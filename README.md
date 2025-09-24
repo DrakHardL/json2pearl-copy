@@ -1,14 +1,3 @@
-# Sample GitLab Project
-
-This sample project shows how a project in GitLab looks for demonstration purposes. It contains issues, merge requests and Markdown files in many branches,
-named and filled with lorem ipsum.
-
-You can look around to get an idea how to structure your project and, when done, you can safely delete this project.
-
-[Learn more about creating GitLab projects.](https://docs.gitlab.com/ee/gitlab-basics/create-project.html)
-
-
-
 # Json2pearl
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
@@ -31,10 +20,16 @@ Angular CLI includes powerful code scaffolding tools. To generate a new componen
 ng generate component component-name
 ```
 
+or 
+
+```bash
+ng g c component-name
+```
+
 For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
 ```bash
-ng generate --help
+ng g --help
 ```
 
 ## Building
