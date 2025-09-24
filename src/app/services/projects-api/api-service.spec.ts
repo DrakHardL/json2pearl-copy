@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { ApiService } from './api-service';
 
-import { ForgeApiService } from './forge-api';
 
 describe('ForgeApi', () => {
-  let service: ForgeApiService;
+  let service: ApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ForgeApiService);
+    service = TestBed.inject(ApiService);
   });
 
   it('should be created', () => {
