@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TestGraph } from '../../test-graph/test-graph';
 
 @Component({
   selector: 'app-floating-toolbar',
@@ -8,6 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './floating-toolbar.scss'
 })
 export class FloatingToolbar {
+  @Input() testGraph!: TestGraph;  // @Input() pour recevoir les données du graph
+
   buttons = [
     { text: 'Développer projet/docs', 
       image: 'projets.png' 
@@ -19,9 +22,15 @@ export class FloatingToolbar {
     { text: 'Information', image: 'Group 12.png' }
   ];
 
-
-
+  
+//methode appelée lors du clic sur un bouton
   clickButton(buttonText: string) {
-    alert('Vous avez cliqué sur : ' + buttonText);
+   
+    if (buttonText === 'Cacher la sélection') {
+      this.testGraph.toggleHideNodes(); 
+    } 
+    else {
+      alert('Vous avez cliqué sur : ' + buttonText);
+    }
   }
 }

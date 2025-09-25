@@ -12,7 +12,7 @@
   
   width: 60px;                    
   transition: width 0.3s ease;
-  z-index: 1000;                  // Ajout du z-index pour être au-dessus de tout
+  z-index: 1000;                  
 }
 
 .toolbar:hover {
@@ -29,8 +29,8 @@
   
   color: #333;
   transition: background-color 0.2s ease;
-  position: relative;             // Assure que les boutons gardent leur position
-  z-index: 1001;                  // Z-index encore plus élevé pour les boutons
+  position: relative;             
+  z-index: 1001;                  
 }
 
 .toolbar-button:hover {
@@ -51,7 +51,6 @@
   font-size: 14px;                
   font-weight: 500;
   transition: opacity 0.3s ease;
-  // un peu plus gros le text
   font-size: 16px;
 }
 

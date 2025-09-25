@@ -11,9 +11,10 @@ export class TestGraph implements OnInit {
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
 
   network!: Network;
-  selectedNodes = signal<number[]>([]);
-  hiddenNodes = signal<number[]>([]);
-  hiddenEdges = signal<number[]>([]);
+  
+  // Variables SIMPLES !
+  selectedNodes: number[] = [];  // Les nœuds sélectionnés
+
 
   private readonly graph_config: Options = {
     nodes: {
@@ -56,6 +57,7 @@ export class TestGraph implements OnInit {
     { from: 1, to: 7, label: '', arrows: 'to' },
     { from: 7, to: 2, label: '', arrows: 'to' },
     { from: 5, to: 3, label: '', arrows: 'to' },
+    
   ]
 
   private readonly default_node: DataSet<Node> = new DataSet<Node>(this.nodes);
@@ -64,7 +66,34 @@ export class TestGraph implements OnInit {
   ngOnInit() {
     this.network = new Network(this.visNetwork.nativeElement, { nodes: this.default_node, edges: this.default_edge }, this.graph_config);
 
+    this.network.on('select', (event) => {
+      this.selectedNodes = event.nodes;  
+    });
+  }
 
+  
+  toggleHideNodes() {
+    if (this.selectedNodes.length === 0) {
+      alert('Sélectionnez des noeuds !');
+      return;
+    }
+
+    // vérifier l'état du premier nœud sélectionné
+    const firstNode = this.default_node.get(this.selectedNodes[0]);
+    const isCurrentlyHidden = firstNode && firstNode.hidden === true;
+
+    // montrer les noeuds
+    if (isCurrentlyHidden) {
+      this.selectedNodes.forEach(nodeId => {
+        this.default_node.update({ id: nodeId, hidden: false });
+      });
+      
+    } else {
+      // cacher les noeuds
+      this.selectedNodes.forEach(nodeId => {
+        this.default_node.update({ id: nodeId, hidden: true });
+      });
+    }
   }
 }
 
