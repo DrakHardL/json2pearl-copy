@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Project } from '../../model/project-model';
+import { Group } from '../../model/group-model';
+import { User } from '../../model/user-model';
 import { ApiService } from '../api-service';
 
 
@@ -35,6 +37,14 @@ export class ProjectApiService extends ApiService {
 
   getProjectForks(project_id: number): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.base_url}/projects/${project_id}/forks`);
+  }
+
+  getProjectUsers(project_id: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.base_url}/projects/${project_id}/users`);
+  }
+
+  getProjectGroups(project_id: number): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.base_url}/projects/${project_id}/groups`);
   }
 
 }
