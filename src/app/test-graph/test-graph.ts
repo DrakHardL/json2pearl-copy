@@ -24,6 +24,6 @@ export class TestGraph implements OnInit {
         this.network.addEdge({ from, to, label: '', arrows: 'to' });
       }
     }
-    // this.network.addEdge({ from: 5, to: 3, label: '', arrows: 'to' },)
   }
+
 }

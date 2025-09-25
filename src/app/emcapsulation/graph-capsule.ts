@@ -1,12 +1,12 @@
-import { DataSet, Edge, Network, Node } from "vis-network/standalone";
+import { DataSet, Edge, network, Network, Node, Options } from "vis-network/standalone";
 
 
 interface NodeCapsule extends Node {
-
+  data?: any,
 }
 
 interface EdgeCapsule extends Edge {
-
+  data?: any,
 }
 
 /**
@@ -14,7 +14,7 @@ interface EdgeCapsule extends Edge {
  */
 export class GraphCapsule {
 
-  private readonly _config = {
+  private readonly _config: Options = {
     nodes: {
       font: { color: '#333', size: 16 },
       borderWidth: 2,
@@ -32,35 +32,14 @@ export class GraphCapsule {
       hover: true,
       dragNodes: true,
       zoomView: true,
+      multiselect: true,
     },
   }
 
   private readonly _network;
 
-  private readonly dataSet_nodes = new DataSet<NodeCapsule>(
-    //   [
-    //   { id: 1, label: "1", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 2, label: "2", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 3, label: "3", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 4, label: "4", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 5, label: "5", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 6, label: "6", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 7, label: "7", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 8, label: "8", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    //   { id: 9, label: "9", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    // ]
-  );
-  private readonly dataSet_edges = new DataSet<EdgeCapsule>(
-    //   [
-    //   { from: 1, to: 3, label: '', arrows: 'to' },
-    //   { from: 1, to: 4, label: '', arrows: 'to' },
-    //   { from: 1, to: 5, label: '', arrows: 'to' },
-    //   { from: 1, to: 6, label: '', arrows: 'to' },
-    //   { from: 1, to: 7, label: '', arrows: 'to' },
-    //   { from: 7, to: 2, label: '', arrows: 'to' },
-    //   { from: 5, to: 3, label: '', arrows: 'to' },
-    // ]
-  );
+  private readonly dataSet_nodes = new DataSet<NodeCapsule>();
+  private readonly dataSet_edges = new DataSet<EdgeCapsule>();
 
   constructor(
     container: HTMLElement
@@ -76,7 +55,14 @@ export class GraphCapsule {
     this.dataSet_nodes.add(node);
   }
   addEdge(edge: EdgeCapsule): void {
-    this.dataSet_edges.add(edge);
+    let is_edge_unique = true;
+
+    this._network.getConnectedEdges(edge.from!).forEach(id => {
+      let e = this.dataSet_edges.get(id);
+      if (e && e.to == edge.to) is_edge_unique = false;
+    })
+
+    if (is_edge_unique) this.dataSet_edges.add(edge);
   }
 
   removeNode(node: NodeCapsule): void {
@@ -93,6 +79,13 @@ export class GraphCapsule {
     return this.dataSet_edges.get(id)
   }
 
-  editNode(id: number, data: any): void { }
-  editEdge(id: number, data: any): void { }
+  editNode(id: number, data: any): void {
+    let node = this.dataSet_nodes.get(id);
+    if (node) node.data = data;
+  }
+  editEdge(id: number, data: any): void {
+    let edge = this.dataSet_edges.get(id);
+    if (edge) edge.data = data;
+  }
+
 }
