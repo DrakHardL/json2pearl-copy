@@ -1,5 +1,5 @@
 # The Docker image that will be used to build your app
-image: node:22-alpine
+image: node:20.19.0
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
