@@ -10,6 +10,9 @@ create-pages:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   # Functions that should be executed before the build script is run
   before_script:
+    - sudo apt-get remove -y nodejs
+    - curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    - sudo apt-get install -y nodejs
     - npm i
   script:
     - npm run build
