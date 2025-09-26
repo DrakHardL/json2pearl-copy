@@ -10,6 +10,8 @@ button {
   cursor: pointer;
   border-radius: 5px;
   margin: 5px;
+  box-shadow:  20px 20px 60px #bebebe,
+             -20px -20px 60px #ffffff;
 }
 
 input {
@@ -21,4 +23,8 @@ input {
   cursor: pointer;
   border-radius: 5px;
   margin: 5px;
+  border-radius: 50px;
+  background: #dddddd;
+  box-shadow:  20px 20px 60px #bebebe,
+             -20px -20px 60px #ffffff;
 }
