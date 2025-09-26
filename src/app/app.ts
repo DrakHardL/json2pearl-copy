@@ -1,18 +1,25 @@
 import { Component, signal, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TestGraph } from "./test-graph/test-graph";
-import { SearchBar } from './components/search-bar/search-bar';
 import { FloatingToolbar } from './components/floating-toolbar/floating-toolbar';
+import { ProjectsInformations } from './components/projects-informations/projects-informations';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestGraph, SearchBar, FloatingToolbar],
+  imports: [RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('Json2pearl');
-  
+   title= (signal('Json2pearl'));
 
+   
+   selectedProjectName = ''; 
+
+   //quand test-graph envoie quelque chose, et lance la fonction onProjectSelected, 
+   // il recoit le nom et le stock dans selectedProjectName
+   onProjectSelected(name: string) {
+   this.selectedProjectName = name;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ProjectApiService } from '../services/projects-api/project-api-service';
 import { GroupApiService } from '../services/group-api/group-api-service';
 import { GraphCapsule } from '../emcapsulation/graph-capsule';
@@ -11,6 +11,9 @@ import { GraphCapsule } from '../emcapsulation/graph-capsule';
 })
 export class TestGraph implements OnInit {
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
+
+  //une sortie qui peut stocker l'id du projet sélectionné
+  @Output() projectSelected = new EventEmitter<string>();
   
   network!: GraphCapsule;
   selectedNodes: number[] = [];  
@@ -23,11 +26,21 @@ export class TestGraph implements OnInit {
   ngOnInit() {
     this.network = new GraphCapsule(this.visNetwork.nativeElement);
     
-    // Écouter les événements de sélection 
+    // quand on clique sur un noeud
     this.network.on('select', (event) => {
-      this.selectedNodes = event.nodes;  
+      this.selectedNodes = event.nodes;
+      
+      if (this.selectedNodes.length > 0) {
+        const node = this.network.nodes.get(this.selectedNodes[0]);
+        if (node && node.shape === 'square') {
+          this.projectSelected.emit(node.label);
+        }
+      }
     });
   }
+
+
+
 
   onSearch(_t3: HTMLInputElement) {
     this.network.clear()
