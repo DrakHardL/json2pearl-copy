@@ -48,7 +48,14 @@ export class TestGraph implements OnInit {
     this.network.getNodes().forEach(n => {
       this.projectsAPI.getProjectUsers(n.id! as number).subscribe(users => {
         users.forEach(user => {
-          this.network.addNode({ id: user.id, label: `${user.name}`, shape: 'circle', color: { background: '#78B1DD', border: '#000000ff' } })
+          this.network.addNode({ 
+            id: user.id, 
+            label: `${user.name}`, 
+            shape: user.avatar_url ? 'circularImage' : 'circle',
+            image: user.avatar_url || undefined,
+            color: { background: '#78B1DD', border: '#000000ff' }, 
+            size: 55
+          })
           this.network.addEdge({ from: n.id!, to: user.id, label: '', arrows: 'to' })
         })
       })

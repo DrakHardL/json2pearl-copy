@@ -4,6 +4,6 @@ export interface User {
   name: string,
   state: string
   locked: boolean
-  avatar_url: undefined,
+  avatar_url: string | null,
   web_url: string,
 }
