@@ -16,10 +16,11 @@ export class App {
 
    
    selectedProjectName = ''; 
+   selectedProjectDescription = ''; 
 
-   //quand test-graph envoie quelque chose, et lance la fonction onProjectSelected, 
-   // il recoit le nom et le stock dans selectedProjectName
-   onProjectSelected(name: string) {
-   this.selectedProjectName = name;
-  }
+
+   onProjectSelected(project: {name: string, description?: string}) {
+     this.selectedProjectName = project.name;
+     this.selectedProjectDescription = project.description || '';
+   }
 }

@@ -13,7 +13,9 @@ export class TestGraph implements OnInit {
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
 
   //une sortie qui peut stocker l'id du projet sélectionné
-  @Output() projectSelected = new EventEmitter<string>();
+
+  @Output() projectSelected = new EventEmitter<{name: string, description: string}>();
+
   
   network!: GraphCapsule;
   selectedNodes: number[] = [];  
@@ -33,7 +35,9 @@ export class TestGraph implements OnInit {
       if (this.selectedNodes.length > 0) {
         const node = this.network.nodes.get(this.selectedNodes[0]);
         if (node && node.shape === 'square') {
-          this.projectSelected.emit(node.label);
+          this.projectsAPI.getProject(node.id as number).subscribe(project => {
+            this.projectSelected.emit({name: node.label as string, description: project.description || ''});
+          });
         }
       }
     });

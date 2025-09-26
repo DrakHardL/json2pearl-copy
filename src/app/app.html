@@ -3,8 +3,10 @@
   <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)"></app-test-graph>
   <app-floating-toolbar [testGraph]="testGraph"></app-floating-toolbar>
 
-  <!--donner le nom stocké au rectangle rouge-->
-  <app-projects-informations [projectName]="selectedProjectName"></app-projects-informations>
+  <app-projects-informations 
+    [projectName]="selectedProjectName"
+    [projectDescription]="selectedProjectDescription">
+  </app-projects-informations>
 </div>
 
 
