@@ -1,5 +1,4 @@
-import { ɵɵtextInterpolate1 } from "@angular/core";
-import { DataSet, Edge, IdType, Network, Node, Options } from "vis-network/standalone";
+import { DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
 
 
 interface NodeCapsule extends Node {
