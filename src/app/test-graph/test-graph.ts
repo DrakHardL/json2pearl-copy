@@ -1,5 +1,7 @@
-import { DataSet, Edge, Node, Network, Options } from 'vis-network/standalone';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ProjectApiService } from '../services/projects-api/project-api-service';
+import { GroupApiService } from '../services/group-api/group-api-service';
+import { GraphCapsule } from '../emcapsulation/graph-capsule';
 
 @Component({
   selector: 'app-test-graph',
@@ -9,68 +11,57 @@ import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core'
 })
 export class TestGraph implements OnInit {
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
-
-  network!: Network;
   
-  // Variables SIMPLES !
-  selectedNodes: number[] = [];  // Les nœuds sélectionnés
+  network!: GraphCapsule;
+  selectedNodes: number[] = [];  
 
-
-  private readonly graph_config: Options = {
-    nodes: {
-      font: { color: '#333', size: 16 },
-      borderWidth: 2,
-    },
-    edges: {
-      font: { align: 'middle' },
-      arrows: { to: { enabled: true, scaleFactor: 0.7 } },
-      color: { color: '#888', highlight: '#000' },
-    },
-    physics: {
-      enabled: true,
-      stabilization: { iterations: 100 },
-    },
-    interaction: {
-      hover: true,
-      dragNodes: true,
-      multiselect: true, // selection multiple
-      zoomView: true,
-    },
-  };
-
-  private readonly nodes: Node[] = [
-    { id: 1, label: "1", shape: 'ellipse', color: { background: '#14f300ff', border: '#0288D1' } },
-    { id: 2, label: "2", shape: 'diamond', color: { background: '#07b9ffff', border: '#0288D1' } },
-    { id: 3, label: "3", shape: 'star', color: { background: '#3b819cff', border: '#0288D1' } },
-    { id: 4, label: "4", shape: 'triangle', color: { background: '#9c523bff', border: '#0288D1' } },
-    { id: 5, label: "5", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    { id: 6, label: "6", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    { id: 7, label: "7", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    { id: 8, label: "8", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-    { id: 9, label: "9", shape: 'circle', color: { background: '#3b819cff', border: '#0288D1' } },
-  ]
-  private readonly edges: Edge[] = [
-    { from: 1, to: 3, label: '', arrows: 'to' },
-    { from: 1, to: 4, label: '', arrows: 'to' },
-    { from: 1, to: 5, label: '', arrows: 'to' },
-    { from: 1, to: 6, label: '', arrows: 'to' },
-    { from: 1, to: 7, label: '', arrows: 'to' },
-    { from: 7, to: 2, label: '', arrows: 'to' },
-    { from: 5, to: 3, label: '', arrows: 'to' },
-    
-  ]
-
-  private readonly default_node: DataSet<Node> = new DataSet<Node>(this.nodes);
-  private readonly default_edge: DataSet<Edge> = new DataSet<Edge>(this.edges);
+  constructor(
+    private readonly projectsAPI: ProjectApiService,
+    private readonly groupAPI: GroupApiService,
+  ) { }
 
   ngOnInit() {
-    this.network = new Network(this.visNetwork.nativeElement, { nodes: this.default_node, edges: this.default_edge }, this.graph_config);
-
+    this.network = new GraphCapsule(this.visNetwork.nativeElement);
+    
+    // Écouter les événements de sélection 
     this.network.on('select', (event) => {
       this.selectedNodes = event.nodes;  
     });
   }
 
+  onSearch(_t3: HTMLInputElement) {
+    this.network.clear()
+    this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
+      projects.forEach(p => {
+        this.network.addNode({ 
+          id: p.id, 
+          label: `${p.name}`, 
+          shape: 'square', 
+          color: { background: '#E0AC54', border: '#000000ff' } 
+        })
+      })
+      this.onShowUser();
+    })
+  }
+
+  onShowUser() {
+    this.network.getNodes().forEach(n => {
+      this.projectsAPI.getProjectUsers(n.id! as number).subscribe(users => {
+        users.forEach(user => {
+          this.network.addNode({ id: user.id, label: `${user.name}`, shape: 'circle', color: { background: '#78B1DD', border: '#000000ff' } })
+          this.network.addEdge({ from: n.id!, to: user.id, label: '', arrows: 'to' })
+        })
+      })
+      this.projectsAPI.getProjectGroups(n.id! as number).subscribe(groups => {
+        groups.forEach(group => {
+          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#55D764', border: '#000000ff' } })
+          this.network.addEdge({ from: n.id!, to: group.id, label: '', arrows: 'to' })
+        })
+      })
+    });
+  }
+
+  // fonction pour cacher ou afficher les noeuds sélectionnés
   
   toggleHideNodes() {
     if (this.selectedNodes.length === 0) {
@@ -78,20 +69,16 @@ export class TestGraph implements OnInit {
       return;
     }
 
-    // vérifier l'état du premier nœud sélectionné
-    const firstNode = this.default_node.get(this.selectedNodes[0]);
+    const firstNode = this.network.nodes.get(this.selectedNodes[0]);
     const isCurrentlyHidden = firstNode && firstNode.hidden === true;
 
-    // montrer les noeuds
     if (isCurrentlyHidden) {
       this.selectedNodes.forEach(nodeId => {
-        this.default_node.update({ id: nodeId, hidden: false });
+        this.network.nodes.update({ id: nodeId, hidden: false });
       });
-      
     } else {
-      // cacher les noeuds
       this.selectedNodes.forEach(nodeId => {
-        this.default_node.update({ id: nodeId, hidden: true });
+        this.network.nodes.update({ id: nodeId, hidden: true });
       });
     }
   }

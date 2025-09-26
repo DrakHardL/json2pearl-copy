@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ApiService } from '../projects-api/api-service';
+import { ApiService } from '../api-service';
 import { Project } from '../../model/project-model';
 import { Group } from '../../model/group-model';
 
@@ -22,7 +22,7 @@ export class GroupApiService extends ApiService {
     );
   }
 
-  searchGroup(
+  searchGroups(
     search: string,
     amount: number = 20,
     page: number = 1,
