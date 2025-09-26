@@ -1,4 +1,5 @@
-import { DataSet, Edge, network, Network, Node, Options } from "vis-network/standalone";
+import { ɵɵtextInterpolate1 } from "@angular/core";
+import { DataSet, Edge, IdType, Network, Node, Options } from "vis-network/standalone";
 
 
 interface NodeCapsule extends Node {
@@ -52,7 +53,12 @@ export class GraphCapsule {
   }
 
   addNode(node: NodeCapsule): void {
-    this.dataSet_nodes.add(node);
+
+    try {
+      this.dataSet_nodes.add(node);
+    } catch(e) {
+      console.error(e);
+    }
   }
   addEdge(edge: EdgeCapsule): void {
     let is_edge_unique = true;
@@ -88,4 +94,20 @@ export class GraphCapsule {
     if (edge) edge.data = data;
   }
 
+  clear(): void {
+    this.dataSet_edges.clear()
+    this.dataSet_nodes.clear()
+  }
+
+  getNodes(): NodeCapsule[] {
+    let rep: NodeCapsule[] = [];
+    this.dataSet_nodes.distinct("id").forEach(r => {
+      let node = this.getNodeByID(r as number);
+      if (node) rep.push(node)
+    });
+    return rep;
+  }
+  getEdegsIDs() {
+    throw new Error('Method not implemented.');
+  }
 }
