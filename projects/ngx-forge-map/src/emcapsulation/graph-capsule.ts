@@ -1,18 +1,18 @@
 import { DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
 
 
-interface NodeCapsule extends Node {
+interface NodeGraph extends Node {
   data?: any,
 }
 
-interface EdgeCapsule extends Edge {
+interface EdgeGraph extends Edge {
   data?: any,
 }
 
 /**
  * Empacsulation de la librairie Vis-Network [WIP]
  */
-export class GraphCapsule {
+export class ForgeGraph {
 
   private readonly _config: Options = {
     nodes: {
@@ -38,8 +38,8 @@ export class GraphCapsule {
 
   private readonly _network;
 
-  private readonly dataSet_nodes = new DataSet<NodeCapsule>();
-  private readonly dataSet_edges = new DataSet<EdgeCapsule>();
+  private readonly dataSet_nodes = new DataSet<NodeGraph>();
+  private readonly dataSet_edges = new DataSet<EdgeGraph>();
 
   constructor(
     container: HTMLElement
@@ -51,15 +51,15 @@ export class GraphCapsule {
     );
   }
 
-  addNode(node: NodeCapsule): void {
+  addNode(node: NodeGraph): void {
 
     try {
       this.dataSet_nodes.add(node);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   }
-  addEdge(edge: EdgeCapsule): void {
+  addEdge(edge: EdgeGraph): void {
     let is_edge_unique = true;
 
     this._network.getConnectedEdges(edge.from!).forEach(id => {
@@ -70,17 +70,17 @@ export class GraphCapsule {
     if (is_edge_unique) this.dataSet_edges.add(edge);
   }
 
-  removeNode(node: NodeCapsule): void {
+  removeNode(node: NodeGraph): void {
     if (node.id) this.dataSet_nodes.remove(node.id);
   }
-  removeEdge(edge: EdgeCapsule): void {
+  removeEdge(edge: EdgeGraph): void {
     if (edge.id) this.dataSet_edges.remove(edge.id);
   }
 
-  getNodeByID(id: number): NodeCapsule | null {
+  getNodeByID(id: number): NodeGraph | null {
     return this.dataSet_nodes.get(id)
   }
-  getEdgeByID(id: number): EdgeCapsule | null {
+  getEdgeByID(id: number): EdgeGraph | null {
     return this.dataSet_edges.get(id)
   }
 
@@ -98,8 +98,8 @@ export class GraphCapsule {
     this.dataSet_nodes.clear()
   }
 
-  getNodes(): NodeCapsule[] {
-    let rep: NodeCapsule[] = [];
+  getNodes(): NodeGraph[] {
+    let rep: NodeGraph[] = [];
     this.dataSet_nodes.distinct("id").forEach(r => {
       let node = this.getNodeByID(r as number);
       if (node) rep.push(node)

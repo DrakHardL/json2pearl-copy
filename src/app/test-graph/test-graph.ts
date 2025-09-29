@@ -1,8 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import { ProjectApiService } from '../services/projects-api/project-api-service';
-import { GroupApiService } from '../services/group-api/group-api-service';
-import { GraphCapsule } from '../emcapsulation/graph-capsule';
+import { ForgeGraph, GroupApiService, ProjectApiService } from 'ngx-forge-map';
 
 
 @Component({
@@ -15,7 +13,7 @@ export class TestGraph implements OnInit {
 
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
 
-  network!: GraphCapsule;
+  network!: ForgeGraph;
 
   constructor(
     private readonly projectsAPI: ProjectApiService,
@@ -23,7 +21,7 @@ export class TestGraph implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.network = new GraphCapsule(this.visNetwork.nativeElement);
+    this.network = new ForgeGraph(this.visNetwork.nativeElement);
   }
 
   onSearch(_t3: HTMLInputElement) {

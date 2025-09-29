@@ -10,5 +10,5 @@
   },
   "include": [
     "src/**/*.ts"
-  ]
+, "projects/ngx-forge-map/src/services/api-service.spec.ts", "projects/ngx-forge-map/src/services/api-service.ts"  ]
 }
