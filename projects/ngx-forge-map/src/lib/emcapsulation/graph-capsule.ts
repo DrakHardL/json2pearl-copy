@@ -107,6 +107,6 @@ export class ForgeGraph {
     return rep;
   }
   getEdegsIDs() {
-    throw new Error('Method not implemented.');
+    throw new Error('WIP Method not implemented.');
   }
 }
