@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { ProjectApiService } from '../services/projects-api/project-api-service';
-import { GroupApiService } from '../services/group-api/group-api-service';
-import { GraphCapsule } from '../emcapsulation/graph-capsule';
+import { ForgeGraph, GroupApiService, ProjectApiService } from 'ngx-forge-map';
+
 
 @Component({
   selector: 'app-test-graph',
@@ -17,7 +16,7 @@ export class TestGraph implements OnInit {
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
 
   
-  network!: GraphCapsule;
+  network!: ForgeGraph;
   selectedNodes: number[] = [];  
 
   constructor(
@@ -26,7 +25,7 @@ export class TestGraph implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.network = new GraphCapsule(this.visNetwork.nativeElement);
+    this.network = new ForgeGraph(this.visNetwork.nativeElement);
     
     // quand on clique sur un noeud
     this.network.on('select', (event) => {

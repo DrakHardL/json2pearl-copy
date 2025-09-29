@@ -93,6 +93,36 @@
           }
         }
       }
+    },
+    "ngx-forge-map": {
+      "projectType": "library",
+      "root": "projects/ngx-forge-map",
+      "sourceRoot": "projects/ngx-forge-map/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-forge-map/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-forge-map/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/ngx-forge-map/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
   }
 }
