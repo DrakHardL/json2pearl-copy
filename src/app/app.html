@@ -1,6 +1,6 @@
 <div class="app-container">
   <h1>{{ title }}</h1>
-  <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)"></app-test-graph>
+  <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)"></app-test-graph>
   <app-floating-toolbar [testGraph]="testGraph"></app-floating-toolbar>
 
   <app-projects-informations 
@@ -12,6 +12,15 @@
     [projectCreator]="selectedProjectCreator"
     [projectOriginalLink]="selectedProjectOriginalLink">
   </app-projects-informations>
+
+  <app-utilisateur-information
+    [utilisateurName]="utilisateurName"
+    [utilisateurRole]="utilisateurRole"
+    [utilisateurNombreProjets]="utilisateurNombreProjets">
+  </app-utilisateur-information>
+
+
+
 </div>
 
 

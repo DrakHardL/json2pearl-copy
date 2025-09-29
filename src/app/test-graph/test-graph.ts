@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { ForgeGraph, GroupApiService, ProjectApiService } from 'ngx-forge-map';
+import { ForgeGraph, GroupApiService, ProjectApiService, UserApiService } from 'ngx-forge-map';
 
 
 @Component({
@@ -14,6 +14,7 @@ export class TestGraph implements OnInit {
   //une sortie qui peut stocker l'id du projet sélectionné
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
+  @Output() utilisateurSelected = new EventEmitter<{ name: string, role: string, nombreProjets: number }>();
 
   
   network!: ForgeGraph;
@@ -22,6 +23,7 @@ export class TestGraph implements OnInit {
   constructor(
     private readonly projectsAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
+    private readonly userAPI: UserApiService,
   ) { }
 
   ngOnInit() {
@@ -43,6 +45,17 @@ export class TestGraph implements OnInit {
               createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
               creator: project.namespace.name,
               originalLink: project.http_url_to_repo
+            });
+          });
+        }
+        if (node && node.shape === 'circle') {
+          // Récupérer les infos utilisateur
+          const userId = node.id as number;
+          this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
+            this.utilisateurSelected.emit({
+              name: node.label || '',
+              role: '', 
+              nombreProjets: projects.length
             });
           });
         }
