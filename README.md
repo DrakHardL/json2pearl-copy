@@ -1,6 +1,10 @@
 # Json2pearl
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
+This project use liberary dependencies, you need tu run this following commandes :
+```bash
+ng build ngx-forge-map
+```
 
 ## Development server
 
