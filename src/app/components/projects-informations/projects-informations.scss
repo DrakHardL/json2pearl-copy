@@ -17,8 +17,20 @@
   flex: 1;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.project-icon {
+  width: 20px;
+  height: 20px;
+}
+
 .left h3 {
-  margin: 0 0 10px 0; 
+  margin: 0; 
   font-size: 16px;
 }
 
@@ -39,4 +51,38 @@
 
 .right {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-section {
+  margin-bottom: 6px;
+}
+
+.info-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+.info-value {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  opacity: 0.8;
+  line-height: 1.2;
+}
+
+.project-link {
+  color: #FFD700;
+  text-decoration: underline;
+  font-size: 11px;
+  opacity: 0.9;
+  word-break: break-all;
+  
+  &:hover {
+    opacity: 1;
+    color: #FFF;
+  }
 }

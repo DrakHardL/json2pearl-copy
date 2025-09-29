@@ -14,7 +14,7 @@ export class TestGraph implements OnInit {
 
   //une sortie qui peut stocker l'id du projet sélectionné
 
-  @Output() projectSelected = new EventEmitter<{name: string, description: string}>();
+  @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
 
   
   network!: GraphCapsule;
@@ -36,7 +36,15 @@ export class TestGraph implements OnInit {
         const node = this.network.nodes.get(this.selectedNodes[0]);
         if (node && node.shape === 'square') {
           this.projectsAPI.getProject(node.id as number).subscribe(project => {
-            this.projectSelected.emit({name: node.label as string, description: project.description || ''});
+            this.projectSelected.emit({
+              name: project.name,
+              description: project.description,
+              thematic: project.topics.join(', '),
+              version: project.default_branch,
+              createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
+              creator: project.namespace.name,
+              originalLink: project.http_url_to_repo
+            });
           });
         }
       }

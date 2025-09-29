@@ -1,9 +1,35 @@
 <div class="rectangle">
   <div class="left">
-    <h3>{{ projectName }}</h3>
+    <div class="header">
+      <img src="project.svg" alt="icone de projet" class="project-icon">
+      <h3>{{ projectName }}</h3>
+    </div>
     <p class="description">{{ projectDescription || 'Aucune description disponible' }}</p>
   </div>
   <div class="line"></div>
   <div class="right">
+    <div class="info-section">
+      <p class="info-label">Thématique :</p>
+      <p class="info-value">{{ projectThematic || 'Non spécifiée' }}</p>
+    </div>
+    <div class="info-section">
+      <p class="info-label">Version :</p>
+      <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
+    </div>
+    <div class="info-section">
+      <p class="info-label">Créé le :</p>
+      <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
+    </div>
+    <div class="info-section">
+      <p class="info-label">Par :</p>
+      <p class="info-value">{{ projectCreator || 'Non spécifié' }}</p>
+    </div>
+    <div class="info-section">
+      <p class="info-label">Lien du projet original :</p>
+      <a [href]="projectOriginalLink" target="_blank" class="project-link" *ngIf="projectOriginalLink">
+        {{ projectOriginalLink }}
+      </a>
+      <p class="info-value" *ngIf="!projectOriginalLink">Non spécifié</p>
+    </div>
   </div>
 </div>

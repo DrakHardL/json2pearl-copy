@@ -16,11 +16,21 @@ export class App {
 
    
    selectedProjectName = ''; 
-   selectedProjectDescription = ''; 
+   selectedProjectDescription = '';
+   selectedProjectThematic = '';
+   selectedProjectVersion = '';
+   selectedProjectCreatedDate = '';
+   selectedProjectCreator = '';
+   selectedProjectOriginalLink = '';
 
 
-   onProjectSelected(project: {name: string, description?: string}) {
+   onProjectSelected(project: {name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}) {
      this.selectedProjectName = project.name;
-     this.selectedProjectDescription = project.description || '';
+     this.selectedProjectDescription = project.description;
+     this.selectedProjectThematic = project.thematic;
+     this.selectedProjectVersion = project.version;
+     this.selectedProjectCreatedDate = project.createdDate;
+     this.selectedProjectCreator = project.creator;
+     this.selectedProjectOriginalLink = project.originalLink;
    }
 }
