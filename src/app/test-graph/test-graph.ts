@@ -48,7 +48,7 @@ export class TestGraph implements OnInit {
             });
           });
         }
-        if (node && node.shape === 'circle') {
+        if (node && (node.shape === 'circle' || node.shape === 'circularImage')) {
           // Récupérer les infos utilisateur
           const userId = node.id as number;
           this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
