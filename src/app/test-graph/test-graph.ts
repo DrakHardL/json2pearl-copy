@@ -14,7 +14,7 @@ export class TestGraph implements OnInit {
   //une sortie qui peut stocker l'id du projet sélectionné
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
-  @Output() utilisateurSelected = new EventEmitter<{ name: string, role: string, nombreProjets: number }>();
+  @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number }>();
 
   
   network!: ForgeGraph;
@@ -54,7 +54,7 @@ export class TestGraph implements OnInit {
           this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
             this.utilisateurSelected.emit({
               name: node.label || '',
-              role: '', 
+              webUrl: node.data.web_url || '',
               nombreProjets: projects.length
             });
           });
@@ -91,7 +91,8 @@ export class TestGraph implements OnInit {
             shape: user.avatar_url ? 'circularImage' : 'circle',
             image: user.avatar_url || undefined,
             color: { background: '#78B1DD', border: '#000000ff' }, 
-            size: 55
+            size: 55,
+            data: { web_url: user.web_url }
           })
           this.network.addEdge({ from: n.id!, to: user.id, label: '', arrows: 'to' })
         })

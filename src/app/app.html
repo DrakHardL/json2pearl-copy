@@ -1,5 +1,5 @@
 <div class="app-container">
-  <h1>{{ title }}</h1>
+  <h1>{{ title() }}</h1>
   <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)"></app-test-graph>
   <app-floating-toolbar [testGraph]="testGraph"></app-floating-toolbar>
 
@@ -15,7 +15,7 @@
 
   <app-utilisateur-information
     [utilisateurName]="utilisateurName"
-    [utilisateurRole]="utilisateurRole"
+    [utilisateurWebUrl]="utilisateurWebUrl"
     [utilisateurNombreProjets]="utilisateurNombreProjets">
   </app-utilisateur-information>
 

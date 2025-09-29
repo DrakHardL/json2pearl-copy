@@ -11,7 +11,7 @@ export class UtilisateurInformation {
 
   //on recoit les informations de app.ts
   @Input() utilisateurName: string = '';
-  @Input() utilisateurRole: string = '';
+  @Input() utilisateurWebUrl: string = '';
   @Input() utilisateurNombreProjets: number = 0;
 
 
