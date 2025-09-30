@@ -1,32 +1,32 @@
 .rectangleInfoUtilisateur {
     position: fixed;
-    top: 68%;
-    right: 40px;
+    top: 60%;
+    right: 3%;
     transform: translateY(-50%);
-    width: 360px;
-    min-width: 280px;
-    max-width: 90vw;
-    min-height: 200px;
-    max-height: 80vh;
+    width: 20vw;
+    min-width: 12vw;
+    max-width: 28vw;
+    min-height: 12vw;
+    max-height: 40vw;
     background: rgba(30, 27, 209, 0.85);
     color: #fff;
-    border-radius: 18px;
+    border-radius: 2vw;
     display: flex;
     flex-direction: column;
-    padding: 28px 24px;
+    padding: 2vw 1.5vw;
     box-sizing: border-box;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    box-shadow: 0 1vw 4vw rgba(0,0,0,0.18);
 
     .header {
         display: flex;
         align-items: center;
-        gap: 18px;
-        margin-bottom: 20px;
+        gap: 1vw;
+        margin-bottom: 1.2vw;
     }
 
     .user-icon {
-        width: 44px;
-        height: 44px;
+        width: 2.5vw;
+        height: 2.5vw;
     }
 
     .left, .right {
@@ -35,37 +35,37 @@
 
     .left h3 {
         margin: 0;
-        font-size: 24px;
+        font-size: 1.3vw;
     }
 
     .description {
-        font-size: 15px;
-        line-height: 1.6;
-        max-height: 72px;
+        font-size: 0.9vw;
+        line-height: 1.5;
+        max-height: 4vw;
         overflow-y: auto;
     }
 
     .right {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 1vw;
         overflow-y: auto;
     }
 
     .info-section {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 0.6vw;
     }
 
     .info-label {
-        font-size: 16px;
+        font-size: 0.95vw;
         font-weight: bold;
         margin: 0;
     }
 
     .info-value {
-        font-size: 15px;
+        font-size: 0.85vw;
         margin: 0;
     }
 }

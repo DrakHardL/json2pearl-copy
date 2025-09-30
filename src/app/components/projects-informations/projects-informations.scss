@@ -1,14 +1,14 @@
 .rectangle {
   position: fixed;
-  top: 200px;
-  right: 20px;
-  width: 420px;
-  height: 320px;
+  top: 10%;
+  right: 2%;
+  width: 22%;
+  height: 26%;
   background: rgba(248, 1, 1, 0.75);
   color: #fff;
-  border-radius: 12px;
+  border-radius: 2%;
   display: flex;
-  padding: 20px;
+  padding: 1.2%;
 }
 
 .left, .right {
@@ -18,52 +18,52 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
+  gap: 2%;
+  margin-bottom: 2%;
 }
 
 .project-icon {
-  width: 36px;
-  height: 36px;
+  width: 15%;
+  height: 15%;
 }
 
 .left h3 {
   margin: 0;
-  font-size: 26px;
+  font-size: 1.1vw;
 }
 
 .description {
-  font-size: 16px;
-  line-height: 1.5;
-  max-height: 90px;
+  font-size: 0.85vw;
+  line-height: 1.4;
+  max-height: 15%;
   overflow-y: auto;
 }
 
 .line {
-  width: 2px;
+  width: 0.3%;
   background: #fff;
-  margin: 0 12px;
+  margin: 0 1.5%;
   height: 80%;
 }
 
 .right {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 1.2%;
   overflow-y: auto;
 }
 
 .info-label {
-  font-size: 17px;
+  font-size: 0.95vw;
   font-weight: bold;
 }
 
 .info-value {
-  font-size: 16px;
+  font-size: 0.85vw;
 }
 
 .project-link {
   color: #FFD700;
   text-decoration: underline;
-  font-size: 16px;
+  font-size: 0.85vw;
 }
