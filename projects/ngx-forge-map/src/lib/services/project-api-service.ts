@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Project } from '../model/model-project';
 import { Group } from '../model/model-group';
 import { User } from '../model/model-user';
-import { ApiService } from '../api-service';
+import { ApiService } from './api-service';
 
 
 @Injectable({
@@ -18,7 +18,7 @@ export class ProjectApiService extends ApiService {
     skip_project: number[] = []
   ): Observable<Project[]> {
     const skipProjectsParam = skip_project.length > 0 ? `&skip_projects=${skip_project.join(',')}` : '';
-    return this.http.get<Project[]>(
+    return this.http.get<Project[]>( // TODO parcourir tout les projects
       `${this.base_url}/projects?per_page=${amount}&page=${page}${skipProjectsParam}`
     );
   }
@@ -31,7 +31,7 @@ export class ProjectApiService extends ApiService {
     search: string,
     amount: number = 20,
     page: number = 1,
-  ): Observable<Project[]> {
+  ): Observable<Project[]> { // TODO parcourir tout les resultats
     return this.http.get<Project[]>(`${this.base_url}/projects?search=${search}&per_page=${amount}&page=${page}`);
   }
 
