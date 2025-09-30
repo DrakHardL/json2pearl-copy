@@ -1,6 +1,6 @@
 .rectangleInfoUtilisateur {
     position: fixed;
-    top: 60%;
+    top: 65%;
     right: 3%;
     transform: translateY(-50%);
     width: 20vw;
@@ -69,4 +69,9 @@
         font-size: 0.85vw;
         margin: 0;
     }
+//scroll bar
+    .projects-list {
+                height: 200px; 
+                overflow-y: auto;
+            }
 }

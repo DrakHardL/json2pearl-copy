@@ -17,11 +17,13 @@
     </div>
     <div class="info-section">
       <p class="info-label">Projets :</p>
-      <div class="info-value">
+      <div class="info-value projects-list">
         <p *ngIf="!projectLinks || projectLinks.length === 0">Aucun projet trouvé</p>
+        <ul *ngIf="projectLinks">
           <li *ngFor="let link of projectLinks">
             <a [href]="link" target="_blank" rel="noopener noreferrer">{{ link }}</a>
           </li>
+        </ul>
       </div>
     </div>
   </div>
