@@ -3,7 +3,7 @@ image: node:20.19.0
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
-    publish: dist/json2pearl/brower
+    publish: dist/json2pearl/browser
   rules:
     # This ensures that only pushes to the default branch will trigger
     # a pages deploy
