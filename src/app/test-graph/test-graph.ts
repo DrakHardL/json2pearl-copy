@@ -25,8 +25,8 @@ export class TestGraph implements OnInit {
   }
 
   onSearch(_t3: HTMLInputElement) {
-    this.network.clear()
     this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
+      this.network.clear()
       projects.forEach(p => {
         this.network.addNode({ id: p.id, label: `${p.name}`, shape: 'square', color: { background: '#E0AC54', border: '#000000ff' } })
       })
