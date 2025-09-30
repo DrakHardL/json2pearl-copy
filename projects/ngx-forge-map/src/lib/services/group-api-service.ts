@@ -11,17 +11,6 @@ import { Group } from '../model/model-group';
 })
 export class GroupApiService extends ApiService {
 
-  // getAllGroups(
-  //   amount: number = 20,
-  //   page: number = 1,
-  //   skip_groups: number[] = []
-  // ): Observable<Group[]> {
-  //   const skipGroupsParam = skip_groups.length > 0 ? `&skip_groups=${skip_groups.join(',')}` : '';
-  //   return this.http.get<Group[]>(
-  //     `${this.rest_url}/groups?per_page=${amount}&page=${page}${skipGroupsParam}`
-  //   );
-  // }
-
   searchGroups(
     search: string,
     amount: number = 20,
