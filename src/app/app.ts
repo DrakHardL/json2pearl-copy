@@ -27,6 +27,7 @@ export class App {
    utilisateurName = '';
    utilisateurNombreProjets = 0;
    utilisateurWebUrl = '';
+  utilisateurProjectLinks: string[] = [];
    
 
 
@@ -40,11 +41,12 @@ export class App {
      this.selectedProjectOriginalLink = project.originalLink;
    }
 
-   onUtilisateurSelected(utilisateur: { name: string, webUrl: string, nombreProjets: number }) {
-     this.utilisateurName = utilisateur.name;
-     this.utilisateurWebUrl = utilisateur.webUrl;
-     this.utilisateurNombreProjets = utilisateur.nombreProjets;
-   }
+  onUtilisateurSelected(utilisateur: { name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }) {
+    this.utilisateurName = utilisateur.name;
+    this.utilisateurWebUrl = utilisateur.webUrl;
+    this.utilisateurNombreProjets = utilisateur.nombreProjets;
+    this.utilisateurProjectLinks = utilisateur.projectLinks || [];
+  }
 
 
    

@@ -4,7 +4,8 @@
   right: 2%;
   width: 22%;
   height: 26%;
-  background: rgba(248, 1, 1, 0.75);
+  background: rgba(33, 65, 70, 0.575);
+  backdrop-filter: blur(7px);
   color: #fff;
   border-radius: 2%;
   display: flex;
@@ -35,7 +36,7 @@
 .description {
   font-size: 0.85vw;
   line-height: 1.4;
-  max-height: 15%;
+  max-height: 40%;
   overflow-y: auto;
 }
 
@@ -63,7 +64,7 @@
 }
 
 .project-link {
-  color: #FFD700;
+  color: #FAEAB1;
   text-decoration: underline;
   font-size: 0.85vw;
 }

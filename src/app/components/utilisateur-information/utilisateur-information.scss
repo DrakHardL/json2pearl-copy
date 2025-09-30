@@ -8,7 +8,8 @@
     max-width: 28vw;
     min-height: 12vw;
     max-height: 40vw;
-    background: rgba(30, 27, 209, 0.85);
+      background: rgba(33, 65, 70, 0.575);
+  backdrop-filter: blur(7px);
     color: #fff;
     border-radius: 2vw;
     display: flex;

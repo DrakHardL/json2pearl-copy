@@ -1,30 +1,30 @@
 button {
-  background-color: rgb(205, 205, 205);
+  background-color: #334443;
   border: none;
-  color: white;
-  padding: 15px 32px;
+  color: #FAF8F1;
+  padding: 0.8vw 1.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 0.8vw;
   cursor: pointer;
-  border-radius: 5px;
-  margin: 5px;
-  box-shadow:  20px 20px 60px #bebebe,
-             -20px -20px 60px #ffffff;
+  border-radius: 0.2vw;
+  margin: 0.2vw;
+  box-shadow:  0.8vw 0.8vw 2.4vw #bebebe,
+             -0.8vw -0.8vw 2.4vw #ffffff;
 }
 
 input {
   outline: none;
-  padding: 15px;
+  padding: 0.8vw;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 0.8vw;
   cursor: pointer;
-  border-radius: 5px;
-  margin: 5px;
-  border-radius: 50px;
-  background: #dddddd;
-  box-shadow:  20px 20px 60px #bebebe,
-             -20px -20px 60px #ffffff;
+  border-radius: 0.2vw;
+  margin: 0.2vw;
+  border-radius: 2vw;
+  background: #FAEAB1;
+  box-shadow:  0.8vw 0.8vw 2.4vw #bebebe,
+             -0.8vw -0.8vw 2.4vw #ffffff;
 }

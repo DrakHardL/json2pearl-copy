@@ -14,7 +14,7 @@ export class TestGraph implements OnInit {
   //une sortie qui peut stocker l'id du projet sélectionné
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
-  @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number }>();
+  @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }>();
 
   
   network!: ForgeGraph;
@@ -49,13 +49,27 @@ export class TestGraph implements OnInit {
           });
         }
         if (node && (node.shape === 'circle' || node.shape === 'circularImage')) {
-          // Récupérer les infos utilisateur
+          // récupérer les infos utilisateur et les liens des projets
           const userId = node.id as number;
           this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
+            // récupérer uniquement les URLs
+            const links: string[] = [];
+
+            if (projects) {
+              for (const p of projects) {
+                // on prend web_url si présent, sinon http_url_to_repo
+                const url = p.web_url || p.http_url_to_repo;
+                if (url) {
+                  links.push(url);
+                }
+              }
+            }
+
             this.utilisateurSelected.emit({
               name: node.label || '',
-              webUrl: node.data.web_url || '',
-              nombreProjets: projects.length
+              webUrl: node.data?.web_url || '',
+              nombreProjets: projects.length,
+              projectLinks: links
             });
           });
         }
@@ -74,7 +88,7 @@ export class TestGraph implements OnInit {
           id: p.id, 
           label: `${p.name}`, 
           shape: 'square', 
-          color: { background: '#E0AC54', border: '#000000ff' } 
+          color: { background: '#FAEAB1', border: '#334443' } 
         })
       })
       this.onShowUser();
@@ -90,7 +104,7 @@ export class TestGraph implements OnInit {
             label: `${user.name}`, 
             shape: user.avatar_url ? 'circularImage' : 'circle',
             image: user.avatar_url || undefined,
-            color: { background: '#78B1DD', border: '#000000ff' }, 
+            color: { background: '#FAF8F1', border: '#334443' }, 
             size: 55,
             data: { web_url: user.web_url }
           })
@@ -99,7 +113,7 @@ export class TestGraph implements OnInit {
       })
       this.projectsAPI.getProjectGroups(n.id! as number).subscribe(groups => {
         groups.forEach(group => {
-          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#55D764', border: '#000000ff' } })
+          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#34656D', border: '#334443' } })
           this.network.addEdge({ from: n.id!, to: group.id, label: '', arrows: 'to' })
         })
       })
