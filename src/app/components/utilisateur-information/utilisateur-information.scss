@@ -70,8 +70,24 @@
         margin: 0;
     }
 //scroll bar
-    .projects-list {
-                height: 200px; 
-                overflow-y: auto;
-            }
+        .projects-list {
+            height: 20vw; /* hauteur fixe relative à la largeur de la viewport */
+            overflow-y: auto;
+        }
+        /* Petite taille pour le bouton qui ouvre la liste */
+        .projects-toggle {
+            background: transparent;
+            border: none;
+            padding: 0.3vw;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .projects-toggle .icon {
+            width: 2vw;
+            height: 2vw;
+            display: block;
+        }
 }

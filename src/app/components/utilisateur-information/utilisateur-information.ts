@@ -16,6 +16,13 @@ export class UtilisateurInformation {
   @Input() utilisateurNombreProjets: number = 0;
   @Input() projectLinks: string[] = [];
 
+  // state pour afficher/masquer la liste des projets
+  showProjects: boolean = false;
+
+  toggleProjects() {
+    this.showProjects = !this.showProjects;
+  }
+
 
 
 

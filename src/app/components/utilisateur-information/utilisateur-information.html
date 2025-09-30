@@ -17,13 +17,18 @@
     </div>
     <div class="info-section">
       <p class="info-label">Projets :</p>
-      <div class="info-value projects-list">
-        <p *ngIf="!projectLinks || projectLinks.length === 0">Aucun projet trouvé</p>
-        <ul *ngIf="projectLinks">
-          <li *ngFor="let link of projectLinks">
-            <a [href]="link" target="_blank" rel="noopener noreferrer">{{ link }}</a>
-          </li>
-        </ul>
+      <div class="info-value">
+        <button class="projects-toggle" (click)="toggleProjects()" aria-label="Afficher projets">
+          <img src="open.svg" alt="open" class="icon" />
+        </button>
+        <div class="projects-list" *ngIf="showProjects">
+          <p *ngIf="!projectLinks || projectLinks.length === 0">Aucun projet trouvé</p>
+          <ul *ngIf="projectLinks && projectLinks.length > 0">
+            <li *ngFor="let link of projectLinks">
+              <a [href]="link" target="_blank" rel="noopener noreferrer">{{ link }}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
