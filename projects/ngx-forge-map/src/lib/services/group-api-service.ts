@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ApiService } from '../api-service';
+import { ApiService } from './api-service';
 import { Project } from '../model/model-project';
 import { Group } from '../model/model-group';
 
