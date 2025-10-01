@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import { ForgeGraph, GroupApiService, ProjectApiService } from 'ngx-forge-map';
+import { ForgeGraph, GroupApiService, NodeShape, ProjectApiService } from 'ngx-forge-map';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class TestGraph implements OnInit {
     this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
       this.network.clear()
       projects.forEach(p => {
-        this.network.addNode({ id: p.id, label: `${p.name}`, shape: 'square', color: { background: '#E0AC54', border: '#000000ff' } })
+        this.network.addNode(p.name, NodeShape.SQUARE, { background: "#E0AC54" }, p)
       })
       this.onShowUser();
     })
@@ -36,16 +36,16 @@ export class TestGraph implements OnInit {
 
   onShowUser() {
     this.network.getNodes().forEach(n => {
-      this.projectsAPI.getProjectUsers(n.id! as number).subscribe(users => {
+      this.projectsAPI.getProjectUsers(n.data!.id! as number).subscribe(users => {
         users.forEach(user => {
-          this.network.addNode({ id: user.id, label: `${user.name}`, shape: 'circle', color: { background: '#78B1DD', border: '#000000ff' } })
-          this.network.addEdge({ from: n.id!, to: user.id, label: '', arrows: 'to' })
+          this.network.addNode(user.name, NodeShape.DOT, { background: "#78B1DD" }, user)
+          this.network.addEdge({ id: n.data.id, type: NodeShape.SQUARE }, { id: user.id, type: NodeShape.DOT })
         })
       })
-      this.projectsAPI.getProjectGroups(n.id! as number).subscribe(groups => {
+      this.projectsAPI.getProjectGroups(n.data.id! as number).subscribe(groups => {
         groups.forEach(group => {
-          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#55D764', border: '#000000ff' } })
-          this.network.addEdge({ from: n.id!, to: group.id, label: '', arrows: 'to' })
+          this.network.addNode(group.name, NodeShape.TRIANGLE, { background: "#55D764" }, group);
+          this.network.addEdge({ id: n.data.id, type: NodeShape.SQUARE }, { id: group.id, type: NodeShape.TRIANGLE })
         })
       })
     });
