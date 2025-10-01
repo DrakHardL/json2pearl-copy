@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
 })
 
 export class ApiService {
-  protected readonly base_url = "https://forge.apps.education.fr/api/v4";
+  protected readonly rest_url = "https://forge.apps.education.fr/api/v4";
+  protected readonly graphql_url = "https://forge.apps.education.fr/api/graphql";
 
   constructor(
     protected readonly http: HttpClient
