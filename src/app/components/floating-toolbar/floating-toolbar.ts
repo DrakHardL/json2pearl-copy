@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TestGraph } from '../../test-graph/test-graph';
 
@@ -10,6 +10,7 @@ import { TestGraph } from '../../test-graph/test-graph';
 })
 export class FloatingToolbar {
   @Input() testGraph!: TestGraph;  // @Input() pour recevoir les données du graph
+  @Output() informationClicked = new EventEmitter<void>();  // nouvel Output pour le bouton information
 
   buttons = [
     { text: 'Développer projet/docs', 
@@ -28,8 +29,10 @@ export class FloatingToolbar {
    
     if (buttonText === 'Cacher la sélection') {
       this.testGraph.toggleHideNodes(); 
-    } 
-    else {
+    } else if (buttonText === 'Information') {
+      // événement vers le parent pour afficher/masquer les infos
+      this.informationClicked.emit();
+    } else {
       alert('Vous avez cliqué sur : ' + buttonText);
     }
   }

@@ -37,6 +37,7 @@ export class TestGraph implements OnInit {
         const node = this.network.nodes.get(this.selectedNodes[0]);
         if (node && node.shape === 'square') {
           this.projectsAPI.getProject(node.id as number).subscribe(project => {
+
             this.projectSelected.emit({
               name: project.name,
               description: project.description,
@@ -88,7 +89,7 @@ export class TestGraph implements OnInit {
           id: p.id, 
           label: `${p.name}`, 
           shape: 'square', 
-          color: { background: '#FAEAB1', border: '#334443' } 
+          color: { background: '#E3924F', border: '#334443' } 
         })
       })
       this.onShowUser();
@@ -104,7 +105,7 @@ export class TestGraph implements OnInit {
             label: `${user.name}`, 
             shape: user.avatar_url ? 'circularImage' : 'circle',
             image: user.avatar_url || undefined,
-            color: { background: '#FAF8F1', border: '#334443' }, 
+            color: { background: '#9AABC1', border: '#334443' }, 
             size: 55,
             data: { web_url: user.web_url }
           })
@@ -113,7 +114,7 @@ export class TestGraph implements OnInit {
       })
       this.projectsAPI.getProjectGroups(n.id! as number).subscribe(groups => {
         groups.forEach(group => {
-          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#34656D', border: '#334443' } })
+          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#54A075', border: '#334443' } })
           this.network.addEdge({ from: n.id!, to: group.id, label: '', arrows: 'to' })
         })
       })
@@ -141,6 +142,11 @@ export class TestGraph implements OnInit {
       });
     }
   }
+
+
+
+
+
 }
 
 

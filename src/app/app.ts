@@ -1,5 +1,6 @@
 import { Component, signal, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { TestGraph } from "./test-graph/test-graph";
 import { FloatingToolbar } from './components/floating-toolbar/floating-toolbar';
 import { ProjectsInformations } from './components/projects-informations/projects-informations';
@@ -8,7 +9,7 @@ import { UtilisateurInformation } from './components/utilisateur-information/uti
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation],
+  imports: [CommonModule, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -28,6 +29,10 @@ export class App {
    utilisateurNombreProjets = 0;
    utilisateurWebUrl = '';
   utilisateurProjectLinks: string[] = [];
+
+  
+  infoVisible: boolean = false;
+  selectedType: string = '';  // 'project' ou 'user'
    
 
 
@@ -39,6 +44,9 @@ export class App {
      this.selectedProjectCreatedDate = project.createdDate;
      this.selectedProjectCreator = project.creator;
      this.selectedProjectOriginalLink = project.originalLink;
+     
+     // memoriser le type de sélection
+     this.selectedType = 'project';
    }
 
   onUtilisateurSelected(utilisateur: { name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }) {
@@ -46,8 +54,20 @@ export class App {
     this.utilisateurWebUrl = utilisateur.webUrl;
     this.utilisateurNombreProjets = utilisateur.nombreProjets;
     this.utilisateurProjectLinks = utilisateur.projectLinks || [];
+    
+    // memoriser le type de sélection
+    this.selectedType = 'user';
   }
 
+  onInformationClicked() {
+    if (!this.selectedType) {
+      alert("sélectionnez un noeud");
+      return;
+    }
+
+    // basculer la visibilité
+    this.infoVisible = !this.infoVisible;
+  }
 
    
 }

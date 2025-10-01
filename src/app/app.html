@@ -1,9 +1,16 @@
 <div class="app-container">
   <h1>{{ title() }}</h1>
   <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)"></app-test-graph>
-  <app-floating-toolbar [testGraph]="testGraph"></app-floating-toolbar>
+  
+   <
+  <app-floating-toolbar 
+    [testGraph]="testGraph"
+    (informationClicked)="onInformationClicked()">
+  </app-floating-toolbar>
 
+  <!-- affiche seulement app-projects-informations si infoVisible est true et qu'un projet est sélectionné -->
   <app-projects-informations 
+    *ngIf="infoVisible && selectedType === 'project'"
     [projectName]="selectedProjectName"
     [projectDescription]="selectedProjectDescription"
     [projectThematic]="selectedProjectThematic"
@@ -14,13 +21,12 @@
   </app-projects-informations>
 
   <app-utilisateur-information
+    *ngIf="infoVisible && selectedType === 'user'"
     [utilisateurName]="utilisateurName"
     [utilisateurWebUrl]="utilisateurWebUrl"
     [utilisateurNombreProjets]="utilisateurNombreProjets"
     [projectLinks]="utilisateurProjectLinks">
   </app-utilisateur-information>
-
-
 
 </div>
 
