@@ -1,93 +1,112 @@
 .rectangleInfoUtilisateur {
-    position: fixed;
-    top: 65%;
-    right: 3%;
-    transform: translateY(-50%);
-    width: 20vw;
-    min-width: 12vw;
-    max-width: 28vw;
-    min-height: 12vw;
-    max-height: 40vw;
-      background: rgba(33, 65, 70, 0.575);
-  backdrop-filter: blur(7px);
-    color: #fff;
-    border-radius: 2vw;
-    display: flex;
-    flex-direction: column;
-    padding: 2vw 1.5vw;
-    box-sizing: border-box;
-    box-shadow: 0 1vw 4vw rgba(0,0,0,0.18);
+  position: fixed;
+  top: 10%;
+  right: 2%;
+  width: 20vw;
+  height: 60vh;
+  flex-shrink: 0;
+  border-radius: 1vw;
+  border: 1px solid #B8B8B8;
+  background: #9AABDC;
+  box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5%;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
-    .header {
-        display: flex;
-        align-items: center;
-        gap: 1vw;
-        margin-bottom: 1.2vw;
-    }
+.user-header {
+  text-align: center;
+  margin-bottom: 3%;
+}
 
-    .user-icon {
-        width: 2.5vw;
-        height: 2.5vw;
-    }
+.user-header h3 {
+  margin: 0;
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: #000;
+}
 
-    .left, .right {
-        flex: 1;
-    }
+.info-section {
+  margin-bottom: 2.5%;
+}
 
-    .left h3 {
-        margin: 0;
-        font-size: 1.3vw;
-    }
+.label {
+  font-size: 0.9vw;
+  font-weight: bold;
+  margin: 0 0 1% 0;
+  color: #000;
+}
 
-    .description {
-        font-size: 0.9vw;
-        line-height: 1.5;
-        max-height: 4vw;
-        overflow-y: auto;
-    }
+.info-value {
+  font-size: 0.8vw;
+  margin: 0;
+  color: #000;
+}
 
-    .right {
-        display: flex;
-        flex-direction: column;
-        gap: 1vw;
-        overflow-y: auto;
-    }
+.user-link {
+  color: #000;
+  text-decoration: underline;
+  font-size: 0.8vw;
+  word-break: break-all;
+}
 
-    .info-section {
-        display: flex;
-        align-items: center;
-        gap: 0.6vw;
-    }
+.projects-section {
+  margin-top: auto;
+  margin-bottom: 2%;
+}
 
-    .info-label {
-        font-size: 0.95vw;
-        font-weight: bold;
-        margin: 0;
-    }
+.projects-header {
+  display: flex;
+  align-items: center;
+  gap: 1%;
+  margin-bottom: 1%;
+}
 
-    .info-value {
-        font-size: 0.85vw;
-        margin: 0;
-    }
-//scroll bar
-        .projects-list {
-            height: 20vw; /* hauteur fixe relative à la largeur de la viewport */
-            overflow-y: auto;
-        }
-        /* Petite taille pour le bouton qui ouvre la liste */
-        .projects-toggle {
-            background: transparent;
-            border: none;
-            padding: 0.3vw;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+.projects-toggle {
+  background: transparent;
+  border: none;
+  padding: 0.3%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        .projects-toggle .icon {
-            width: 2vw;
-            height: 2vw;
-            display: block;
-        }
+.projects-toggle .icon {
+  width: 1.5vw;
+  height: 1.5vw;
+  display: block;
+}
+
+.projects-list {
+  max-height: 15vh;
+  overflow-y: auto;
+}
+
+.no-projects {
+  font-size: 0.7vw;
+  margin: 0;
+  color: #000;
+  font-style: italic;
+}
+
+.project-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-links li {
+  margin-bottom: 0.5%;
+}
+
+.project-link {
+  color: #000;
+  text-decoration: underline;
+  font-size: 0.7vw;
+  word-break: break-all;
+  display: block;
 }

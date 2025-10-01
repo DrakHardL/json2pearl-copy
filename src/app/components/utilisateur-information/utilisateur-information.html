@@ -1,35 +1,41 @@
 <div class="rectangleInfoUtilisateur">
-  <div class="left">
-    <div class="header">
-      <h3>{{ utilisateurName }}</h3>
-    </div>
+  <div class="user-header">
+    <h3>{{ utilisateurName || 'Nom de l\'utilisateur' }}</h3>
   </div>
-  <div class="right">
-    <div class="info-section">
-      <p class="info-label">URL Web :</p>
-      <p class="info-value">
-  <a [href]="utilisateurWebUrl" style="color: #FAEAB1;">{{ utilisateurWebUrl }}</a>
-      </p>
+  
+  
+  <!-- url du compte -->
+  <div class="info-section">
+    <p class="label">URL du compte :</p>
+    <p class="info-value">
+      <a [href]="utilisateurWebUrl" class="user-link" *ngIf="utilisateurWebUrl">{{ utilisateurWebUrl }}</a>
+      <span *ngIf="!utilisateurWebUrl">Non spécifiée</span>
+    </p>
+  </div>
+  
+
+
+  <div class="info-section">
+    <p class="info-value">{{ utilisateurNombreProjets || 0 }} projets</p>
+  </div>
+  
+
+  <!-- projets -->
+  <div class="projects-section">
+    <div class="projects-header">
+      <p class="label">Projets :</p>
+      <button class="projects-toggle" (click)="toggleProjects()" aria-label="Afficher projets">
+        <img src="open.svg" alt="open" class="icon" />
+      </button>
     </div>
-    <div class="info-section">
-      <p class="info-label">Nombre de projets :</p>
-      <p class="info-value">{{ utilisateurNombreProjets || 0 }}</p>
-    </div>
-    <div class="info-section">
-      <p class="info-label">Projets :</p>
-      <div class="info-value">
-        <button class="projects-toggle" (click)="toggleProjects()" aria-label="Afficher projets">
-          <img src="open.svg" alt="open" class="icon" />
-        </button>
-        <div class="projects-list" *ngIf="showProjects">
-          <p *ngIf="!projectLinks || projectLinks.length === 0">Aucun projet trouvé</p>
-          <ul *ngIf="projectLinks && projectLinks.length > 0">
-            <li *ngFor="let link of projectLinks">
-              <a [href]="link" target="_blank" rel="noopener noreferrer">{{ link }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+    
+    <div class="projects-list" *ngIf="showProjects">
+      <p *ngIf="!projectLinks || projectLinks.length === 0" class="no-projects">Aucun projet trouvé</p>
+      <ul *ngIf="projectLinks && projectLinks.length > 0" class="project-links">
+        <li *ngFor="let link of projectLinks">
+          <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

@@ -1,35 +1,30 @@
 <div class="rectangle">
-  <div class="left">
-    <div class="header">
-      <img src="project.svg" alt="icone de projet" class="project-icon">
-      <h3>{{ projectName }}</h3>
-    </div>
+  <div class="project-header">
+    <h3>{{ projectName || 'Nom du projet' }}</h3>
+  </div>
+  
+  <div class="description-section">
+    <p class="label">Description :</p>
     <p class="description">{{ projectDescription || 'Aucune description disponible' }}</p>
   </div>
-  <div class="line"></div>
-  <div class="right">
-    <div class="info-section">
-      <p class="info-label">Thématique :</p>
-      <p class="info-value">{{ projectThematic || 'Non spécifiée' }}</p>
-    </div>
-    <div class="info-section">
-      <p class="info-label">Version :</p>
-      <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
-    </div>
-    <div class="info-section">
-      <p class="info-label">Créé le :</p>
-      <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
-    </div>
-    <div class="info-section">
-      <p class="info-label">Par :</p>
-      <p class="info-value">{{ projectCreator || 'Non spécifié' }}</p>
-    </div>
-    <div class="info-section">
-      <p class="info-label">Lien du projet original :</p>
-      <a [href]="projectOriginalLink" class="project-link">
-        {{ projectOriginalLink }}
-      </a>
-      <p class="info-value" *ngIf="!projectOriginalLink">Non spécifié</p>
-    </div>
+  
+  <div class="info-section">
+    <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
+  </div>
+  
+  <div class="info-section">
+    <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
+  </div>
+  
+
+  <div class="creator-section">
+    <p class="creator-label">Par : <span class="creator-name">{{ projectCreator || 'Non spécifié' }}</span></p>
+  </div>
+  
+  <div class="link-section">
+    <a [href]="projectOriginalLink" class="project-link" *ngIf="projectOriginalLink">
+      {{ projectOriginalLink }}
+    </a>
+    <p class="info-value" *ngIf="!projectOriginalLink">Lien non disponible</p>
   </div>
 </div>
