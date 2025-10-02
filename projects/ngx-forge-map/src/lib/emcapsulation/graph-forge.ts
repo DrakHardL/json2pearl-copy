@@ -147,14 +147,29 @@ export class GraphForge {
     const event = new EventEmitter<string>();
     const temp = new EventEmitter<string>();
     temp.subscribe(id => {
-      console.log("called in onNodeDoubleClick :", id);
       event.emit(id);
     })
     this._network.on("doubleClick", (e) => {
-      console.log("double click on", e);
       temp.emit(e.nodes[0]);
     });
 
     return event;
+  }
+
+  onNodeSelect() {
+    const event = new EventEmitter<string>();
+    const temp = new EventEmitter<string>();
+    temp.subscribe(id => {
+      event.emit(id);
+    })
+    this._network.on("selectNode", (e) => {
+      temp.emit(e.nodes[0]);
+    });
+
+    return event;
+  }
+
+  removeNode(id: string) {
+    this.dataSet_nodes.remove(id);
   }
 }

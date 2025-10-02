@@ -36,6 +36,9 @@ export class TestGraph implements OnInit {
     this.network = new GraphForge(this.visNetwork.nativeElement);
 
     this.network.onNodeDoubleClick().subscribe(id => this.on2click(id));
+    this.network.onNodeSelect().subscribe(id => {
+      console.log("node selected :", id);
+    })
   }
 
   onSearch(_t3: HTMLInputElement) {
