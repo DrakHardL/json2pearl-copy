@@ -1,8 +1,10 @@
-import { Color, DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
-
+import { DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
 
 interface NodeGraph extends Node {
-  data?: any,
+  data?: {
+    id: string,
+  },
+  type?: string | number,
 }
 
 interface EdgeGraph extends Edge {
@@ -21,6 +23,7 @@ export enum NodeShape {
   HEXAGON = "hexagon",
   ICON = "icon",
 }
+
 
 export class GraphForge {
 
@@ -54,13 +57,9 @@ export class GraphForge {
   private readonly reverse_ref_node = new Map<string, { type: NodeShape, id: number }>();
 
   constructor(
-    container: HTMLElement
+    private readonly container: HTMLElement
   ) {
-    this._network = new Network(
-      container,
-      { nodes: this.dataSet_nodes, edges: this.dataSet_edges },
-      this._config
-    );
+    this._network = new Network(container, { nodes: this.dataSet_nodes, edges: this.dataSet_edges }, this._config);
   }
 
   private _registerNewNode(node_type: NodeShape, node_ref_id: number, node_id: string): boolean {
@@ -83,50 +82,53 @@ export class GraphForge {
     return this.ref_nodes.get(node_type)?.get(node_ref_id);
   }
 
-  addNode(label: string, node_type: NodeShape, node_color: Color, data?: any): void {
-    let node: NodeGraph = { label: label, shape: node_type, title: `${node_type} ${data.id}`, data: data, color: node_color }
-    let id = this.dataSet_nodes.add(node)[0] as unknown as string;
-    console.log("ID node geenered ", id);
-    if (!this._registerNewNode(node_type, data.id, id)) this.dataSet_nodes.remove(node);
+  /**
+   * Creates a new node in the graph with the specified properties.
+   *
+   * @param label - The display label for the node.
+   * @param type - The type identifier for the node.
+   * @param shape - The shape of the node, as defined by `NodeShape`.
+   * @param color - The background color of the node (CSS color string).
+   * @param data - Optional additional data to associate with the node.
+   *
+   * @remarks
+   * - The node ID is generated based on the type and the `data.id` property.
+   * - If a node with the same ID already exists, the method will log a warning and not create a duplicate.
+   * - The new node is added to the internal node dataset and can be referenced by its generated ID.
+   */
+  createNode(
+    label: string,
+    type: number,
+    shape: NodeShape,
+    color: string,
+    data?: any
+  ): string {
+    const node: NodeGraph = {
+      id: this.generateID(type, data.id),
+      label: label,
+      type: type,
+      shape: shape,
+      color: {
+        background: color,
+        border: "#000000",
+      },
+      data: data
+    };
+    if (this.dataSet_nodes.getIds().includes(node.id!)) {
+      return node.id as string;
+    }
+
+    const id = this.dataSet_nodes.add(node)[0];
+    console.log("Un noeud avec l'identifiant :", id);
+    return id as string;
   }
 
-  addEdge(from: { type: NodeShape, id: number }, to: { type: NodeShape, id: number }): void {
-    const origin_node = this._getNodeRef(from.type, from.id);
-    const arrive_node = this._getNodeRef(to.type, to.id);
-    if (!origin_node || !arrive_node) return;
-
-    this.dataSet_edges.forEach(edges => {
-      if (edges.from === origin_node && edges.to === arrive_node) return
-      if (edges.from === arrive_node && edges.to === origin_node) return
-    })
-
-    this.dataSet_edges.add({ from: origin_node, to: arrive_node });
+  generateID(type: number, id: string): string {
+    return `==${type}==${id}==`
   }
 
-  removeNode(node_type: NodeShape, node_id: number): void {
-    const n = this._getNodeRef(node_type, node_id);
-    if (n) this.dataSet_nodes.remove(n);
-  }
-
-  removeEdge(edge: EdgeGraph): void {
-    if (edge.id) this.dataSet_edges.remove(edge.id);
-  }
-
-  getNodeByID(id: number): NodeGraph | null {
-    return this.dataSet_nodes.get(id)
-  }
-  getEdgeByID(id: number): EdgeGraph | null {
-    return this.dataSet_edges.get(id)
-  }
-
-  editNode(id: number, data: any): void {
-    let node = this.dataSet_nodes.get(id);
-    if (node) node.data = data;
-  }
-
-  editEdge(id: number, data: any): void {
-    let edge = this.dataSet_edges.get(id);
-    if (edge) edge.data = data;
+  connectNodes(id_1: string, id_2: string) {
+    this.dataSet_edges.add({ id: `||${id_1}||${id_2}||`, to: id_1, from: id_2 });
   }
 
   clear(): void {
@@ -136,9 +138,21 @@ export class GraphForge {
     this.reverse_ref_node.clear();
   }
 
-  getSelectedNodes(): { type: NodeShape, id: number }[] {
-    return this._network.getSelectedNodes()
-      .map(e => this._getReverseNodeRef(e as unknown as string))
-      .filter((el): el is { type: NodeShape, id: number } => el !== undefined);
+  getSelectedNodes(): string[] {
+    return this._network.getSelectedNodes() as string[]
+  }
+
+  getNodeType(id: string): number {
+    const r = id.split('==').slice(1, 3);
+    let type = r[0];
+
+    return type as unknown as number;
+  }
+
+  getNodeID(id: string): number {
+    const r = id.split('==').slice(1, 3);
+    let elt_id = r[1];
+
+    return elt_id as unknown as number;
   }
 }

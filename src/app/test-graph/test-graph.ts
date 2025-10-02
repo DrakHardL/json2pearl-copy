@@ -1,7 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
-import { ForgeGraph, GroupApiService, NodeShape, ProjectApiService, UserApiService } from 'ngx-forge-map';
+import { GraphForge, GroupApiService, NodeShape, ProjectApiService, UserApiService } from 'ngx-forge-map';
 
+enum NodeColor {
+  PROJECT = "#E0AC54",
+  USER = "#78B1DD",
+  GROUP = "#55D764"
+}
+
+enum NodeType {
+  PROJECT,
+  USER,
+  GROUP,
+}
 
 @Component({
   selector: 'app-test-graph',
@@ -13,7 +24,7 @@ export class TestGraph implements OnInit {
 
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
 
-  network!: ForgeGraph;
+  network!: GraphForge;
 
   constructor(
     private readonly projectsAPI: ProjectApiService,
@@ -22,81 +33,71 @@ export class TestGraph implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.network = new ForgeGraph(this.visNetwork.nativeElement);
+    this.network = new GraphForge(this.visNetwork.nativeElement);
   }
 
   onSearch(_t3: HTMLInputElement) {
     this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
       this.network.clear()
-      projects.forEach(project => {
-        this.createProject(project)
-      })
+      projects.forEach(project => { this.createProject(project) });
     })
   }
 
-  onShowUser() {
-    this.network.getNodes().forEach(n => {
-      this.projectsAPI.getProjectUsers(n.data!.id! as number).subscribe(users => {
-        users.forEach(user => {
-          this.createUser(user)
-          this.network.addEdge({ id: n.data.id, type: NodeShape.SQUARE }, { id: user.id, type: NodeShape.DOT })
-        })
-      })
-      this.projectsAPI.getProjectGroups(n.data.id! as number).subscribe(groups => {
-        groups.forEach(group => {
-          this.createGroup(group);
-          this.network.addEdge({ id: n.data.id, type: NodeShape.SQUARE }, { id: group.id, type: NodeShape.TRIANGLE })
-        })
-      })
-    });
-  }
-
   onExpend() {
-    this.network.getSelectedElements().forEach(e => {
-      switch (e.type) {
-        case NodeShape.DOT:
-          this.userAPI.getUserProjects(e.id as unknown as string).subscribe(projects => {
-            projects.forEach(project => {
-              this.createProject(project);
-              this.network.addEdge({ id: project.id, type: NodeShape.SQUARE }, { id: e.id, type: NodeShape.DOT });
-            });
+    this.network.getSelectedNodes().forEach(id => {
+      const type: NodeType = this.network.getNodeType(id);
+      const elt_id = this.network.getNodeID(id);
+
+      console.log("type du noued :", type, type == NodeType.PROJECT);
+      console.log("identifiant du noued :", elt_id);
+
+      if (type == NodeType.PROJECT) {
+        this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
+          users.forEach(user => {
+            this.connectNodes(this.createUser(user), id);
           });
-          break;
-        case NodeShape.SQUARE:
-          this.projectsAPI.getProjectUsers(e.id).subscribe(users => {
-            users.forEach(user => {
-              this.createUser(user);
-              this.network.addEdge({ id: user.id, type: NodeShape.DOT }, { id: e.id, type: NodeShape.SQUARE });
-            });
+        });
+        this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
+          groups.forEach(group => {
+            this.connectNodes(this.createGroup(group), id);
           });
-          this.projectsAPI.getProjectGroups(e.id).subscribe(groups => {
-            groups.forEach(group => {
-              this.createGroup(group);
-              this.network.addEdge({ id: group.id, type: NodeShape.TRIANGLE }, { id: e.id, type: NodeShape.SQUARE });
-            });
+        });
+      } else if (type == NodeType.USER) {
+        this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
+          projects.forEach(project => {
+            this.connectNodes(this.createProject(project), id)
           });
-          break;
-        case NodeShape.TRIANGLE:
-          this.groupAPI.getGroupProjects(e.id).subscribe(projects => {
-            projects.forEach(project => {
-              this.createProject(project);
-              this.network.addEdge({ id: project.id, type: NodeShape.SQUARE }, { id: e.id, type: NodeShape.TRIANGLE });
-            });
+        });
+      } else if (type == NodeType.GROUP) {
+        this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
+          projects.forEach(project => {
+            this.connectNodes(this.createProject(project), id);
           });
-          break;
+        });
+      } else {
+        throw new Error("nouveau type non declarer");
       }
     })
   }
 
-  createUser(user: any) {
-    this.network.addNode(user.name, NodeShape.DOT, { background: "#78B1DD" }, user);
+  private connectNodes(id_node_1: string, id_node_2: string) {
+    return this.network.connectNodes(id_node_1, id_node_2);
   }
 
-  createProject(project: any) {
-    this.network.addNode(project.name, NodeShape.SQUARE, { background: "#E0AC54" }, project)
+  private createNode(label: string, type: number, shape: NodeShape, color: string, data: any): string {
+    return this.network.createNode(label, type, shape, color, data);
   }
 
-  createGroup(group: any) {
-    this.network.addNode(group.name, NodeShape.TRIANGLE, { background: "#55D764" }, group);
+  createUser(user: any): string {
+    console.log("create user");
+    return this.createNode(user.name, NodeType.USER, NodeShape.DOT, NodeColor.USER, user);
+  }
+
+  createProject(project: any): string {
+    return this.createNode(project.name, NodeType.PROJECT, NodeShape.SQUARE, NodeColor.PROJECT, project);
+  }
+
+  createGroup(group: any): string {
+    return this.createNode(group.name, NodeType.GROUP, NodeShape.TRIANGLE, NodeColor.GROUP, group);
   }
 }
