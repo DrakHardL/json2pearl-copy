@@ -1,6 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { ForgeGraph, GroupApiService, ProjectApiService, UserApiService } from 'ngx-forge-map';
 
+import { GraphForge, GroupApiService, NodeShape, ProjectApiService, UserApiService } from 'ngx-forge-map';
+
+enum NodeColor {
+  PROJECT = "#E0AC54",
+  USER = "#78B1DD",
+  GROUP = "#55D764"
+}
+
+enum NodeType {
+  PROJECT,
+  USER,
+  GROUP,
+}
 
 @Component({
   selector: 'app-test-graph',
@@ -11,14 +23,16 @@ import { ForgeGraph, GroupApiService, ProjectApiService, UserApiService } from '
 export class TestGraph implements OnInit {
   @ViewChild('visNetwork', { static: true }) visNetwork!: ElementRef;
 
+
   //une sortie qui peut stocker l'id du projet sélectionné
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
   @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }>();
 
-  
-  network!: ForgeGraph;
-  selectedNodes: number[] = [];  
+
+  network!: GraphForge;
+  selectedNodes: string[] = [];  
+
 
   constructor(
     private readonly projectsAPI: ProjectApiService,
@@ -27,11 +41,10 @@ export class TestGraph implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.network = new ForgeGraph(this.visNetwork.nativeElement);
-    
-    // quand on clique sur un noeud
+    this.network = new GraphForge(this.visNetwork.nativeElement);// quand on clique sur un noeud
     this.network.on('select', (event) => {
       this.selectedNodes = event.nodes;
+      console.log("noeuds sélectionnés :", this.selectedNodes);
       
       if (this.selectedNodes.length > 0) {
         const node = this.network.nodes.get(this.selectedNodes[0]);
@@ -68,7 +81,7 @@ export class TestGraph implements OnInit {
 
             this.utilisateurSelected.emit({
               name: node.label || '',
-              webUrl: node.data?.web_url || '',
+              webUrl: (node.data as any)?.web_url || '',
               nombreProjets: projects.length,
               projectLinks: links
             });
@@ -78,48 +91,71 @@ export class TestGraph implements OnInit {
     });
   }
 
-
-
-
   onSearch(_t3: HTMLInputElement) {
     this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
       this.network.clear()
-      projects.forEach(p => {
-        this.network.addNode({ 
-          id: p.id, 
-          label: `${p.name}`, 
-          shape: 'square', 
-          color: { background: '#E3924F', border: '#334443' } 
-        })
-      })
-      this.onShowUser();
+      projects.forEach(project => { this.createProject(project) });
     })
   }
 
-  onShowUser() {
-    this.network.getNodes().forEach(n => {
-      this.projectsAPI.getProjectUsers(n.id! as number).subscribe(users => {
-        users.forEach(user => {
-          this.network.addNode({ 
-            id: user.id, 
-            label: `${user.name}`, 
-            shape: user.avatar_url ? 'circularImage' : 'circle',
-            image: user.avatar_url || undefined,
-            color: { background: '#9AABC1', border: '#334443' }, 
-            size: 55,
-            data: { web_url: user.web_url }
-          })
-          this.network.addEdge({ from: n.id!, to: user.id, label: '', arrows: 'to' })
-        })
-      })
-      this.projectsAPI.getProjectGroups(n.id! as number).subscribe(groups => {
-        groups.forEach(group => {
-          this.network.addNode({ id: group.id, label: `${group.name}`, shape: 'triangle', color: { background: '#54A075', border: '#334443' } })
-          this.network.addEdge({ from: n.id!, to: group.id, label: '', arrows: 'to' })
-        })
-      })
-    });
+  onExpend() {
+    this.network.getSelectedNodes().forEach((id) => {
+      const type: NodeType = this.network.getNodeType(id);
+      const elt_id = this.network.getNodeID(id);
+
+      console.log("type du noued :", type, type == NodeType.PROJECT);
+      console.log("identifiant du noued :", elt_id);
+
+      if (type == NodeType.PROJECT) {
+        this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
+          users.forEach(user => {
+            this.connectNodes(this.createUser(user), id);
+          });
+        });
+        this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
+          groups.forEach(group => {
+            this.connectNodes(this.createGroup(group), id);
+          });
+        });
+      } else if (type == NodeType.USER) {
+        this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
+          projects.forEach(project => {
+            this.connectNodes(this.createProject(project), id)
+          });
+        });
+      } else if (type == NodeType.GROUP) {
+        this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
+          projects.forEach(project => {
+            this.connectNodes(this.createProject(project), id);
+          });
+        });
+      } else {
+        throw new Error("nouveau type non declarer");
+      }
+    })
   }
+
+  private connectNodes(id_node_1: string, id_node_2: string) {
+    return this.network.connectNodes(id_node_1, id_node_2);
+  }
+
+  private createNode(label: string, type: number, shape: NodeShape, color: string, data: any): string {
+    return this.network.createNode(label, type, shape, color, data);
+  }
+
+  createUser(user: any): string {
+    console.log("create user");
+    return this.createNode(user.name, NodeType.USER, NodeShape.DOT, NodeColor.USER, user);
+  }
+
+  createProject(project: any): string {
+    return this.createNode(project.name, NodeType.PROJECT, NodeShape.SQUARE, NodeColor.PROJECT, project);
+  }
+
+  createGroup(group: any): string {
+    return this.createNode(group.name, NodeType.GROUP, NodeShape.TRIANGLE, NodeColor.GROUP, group);
+  }
+
 
   // fonction pour cacher ou afficher les noeuds sélectionnés
   
@@ -144,9 +180,5 @@ export class TestGraph implements OnInit {
   }
 
 
-
-
-
+  
 }
-
-

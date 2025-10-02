@@ -111,18 +111,4 @@ export class ForgeGraph {
   }
 
 
-
-
-  on(event: string, callback: (params?: any) => void): void {
-    this._network.on(event as any, callback);
-  }
-
-    get nodes() {
-    return this.dataSet_nodes;
-  }
-
-  get edges() {
-    return this.dataSet_edges;
-  }
-
 }
