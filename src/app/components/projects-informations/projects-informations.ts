@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-projects-informations',
   imports: [CommonModule],
   templateUrl: './projects-informations.html',
-  styleUrl: './projects-informations.scss'
+  styleUrl: './projects-informations.scss',
 })
 export class ProjectsInformations {
   @Input() projectName: string = '';

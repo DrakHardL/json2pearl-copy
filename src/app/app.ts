@@ -1,5 +1,6 @@
 import { Component, signal, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { TestGraph } from "./test-graph/test-graph";
 import { FloatingToolbar } from './components/floating-toolbar/floating-toolbar';
 import { ProjectsInformations } from './components/projects-informations/projects-informations';
@@ -8,10 +9,15 @@ import { UtilisateurInformation } from './components/utilisateur-information/uti
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation],
+  imports: [CommonModule, RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
+
+
+
+
+
 export class App {
    title= (signal('Json2pearl'));
 
@@ -35,7 +41,7 @@ infoVisible: boolean = false;
 selectedType: string = '';  // project ou user
 
 
-
+//fonction qui permet d'affecter les informations du projet sélectionné aux variables correspondantes
    onProjectSelected(project: {name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}) {
      this.selectedProjectName = project.name;
      this.selectedProjectDescription = project.description;

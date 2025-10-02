@@ -3,13 +3,14 @@
 <!-- permet d'afficher les images svg et les texte associé automatiquement, juste en ajoutant un nouvel objet dans le tableau buttons -->
 
 <div class="toolbar">
-  <div *ngFor="let Unbutton of buttons" class="toolbar-button" (click)="clickButton(Unbutton.text)">
-
-    <img 
-      [src]="Unbutton.image" 
-      [alt]="Unbutton.text"
-      class="icon-image"
-    />
-    <span class="text">{{ Unbutton.text }}</span>
-  </div>
+  @for (Unbutton of buttons; track Unbutton.text) {
+    <div class="toolbar-button" (click)="clickButton(Unbutton.text)">
+      <img 
+        [src]="Unbutton.image" 
+        [alt]="Unbutton.text"
+        class="icon-image"
+      />
+      <span class="text">{{ Unbutton.text }}</span>
+    </div>
+  }
 </div>

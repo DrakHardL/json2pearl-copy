@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-utilisateur-information',
   imports: [CommonModule],
   templateUrl: './utilisateur-information.html',
-  styleUrl: './utilisateur-information.scss'
+  styleUrl: './utilisateur-information.scss',
 })
 export class UtilisateurInformation {
 

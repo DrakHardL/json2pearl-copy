@@ -8,8 +8,11 @@
   <div class="info-section">
     <p class="label">URL du compte :</p>
     <p class="info-value">
-      <a [href]="utilisateurWebUrl" class="user-link" *ngIf="utilisateurWebUrl">{{ utilisateurWebUrl }}</a>
-      <span *ngIf="!utilisateurWebUrl">Non spécifiée</span>
+      @if (utilisateurWebUrl) {
+        <a [href]="utilisateurWebUrl" class="user-link">{{ utilisateurWebUrl }}</a>
+      } @else {
+        <span>Non spécifiée</span>
+      }
     </p>
   </div>
   
@@ -29,13 +32,20 @@
       </button>
     </div>
     
-    <div class="projects-list" *ngIf="showProjects">
-      <p *ngIf="!projectLinks || projectLinks.length === 0" class="no-projects">Aucun projet trouvé</p>
-      <ul *ngIf="projectLinks && projectLinks.length > 0" class="project-links">
-        <li *ngFor="let link of projectLinks">
-          <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
-        </li>
-      </ul>
-    </div>
+    @if (showProjects) {
+      <div class="projects-list">
+        @if (!projectLinks || projectLinks.length === 0) {
+          <p class="no-projects">Aucun projet trouvé</p>
+        } @else {
+          <ul class="project-links">
+            @for (link of projectLinks; track link) {
+              <li>
+                <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
   </div>
 </div>

@@ -28,11 +28,13 @@ export class FloatingToolbar {
   clickButton(buttonText: string) {
    
     if (buttonText === 'Cacher la sélection') {
-      this.testGraph.toggleHideNodes(); 
-    } else if (buttonText === 'Information') {
+      this.testGraph.removeSelectedNodes(); 
+    } 
+    else if (buttonText === 'Information') {
       // événement vers le parent pour afficher/masquer les infos
       this.informationClicked.emit();
-    } else {
+    } 
+    else {
       alert('Vous avez cliqué sur : ' + buttonText);
     }
   }

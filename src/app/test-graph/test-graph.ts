@@ -31,7 +31,7 @@ export class TestGraph implements OnInit {
 
 
   network!: GraphForge;
-  selectedNodes: string[] = [];  
+selectedNodes: string[] = [];  
 
 
   constructor(
@@ -41,55 +41,76 @@ export class TestGraph implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.network = new GraphForge(this.visNetwork.nativeElement);// quand on clique sur un noeud
-    this.network.on('select', (event) => {
-      this.selectedNodes = event.nodes;
-      console.log("noeuds sélectionnés :", this.selectedNodes);
-      
-      if (this.selectedNodes.length > 0) {
-        const node = this.network.nodes.get(this.selectedNodes[0]);
-        if (node && node.shape === 'square') {
-          this.projectsAPI.getProject(node.id as number).subscribe(project => {
+    this.network = new GraphForge(this.visNetwork.nativeElement);
 
-            this.projectSelected.emit({
-              name: project.name,
-              description: project.description,
-              thematic: project.topics.join(', '),
-              version: project.default_branch,
-              createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
-              creator: project.namespace.name,
-              originalLink: project.http_url_to_repo
-            });
-          });
-        }
-        if (node && (node.shape === 'circle' || node.shape === 'circularImage')) {
-          // récupérer les infos utilisateur et les liens des projets
-          const userId = node.id as number;
-          this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
-            // récupérer uniquement les URLs
-            const links: string[] = [];
-
-            if (projects) {
-              for (const p of projects) {
-                // on prend web_url si présent, sinon http_url_to_repo
-                const url = p.web_url || p.http_url_to_repo;
-                if (url) {
-                  links.push(url);
-                }
-              }
-            }
-
-            this.utilisateurSelected.emit({
-              name: node.label || '',
-              webUrl: (node.data as any)?.web_url || '',
-              nombreProjets: projects.length,
-              projectLinks: links
-            });
-          });
-        }
-      }
+    this.network.onNodeDoubleClick().subscribe(id => this.on2click(id));
+    this.network.onNodeSelect().subscribe(id => {
+      console.log("node selected :", id);
+      this.onNodeSelected(id);
     });
   }
+
+  //fonction pour gérer la sélection de noeuds
+  private onNodeSelected(nodeId: string) {
+    this.selectedNodes = this.network.getSelectedNodes();
+    if (this.selectedNodes.length === 0) return;
+
+    const nodeType = this.network.getNodeType(nodeId);
+   
+
+    // convertir nodeType en number car getNodeType retourne un string
+    const nodeTypeNumber = Number(nodeType);
+    
+    if (nodeTypeNumber === NodeType.PROJECT) {
+      //appel de la fonction pour afficher les infos projet
+      this.showProjectInfo(nodeId);
+    } else if (nodeTypeNumber === NodeType.USER) {
+      //appel de la fonction pour afficher les infos utilisateur
+      this.showUserInfo(nodeId);
+    }
+  }
+
+
+
+  //fonction pour afficher les infos projet
+  private showProjectInfo(nodeId: string) {
+    const projectId = this.network.getNodeID(nodeId);
+    this.projectsAPI.getProject(projectId as number).subscribe(project => {
+      const projectData = {
+        name: project.name,
+        description: project.description,
+        thematic: project.topics.join(', '),
+        version: project.default_branch,
+        createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
+        creator: project.namespace.name,
+        originalLink: project.http_url_to_repo
+      };
+      this.projectSelected.emit(projectData);
+    });
+  }
+
+
+  //fonction pour afficher les infos utilisateur
+  private showUserInfo(nodeId: string) {
+
+    const userId = this.network.getNodeID(nodeId);
+    
+    this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
+      const links = projects
+        .map(p => p.web_url || p.http_url_to_repo)
+        .filter(url => url);
+      
+      const userData = {
+        name: userId.toString(),
+        webUrl: `https://forge.apps.education.fr/${userId}`,
+        nombreProjets: projects.length,
+        projectLinks: links
+      };
+      this.utilisateurSelected.emit(userData);
+    });
+  }
+
+
 
   onSearch(_t3: HTMLInputElement) {
     this.projectsAPI.searchProjects(_t3.value).subscribe(projects => {
@@ -98,40 +119,49 @@ export class TestGraph implements OnInit {
     })
   }
 
+  on2click(id: string) {
+    this.extends(id);
+    
+  }
+
+  private extends(id: string) {
+    const type: NodeType = this.network.getNodeType(id);
+    const elt_id = this.network.getNodeID(id);
+
+    console.log("type du noued :", type, type == NodeType.PROJECT);
+    console.log("identifiant du noued :", elt_id);
+
+    if (type == NodeType.PROJECT) {
+      this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
+        users.forEach(user => {
+          this.connectNodes(this.createUser(user), id);
+        });
+      });
+      this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
+        groups.forEach(group => {
+          this.connectNodes(this.createGroup(group), id);
+        });
+      });
+    } else if (type == NodeType.USER) {
+      this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
+        projects.forEach(project => {
+          this.connectNodes(this.createProject(project), id)
+        });
+      });
+    } else if (type == NodeType.GROUP) {
+      this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
+        projects.forEach(project => {
+          this.connectNodes(this.createProject(project), id);
+        });
+      });
+    } else {
+      throw new Error("nouveau type non declarer");
+    }
+  }
+
   onExpend() {
-    this.network.getSelectedNodes().forEach((id) => {
-      const type: NodeType = this.network.getNodeType(id);
-      const elt_id = this.network.getNodeID(id);
-
-      console.log("type du noued :", type, type == NodeType.PROJECT);
-      console.log("identifiant du noued :", elt_id);
-
-      if (type == NodeType.PROJECT) {
-        this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
-          users.forEach(user => {
-            this.connectNodes(this.createUser(user), id);
-          });
-        });
-        this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
-          groups.forEach(group => {
-            this.connectNodes(this.createGroup(group), id);
-          });
-        });
-      } else if (type == NodeType.USER) {
-        this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
-          projects.forEach(project => {
-            this.connectNodes(this.createProject(project), id)
-          });
-        });
-      } else if (type == NodeType.GROUP) {
-        this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
-          projects.forEach(project => {
-            this.connectNodes(this.createProject(project), id);
-          });
-        });
-      } else {
-        throw new Error("nouveau type non declarer");
-      }
+    this.network.getSelectedNodes().forEach(id => {
+      this.extends(id);
     })
   }
 
@@ -157,26 +187,19 @@ export class TestGraph implements OnInit {
   }
 
 
-  // fonction pour cacher ou afficher les noeuds sélectionnés
+  // fonction pour supprimer les noeuds sélectionnés
   
-  toggleHideNodes() {
+  removeSelectedNodes() {
     if (this.selectedNodes.length === 0) {
       alert('Sélectionnez des noeuds !');
       return;
     }
 
-    const firstNode = this.network.nodes.get(this.selectedNodes[0]);
-    const isCurrentlyHidden = firstNode && firstNode.hidden === true;
-
-    if (isCurrentlyHidden) {
-      this.selectedNodes.forEach(nodeId => {
-        this.network.nodes.update({ id: nodeId, hidden: false });
-      });
-    } else {
-      this.selectedNodes.forEach(nodeId => {
-        this.network.nodes.update({ id: nodeId, hidden: true });
-      });
-    }
+    this.selectedNodes.forEach(nodeId => {
+      this.network.removeNode(nodeId);
+    });
+    
+    this.selectedNodes = [];
   }
 
 

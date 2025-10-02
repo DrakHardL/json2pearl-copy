@@ -9,24 +9,26 @@
   </app-floating-toolbar>
 
   <!-- affiche seulement app-projects-informations si infoVisible est true et qu'un projet est sélectionné -->
-  <app-projects-informations 
-    *ngIf="infoVisible && selectedType === 'project'"
-    [projectName]="selectedProjectName"
-    [projectDescription]="selectedProjectDescription"
-    [projectThematic]="selectedProjectThematic"
-    [projectVersion]="selectedProjectVersion"
-    [projectCreatedDate]="selectedProjectCreatedDate"
-    [projectCreator]="selectedProjectCreator"
-    [projectOriginalLink]="selectedProjectOriginalLink">
-  </app-projects-informations>
+  @if (infoVisible && selectedType === 'project') {
+    <app-projects-informations 
+      [projectName]="selectedProjectName"
+      [projectDescription]="selectedProjectDescription"
+      [projectThematic]="selectedProjectThematic"
+      [projectVersion]="selectedProjectVersion"
+      [projectCreatedDate]="selectedProjectCreatedDate"
+      [projectCreator]="selectedProjectCreator"
+      [projectOriginalLink]="selectedProjectOriginalLink">
+    </app-projects-informations>
+  }
 
-  <app-utilisateur-information
-    *ngIf="infoVisible && selectedType === 'user'"
-    [utilisateurName]="utilisateurName"
-    [utilisateurWebUrl]="utilisateurWebUrl"
-    [utilisateurNombreProjets]="utilisateurNombreProjets"
-    [projectLinks]="utilisateurProjectLinks">
-  </app-utilisateur-information>
+  @if (infoVisible && selectedType === 'user') {
+    <app-utilisateur-information
+      [utilisateurName]="utilisateurName"
+      [utilisateurWebUrl]="utilisateurWebUrl"
+      [utilisateurNombreProjets]="utilisateurNombreProjets"
+      [projectLinks]="utilisateurProjectLinks">
+    </app-utilisateur-information>
+  }
 
 </div>
 
