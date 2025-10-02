@@ -34,6 +34,8 @@ export class TestGraph implements OnInit {
 
   ngOnInit() {
     this.network = new GraphForge(this.visNetwork.nativeElement);
+
+    this.network.onNodeDoubleClick().subscribe(id => this.on2click(id));
   }
 
   onSearch(_t3: HTMLInputElement) {
@@ -43,40 +45,49 @@ export class TestGraph implements OnInit {
     })
   }
 
+  on2click(id: string) {
+    this.extends(id);
+    
+  }
+
+  private extends(id: string) {
+    const type: NodeType = this.network.getNodeType(id);
+    const elt_id = this.network.getNodeID(id);
+
+    console.log("type du noued :", type, type == NodeType.PROJECT);
+    console.log("identifiant du noued :", elt_id);
+
+    if (type == NodeType.PROJECT) {
+      this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
+        users.forEach(user => {
+          this.connectNodes(this.createUser(user), id);
+        });
+      });
+      this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
+        groups.forEach(group => {
+          this.connectNodes(this.createGroup(group), id);
+        });
+      });
+    } else if (type == NodeType.USER) {
+      this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
+        projects.forEach(project => {
+          this.connectNodes(this.createProject(project), id)
+        });
+      });
+    } else if (type == NodeType.GROUP) {
+      this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
+        projects.forEach(project => {
+          this.connectNodes(this.createProject(project), id);
+        });
+      });
+    } else {
+      throw new Error("nouveau type non declarer");
+    }
+  }
+
   onExpend() {
     this.network.getSelectedNodes().forEach(id => {
-      const type: NodeType = this.network.getNodeType(id);
-      const elt_id = this.network.getNodeID(id);
-
-      console.log("type du noued :", type, type == NodeType.PROJECT);
-      console.log("identifiant du noued :", elt_id);
-
-      if (type == NodeType.PROJECT) {
-        this.projectsAPI.getProjectUsers(elt_id as unknown as number).subscribe(users => {
-          users.forEach(user => {
-            this.connectNodes(this.createUser(user), id);
-          });
-        });
-        this.projectsAPI.getProjectGroups(elt_id as unknown as number).subscribe(groups => {
-          groups.forEach(group => {
-            this.connectNodes(this.createGroup(group), id);
-          });
-        });
-      } else if (type == NodeType.USER) {
-        this.userAPI.getUserProjects(elt_id as unknown as string).subscribe(projects => {
-          projects.forEach(project => {
-            this.connectNodes(this.createProject(project), id)
-          });
-        });
-      } else if (type == NodeType.GROUP) {
-        this.groupAPI.getGroupProjects(elt_id as unknown as number).subscribe(projects => {
-          projects.forEach(project => {
-            this.connectNodes(this.createProject(project), id);
-          });
-        });
-      } else {
-        throw new Error("nouveau type non declarer");
-      }
+      this.extends(id);
     })
   }
 

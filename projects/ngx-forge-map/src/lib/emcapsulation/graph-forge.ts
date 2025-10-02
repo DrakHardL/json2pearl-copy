@@ -1,3 +1,4 @@
+import { EventEmitter } from "@angular/core";
 import { DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
 
 interface NodeGraph extends Node {
@@ -62,26 +63,6 @@ export class GraphForge {
     this._network = new Network(container, { nodes: this.dataSet_nodes, edges: this.dataSet_edges }, this._config);
   }
 
-  private _registerNewNode(node_type: NodeShape, node_ref_id: number, node_id: string): boolean {
-    if (!this.ref_nodes.has(node_type)) {
-      this.ref_nodes.set(node_type, new Map());
-    }
-    let e = this.ref_nodes.get(node_type)!;
-
-    if (e.has(node_ref_id)) return false;
-    e.set(node_ref_id, node_id);
-    this.reverse_ref_node.set(node_id, { type: node_type, id: node_ref_id });
-    return true;
-  }
-
-  private _getReverseNodeRef(graph_node_id: string) {
-    return this.reverse_ref_node.get(graph_node_id);
-  }
-
-  private _getNodeRef(node_type: NodeShape, node_ref_id: number): string | undefined {
-    return this.ref_nodes.get(node_type)?.get(node_ref_id);
-  }
-
   /**
    * Creates a new node in the graph with the specified properties.
    *
@@ -127,8 +108,14 @@ export class GraphForge {
     return `==${type}==${id}==`
   }
 
+  private readonly resisted_edges = new Map<string, string>();
   connectNodes(id_1: string, id_2: string) {
-    this.dataSet_edges.add({ id: `||${id_1}||${id_2}||`, to: id_1, from: id_2 });
+    if (this.resisted_edges.has(`||${id_1}||${id_2}||`) || this.resisted_edges.has(`||${id_2}||${id_1}||`)) return;
+    const id = this.dataSet_edges.add({ to: id_1, from: id_2, arrows: { from: false, to: false } })[0] as string;
+
+    this.resisted_edges.set(`||${id_1}||${id_2}||`, id);
+    this.resisted_edges.set(`||${id_2}||${id_1}||`, id);
+
   }
 
   clear(): void {
@@ -154,5 +141,20 @@ export class GraphForge {
     let elt_id = r[1];
 
     return elt_id as unknown as number;
+  }
+
+  onNodeDoubleClick() {
+    const event = new EventEmitter<string>();
+    const temp = new EventEmitter<string>();
+    temp.subscribe(id => {
+      console.log("called in onNodeDoubleClick :", id);
+      event.emit(id);
+    })
+    this._network.on("doubleClick", (e) => {
+      console.log("double click on", e);
+      temp.emit(e.nodes[0]);
+    });
+
+    return event;
   }
 }
