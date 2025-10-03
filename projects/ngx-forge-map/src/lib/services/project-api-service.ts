@@ -32,7 +32,7 @@ export class ProjectApiService extends ApiService {
       map(rep =>
         rep.data.projects.nodes.map(node => {
           console.log(node);
-          const match = node.id.match(/(\d+)$/);
+          const match = RegExp(/(\d+)$/).exec(node.id);
           return match ? match[1] : null;
         })
           .filter((id): id is string => id !== null)
