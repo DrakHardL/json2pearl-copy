@@ -172,4 +172,8 @@ export class GraphForge {
   removeNode(id: string) {
     this.dataSet_nodes.remove(id);
   }
+
+  getNodeDataByID(id: string): NodeGraph | undefined {
+    return this.dataSet_nodes.get(id) as NodeGraph
+  }
 }
