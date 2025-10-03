@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 
-import { GraphForge, GroupApiService, NodeShape, ProjectApiService, UserApiService } from 'ngx-forge-map';
+import { GraphForge, GroupApiService, NodeShape, ProjectApiService, TopicApiService, UserApiService } from 'ngx-forge-map';
 
 enum NodeColor {
   PROJECT = "#E0AC54",
@@ -38,6 +38,7 @@ selectedNodes: string[] = [];
     private readonly projectsAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
     private readonly userAPI: UserApiService,
+    private readonly topicAPI: TopicApiService,
   ) { }
 
   ngOnInit() {
@@ -48,6 +49,17 @@ selectedNodes: string[] = [];
       console.log("node selected :", id);
       this.onNodeSelected(id);
     });
+
+
+    this.topicAPI.getTopics().subscribe(topics => {
+      console.log(topics);
+    });
+
+    this.projectsAPI.getProjectsIdByTopic("maths").subscribe(ids => {
+      console.log(ids);
+    });
+
+
   }
 
   //fonction pour gérer la sélection de noeuds

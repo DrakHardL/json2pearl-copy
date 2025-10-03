@@ -6,6 +6,16 @@ import { Group } from '../model/model-group';
 import { User } from '../model/model-user';
 import { ApiService } from './api-service';
 
+interface ProjectsResponse {
+  data: {
+    projects: {
+      nodes: {
+        id: string;
+      }[];
+    };
+  };
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +24,20 @@ export class ProjectApiService extends ApiService {
 
   getProject(project_id: number): Observable<Project> {
     return this.http.get<Project>(`${this.rest_url}/projects/${project_id}`);
+  }
+
+  getProjectsIdByTopic(topic: string): Observable<string[]> {
+    const query = `{ projects(topics: "${topic}") { nodes { id } } }`;
+    return this.http.post<ProjectsResponse>(this.graphql_url, { query }).pipe(
+      map(rep =>
+        rep.data.projects.nodes.map(node => {
+          console.log(node);
+          const match = RegExp(/(\d+)$/).exec(node.id);
+          return match ? match[1] : null;
+        })
+          .filter((id): id is string => id !== null)
+      )
+    );
   }
 
   searchProjects(

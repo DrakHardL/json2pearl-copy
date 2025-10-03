@@ -19,7 +19,6 @@ import { UtilisateurInformation } from './components/utilisateur-information/uti
 
 
 export class App {
-   title= (signal('Json2pearl'));
 
    selectedProjectName = ''; 
    selectedProjectDescription = '';
