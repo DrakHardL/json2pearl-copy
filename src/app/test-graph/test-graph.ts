@@ -113,8 +113,9 @@ selectedNodes: string[] = [];
         .filter(url => url);
       
       const userData = {
-        name: userId.toString(),
-        webUrl: `https://forge.apps.education.fr/${userId}`,
+        //name: userId.toString(),
+        name: this.network.getNodeDataByID(nodeId).name,
+        webUrl: this.network.getNodeDataByID(nodeId).web_url,
         nombreProjets: projects.length,
         projectLinks: links
       };
