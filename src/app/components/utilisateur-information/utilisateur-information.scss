@@ -56,6 +56,9 @@
 .projects-section {
   margin-top: auto;
   margin-bottom: 2%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .projects-header {
@@ -84,6 +87,8 @@
 .projects-list {
   max-height: 15vh;
   overflow-y: auto;
+  flex: 1 1 auto;
+  overflow-y: auto;
 }
 
 .no-projects {
@@ -103,10 +108,23 @@
   margin-bottom: 0.5%;
 }
 
+
 .project-link {
-  color: #000;
+  color: #334443;
   text-decoration: underline;
-  font-size: 0.7vw;
+  font-size: 0.85vw;
   word-break: break-all;
   display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.project-title {
+  font-weight: bold;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-bottom: 0.1em;
 }

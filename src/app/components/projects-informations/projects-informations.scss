@@ -31,6 +31,9 @@
 
 .description-section {
   margin-bottom: 2.5%;
+  flex: 1 1 auto;  //permet à la description de prendre tout l'espace disponible
+  display: flex;
+  flex-direction: column;
 }
 
 .label {
@@ -45,7 +48,7 @@
   line-height: 1.4;
   margin: 0;
   color: #000;
-  max-height: 15vh;
+  flex: 1 1 auto;
   overflow-y: auto;
 }
 
@@ -60,7 +63,8 @@
 }
 
 .creator-section {
-  margin-bottom: 2.5%;
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 .creator-label {
@@ -74,7 +78,7 @@
 }
 
 .link-section {
-  margin-top: auto;
+  margin-top: 0;
   margin-bottom: 2%;
 }
 
@@ -84,4 +88,8 @@
   font-size: 0.7vw;
   word-break: break-all;
   display: block;
+}
+
+.text {
+    font-size: 0.8vw;
 }

@@ -1,6 +1,9 @@
 <div class="rectangleInfoUtilisateur" style="z-index: 1000;">
   <div class="user-header">
-    <h3>{{ utilisateurName || 'Nom de l\'utilisateur' }}</h3>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
+      <img src="UserIcon.png" alt="Utilisateur" style="width:1.3vw; height:1.3vw; min-width:16px; min-height:16px;" />
+      <h3 style="margin:0;">{{ utilisateurName || 'Nom de l\'utilisateur' }}</h3>
+    </div>
   </div>
   
   
@@ -40,7 +43,13 @@
           <ul class="project-links">
             @for (link of projectLinks; track link) {
               <li>
-                <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
+                <div class="project-item">
+                  <span class="project-title">
+                    <span class="project-icon">📁</span>
+                    {{ link.split('/').slice(-1)[0] }} <!-- récupérer le titre -->
+                  </span>
+                  <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
+                </div>
               </li>
             }
           </ul>

@@ -1,27 +1,29 @@
 <div class="rectangle" style="z-index: 1000;">
   <div class="project-header">
-    <h3>{{ projectName || 'Nom du projet' }}</h3>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
+      <img src="CarreProject.svg" alt="Projet" style="width:1.3vw; height:1.3vw; min-width:16px; min-height:16px;" />
+      <h3 style="margin:0;">{{ projectName || 'Nom du projet' }}</h3>
+    </div>
   </div>
-  
+
+  <div class="info-section">
+    <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
+    <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
+  </div>
+
   <div class="description-section">
     <p class="label">Description :</p>
     <p class="description">{{ projectDescription || 'Aucune description disponible' }}</p>
   </div>
   
-  <div class="info-section">
-    <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
-  </div>
-  
-  <div class="info-section">
-    <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
-  </div>
-  
 
   <div class="creator-section">
-    <p class="creator-label">Par : <span class="creator-name">{{ projectCreator || 'Non spécifié' }}</span></p>
+    <p class="creator-label">Créer par : <span class="creator-name">{{ projectCreator || 'Non spécifié' }}</span></p>
   </div>
   
   <div class="link-section">
+    <span class="text">Lien vers le projet :</span>
     @if (projectOriginalLink) {
       <a [href]="projectOriginalLink" class="project-link">
         {{ projectOriginalLink }}
