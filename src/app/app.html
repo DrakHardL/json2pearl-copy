@@ -1,5 +1,5 @@
 <div class="app-container">
-  <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)"></app-test-graph>
+  <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)" (groupSelected)="onGroupSelected($event)"></app-test-graph>
   
    
   <app-floating-toolbar 
@@ -27,6 +27,15 @@
       [utilisateurNombreProjets]="utilisateurNombreProjets"
       [projectLinks]="utilisateurProjectLinks">
     </app-utilisateur-information>
+  }
+
+  @if (infoVisible && selectedType === 'group') {
+    <app-group-info
+      [name]="groupName"
+      [description]="groupDescription"
+      [webUrl]="groupWebUrl"
+      [createdAt]="groupCreatedAt">
+    </app-group-info>
   }
 
 </div>

@@ -28,6 +28,7 @@ export class TestGraph implements OnInit {
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
   @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }>();
+  @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string }>();
 
 
   network!: GraphForge;
@@ -80,8 +81,12 @@ selectedNodes: string[] = [];
       //appel de la fonction pour afficher les infos utilisateur
       this.showUserInfo(nodeId);
     }
-  }
 
+    else if (nodeTypeNumber === NodeType.GROUP) {
+      //appel de la fonction pour afficher les infos groupe
+      this.showUserGroup(nodeId);
+    }
+  }
 
 
   //fonction pour afficher les infos projet
@@ -108,6 +113,7 @@ selectedNodes: string[] = [];
     const userId = this.network.getNodeID(nodeId);
     
     this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
+      // génère un tableau des urls des projets (web_url ou http_url_to_repo), en filtrant les valeurs non définies.
       const links = projects
         .map(p => p.web_url || p.http_url_to_repo)
         .filter(url => url);
@@ -122,6 +128,24 @@ selectedNodes: string[] = [];
       this.utilisateurSelected.emit(userData);
     });
   }
+
+
+  private showUserGroup(nodeId: string) {
+    const groupId = this.network.getNodeID(nodeId);
+    this.groupAPI.getGroup(groupId as number).subscribe(group => {
+      const groupData = {
+        name: group.name,
+        description: group.description,
+        webUrl: group.web_url,
+        createdAt: group.created_at
+      };
+      this.groupSelected.emit(groupData); //envoie a app.html
+    });
+  }
+
+
+
+
 
 
 

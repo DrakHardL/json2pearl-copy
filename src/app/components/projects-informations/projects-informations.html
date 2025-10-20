@@ -23,10 +23,11 @@
   </div>
   
   <div class="link-section">
-    <span class="text">Lien vers le projet :</span>
+    <p class="label">Lien du projet :</p>
     @if (projectOriginalLink) {
-      <a [href]="projectOriginalLink" class="project-link">
-        {{ projectOriginalLink }}
+      <a [href]="projectOriginalLink" target="_blank" class="project-link">
+        <img src="open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
+        <span>Ouvrir le projet</span>
       </a>
     } @else {
       <p class="info-value">Lien non disponible</p>

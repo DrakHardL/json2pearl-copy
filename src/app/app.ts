@@ -5,18 +5,15 @@ import { TestGraph } from "./test-graph/test-graph";
 import { FloatingToolbar } from './components/floating-toolbar/floating-toolbar';
 import { ProjectsInformations } from './components/projects-informations/projects-informations';
 import { UtilisateurInformation } from './components/utilisateur-information/utilisateur-information';
+import { GroupInfo } from './components/group-info/group-info';
 
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation],
+  imports: [CommonModule, RouterOutlet, TestGraph, FloatingToolbar, ProjectsInformations, UtilisateurInformation, GroupInfo],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-
-
-
-
 
 export class App {
 
@@ -32,12 +29,17 @@ export class App {
    utilisateurNombreProjets = 0;
    utilisateurWebUrl = '';
   utilisateurProjectLinks: string[] = [];
+
+   groupName = '';
+   groupDescription = '';
+   groupWebUrl = '';
+   groupCreatedAt = '';
    
 // état pour la visibilité de la boîte d'infos et type de sélection
 
 infoVisible: boolean = false;
 
-selectedType: string = '';  // project ou user
+selectedType: string = '';  // project, user ou group
 
 
 //fonction qui permet d'affecter les informations du projet sélectionné aux variables correspondantes
@@ -63,6 +65,15 @@ selectedType: string = '';  // project ou user
     //le type de sélection est un utilisateur
     this.selectedType = 'user';
     this.infoVisible = true; // Affiche la boîte d'information automatiquement
+  }
+
+  onGroupSelected(group: { name: string, description: string, webUrl: string, createdAt: string }) {
+    this.groupName = group.name;
+    this.groupDescription = group.description;
+    this.groupWebUrl = group.webUrl;
+    this.groupCreatedAt = group.createdAt;
+    this.selectedType = 'group';
+    this.infoVisible = true;
   }
 
 // Gestion du clic sur le bouton "Information"

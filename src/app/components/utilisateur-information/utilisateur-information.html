@@ -9,14 +9,15 @@
   
   <!-- url du compte -->
   <div class="info-section">
-    <p class="label">URL du compte :</p>
-    <p class="info-value">
-      @if (utilisateurWebUrl) {
-        <a [href]="utilisateurWebUrl" class="user-link">{{ utilisateurWebUrl }}</a>
-      } @else {
-        <span>Non spécifiée</span>
-      }
-    </p>
+    <p class="label">Lien du compte :</p>
+    @if (utilisateurWebUrl) {
+      <a [href]="utilisateurWebUrl" target="_blank" class="user-link">
+        <img src="open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
+        <span>Ouvrir le profil</span>
+      </a>
+    } @else {
+      <p class="info-value">Non spécifiée</p>
+    }
   </div>
   
 
@@ -43,13 +44,10 @@
           <ul class="project-links">
             @for (link of projectLinks; track link) {
               <li>
-                <div class="project-item">
-                  <span class="project-title">
-                    <span class="project-icon">📁</span>
-                    {{ link.split('/').slice(-1)[0] }} <!-- récupérer le titre -->
-                  </span>
-                  <a [href]="link" target="_blank" rel="noopener noreferrer" class="project-link">{{ link }}</a>
-                </div>
+                <a [href]="link" target="_blank" class="project-link">
+                  <img src="open.svg" alt="Open" style="width: 1vw; height: 1vw; vertical-align: middle; margin-right: 0.3vw;">
+                  <span>{{ link.split('/').slice(-1)[0] }}</span>
+                </a>
               </li>
             }
           </ul>

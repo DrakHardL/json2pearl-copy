@@ -1,4 +1,4 @@
-.rectangle {
+.rectangleInfoGroup {
   position: fixed;
   top: 10%;
   right: 2%;
@@ -7,22 +7,23 @@
   flex-shrink: 0;
   border-radius: 1vw;
   border: 1px solid #B8B8B8;
-  background: #E3924F;
+  background: #55D764;
   box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
-  color: #000;
+  padding: 1.5%;
   display: flex;
   flex-direction: column;
-  padding: 1.5%;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
+  color: #000;
 }
 
-.project-header {
+
+.group-header {
   text-align: center;
   margin-bottom: 3%;
 }
 
-.project-header h3 {
+.group-header h3 {
   margin: 0;
   font-size: 1.2vw;
   font-weight: bold;
@@ -31,7 +32,6 @@
 
 .description-section {
   margin-bottom: 2.5%;
-  flex: 1 1 auto;  //permet à la description de prendre tout l'espace disponible
   display: flex;
   flex-direction: column;
 }
@@ -48,8 +48,6 @@
   line-height: 1.4;
   margin: 0;
   color: #000;
-  flex: 1 1 auto;
-  overflow-y: auto;
 }
 
 .info-section {
@@ -62,42 +60,24 @@
   color: #000;
 }
 
-.creator-section {
-  margin-top: auto;
-  margin-bottom: 0;
-}
-
-.creator-label {
-  font-size: 0.8vw;
-  margin: 0;
-  color: #000;
-}
-
-.creator-name {
-  font-weight: bold;
-}
-
 .link-section {
   margin-top: auto;
   margin-bottom: 2%;
 }
 
-.project-link {
+.group-link {
   color: #000;
   text-decoration: none;
   font-size: 0.8vw;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0.5vw;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 0.4vw;
   transition: background 0.2s ease;
-  margin: 0 auto;
-  width: fit-content;
 }
 
-.project-link:hover {
+.group-link:hover {
   background: rgba(255, 255, 255, 0.4);
 }
 
