@@ -15,4 +15,11 @@ export class GroupInfo {
   @Input() description: string = '';
   @Input() webUrl: string = '';
   @Input() createdAt: string = '';
+  @Input() members: any[] = [];
+
+  showMembers = false;
+
+  toggleMembers() {
+    this.showMembers = !this.showMembers;
+  }
 }

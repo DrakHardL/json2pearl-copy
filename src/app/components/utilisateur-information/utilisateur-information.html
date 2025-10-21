@@ -1,6 +1,6 @@
 
 
-<div class="rectangleInfoUtilisateur" [class.expanded]="showProjects && projectLinks.length > 3" style="z-index: 1000;">
+<div class="rectangleInfoUtilisateur" style="z-index: 1000;">
   <div class="user-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
       <img src="UserIcon.png" alt="User Icon" style="width: 1.5vw; height: 1.5vw;">
@@ -51,7 +51,6 @@
                     [src]="project.avatar_url || 'default-project.svg'" 
                     [alt]="project.name"
                     class="project-avatar"
-                    (error)="$any($event.target).src = 'default-project.svg'"
                   >
                   <span class="project-name">{{ project.name }}</span>
                 </a>

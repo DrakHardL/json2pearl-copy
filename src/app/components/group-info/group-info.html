@@ -24,4 +24,31 @@
       </a>
     }
   </div>
+<!-- section des membres -->
+  <div class="members-section">
+    <div class="members-header">
+      <p class="label">Membres :</p>
+      <button class="members-toggle" (click)="toggleMembers()" aria-label="Afficher membres">
+        <img src="open.svg" alt="open" class="icon" />
+      </button>
+    </div>
+    
+    @if (showMembers) {
+      <div class="members-list">
+        @if (!members || members.length === 0) {
+          <p class="no-members">Aucun membre trouvé</p>
+        } @else {
+          <ul class="member-links">
+            @for (member of members; track member) {
+              <li>
+                <div class="member-link">
+                  <span class="member-name">Membre #{{ member }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
 </div>

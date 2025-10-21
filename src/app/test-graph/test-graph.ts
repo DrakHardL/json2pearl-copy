@@ -28,7 +28,7 @@ export class TestGraph implements OnInit {
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
   @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[], projects: any[] }>();
-  @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string }>();
+  @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string, members: number[] }>();
 
 
   network!: GraphForge;
@@ -134,13 +134,16 @@ selectedNodes: string[] = [];
   private showUserGroup(nodeId: string) {
     const groupId = this.network.getNodeID(nodeId);
     this.groupAPI.getGroup(groupId as number).subscribe(group => {
-      const groupData = {
-        name: group.name,
-        description: group.description,
-        webUrl: group.web_url,
-        createdAt: group.created_at
-      };
-      this.groupSelected.emit(groupData); //envoie a app.html
+      this.groupAPI.getGroupMembersID(groupId as number).subscribe(membersData => {
+        const groupData = {
+          name: group.name,
+          description: group.description,
+          webUrl: group.web_url,
+          createdAt: group.created_at,
+          members: membersData.members
+        };
+        this.groupSelected.emit(groupData);
+      });
     });
   }
 
