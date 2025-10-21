@@ -1,6 +1,6 @@
-export * from './lib/services/project-api-service';
-export * from './lib/services/group-api-service';
-export * from './lib/services/topic-api-service';
-export * from './lib/services/user-api-service';
+export * from './lib/services/project.service';
+export * from './lib/services/group.service';
+export * from './lib/services/topic.service';
+export * from './lib/services/user.service';
 
 export * from './lib/emcapsulation/graph-forge';
