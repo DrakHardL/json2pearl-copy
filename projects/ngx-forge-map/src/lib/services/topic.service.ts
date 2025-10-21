@@ -9,7 +9,11 @@ import { Topic } from '../model/topic.model';
 })
 export class TopicApiService extends ApiService {
   getTopics(): Observable<Topic[]> {
-    return this.getAllRessource(`${this.REST_URL}/topics`);
+    return this.getAllRessource(`${this.REST_URL}/topics?per_page=20`);
+  }
+
+  getTopic(id: number): Observable<Topic> {
+    return this.http.get<Topic>(`${this.REST_URL}/topics/${id}`);
   }
 
   getTopicsMatchSearch(search: string): Observable<Topic[]> {

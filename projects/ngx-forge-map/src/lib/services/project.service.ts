@@ -24,6 +24,11 @@ export class ProjectApiService extends ApiService {
     return this.http.get<Project>(`${this.REST_URL}/projects/${project_id}`);
   }
 
+  getProjectsMatchTopic(topic: string): Observable<Project[]> {
+    return this.getAllRessource(`${this.REST_URL}/projects?topic=${topic}`);
+  }
+
+  /** Dépréciée */
   getProjectsIdByTopic(topic: string): Observable<string[]> {
     const query = `{ projects(topics: "${topic}") { nodes { id } } }`;
     return this.http.post<ProjectsResponse>(this.graphql_url, { query }).pipe(
