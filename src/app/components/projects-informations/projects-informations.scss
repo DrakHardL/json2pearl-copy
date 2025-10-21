@@ -1,3 +1,5 @@
+
+// bloc de base du rectangle d'informations sur les projets 
 .rectangle {
   position: fixed;
   top: 10%;
@@ -31,7 +33,7 @@
 
 .description-section {
   margin-bottom: 2.5%;
-  flex: 1 1 auto;  //permet à la description de prendre tout l'espace disponible
+  flex: 1 1 auto;  // prend tout l'espace disponible
   display: flex;
   flex-direction: column;
 }
@@ -49,7 +51,7 @@
   margin: 0;
   color: #000;
   flex: 1 1 auto;
-  overflow-y: auto;
+  overflow-y: auto;  // scrollbar si description trop longue
 }
 
 .info-section {
@@ -63,7 +65,7 @@
 }
 
 .creator-section {
-  margin-top: auto;
+  margin-top: auto;  // pousse vers le bas
   margin-bottom: 0;
 }
 

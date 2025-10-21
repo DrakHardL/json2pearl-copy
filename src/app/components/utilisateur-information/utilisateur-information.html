@@ -1,8 +1,10 @@
-<div class="rectangleInfoUtilisateur" style="z-index: 1000;">
+
+
+<div class="rectangleInfoUtilisateur" [class.expanded]="showProjects && projectLinks.length > 3" style="z-index: 1000;">
   <div class="user-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
-      <img src="UserIcon.png" alt="Utilisateur" style="width:1.3vw; height:1.3vw; min-width:16px; min-height:16px;" />
-      <h3 style="margin:0;">{{ utilisateurName || 'Nom de l\'utilisateur' }}</h3>
+      <img src="UserIcon.png" alt="User Icon" style="width: 1.5vw; height: 1.5vw;">
+      <h3>{{ utilisateurName || 'Utilisateur sans nom' }}</h3>
     </div>
   </div>
   
@@ -38,15 +40,20 @@
     
     @if (showProjects) {
       <div class="projects-list">
-        @if (!projectLinks || projectLinks.length === 0) {
+        @if (!projects || projects.length === 0) {
           <p class="no-projects">Aucun projet trouvé</p>
         } @else {
           <ul class="project-links">
-            @for (link of projectLinks; track link) {
+            @for (project of projects; track project.id) {
               <li>
-                <a [href]="link" target="_blank" class="project-link">
-                  <img src="open.svg" alt="Open" style="width: 1vw; height: 1vw; vertical-align: middle; margin-right: 0.3vw;">
-                  <span>{{ link.split('/').slice(-1)[0] }}</span>
+                <a [href]="project.web_url" target="_blank" class="project-link">
+                  <img 
+                    [src]="project.avatar_url || 'default-project.svg'" 
+                    [alt]="project.name"
+                    class="project-avatar"
+                    (error)="$any($event.target).src = 'default-project.svg'"
+                  >
+                  <span class="project-name">{{ project.name }}</span>
                 </a>
               </li>
             }

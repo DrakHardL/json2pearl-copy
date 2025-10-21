@@ -1,3 +1,4 @@
+// conteneur principal
 .rectangleInfoUtilisateur {
   position: fixed;
   top: 10%;
@@ -9,12 +10,19 @@
   border: 1px solid #B8B8B8;
   background: #9AABDC;
   box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
-  color: #000;
+  color: #FFF;
   display: flex;
   flex-direction: column;
   padding: 1.5%;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
+  // animation d'agrandissement avec effet de rebond 
+  transition: height 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+// Classe ajoutée quand la liste des projets est dépliée
+.rectangleInfoUtilisateur.expanded {
+  height: 80vh;
 }
 
 .user-header {
@@ -33,6 +41,7 @@
   margin-bottom: 2.5%;
 }
 
+
 .label {
   font-size: 0.9vw;
   font-weight: bold;
@@ -46,6 +55,7 @@
   color: #000;
 }
 
+// lien vers le profil de l'utilisateur
 .user-link {
   color: #000;
   text-decoration: none;
@@ -65,6 +75,7 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
+// section contenant la liste des projets
 .projects-section {
   margin-top: auto;
   margin-bottom: 2%;
@@ -73,6 +84,7 @@
   flex-direction: column;
 }
 
+
 .projects-header {
   display: flex;
   align-items: center;
@@ -80,6 +92,7 @@
   margin-bottom: 1%;
 }
 
+// bouton pour afficher/masquer les projets
 .projects-toggle {
   background: transparent;
   border: none;
@@ -96,13 +109,37 @@
   display: block;
 }
 
+// conteneur de la liste des projets avec scrollbar
 .projects-list {
-  max-height: 15vh;
+  max-height: 35vh;
   overflow-y: auto;
-  flex: 1 1 auto;
-  overflow-y: auto;
+  padding-right: 0.3vw;
 }
 
+//   la scrollbar 
+.projects-list::-webkit-scrollbar {
+  width: 0.4vw;
+}
+
+// fond de la scrollbar
+.projects-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.2vw;
+}
+
+// barre de défilement
+.projects-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 0.2vw;
+  transition: background 0.2s ease;
+}
+
+// barre de défilement au survol
+.projects-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+// Message quand aucun projet n'est trouvé
 .no-projects {
   font-size: 0.7vw;
   margin: 0;
@@ -117,22 +154,42 @@
 }
 
 .project-links li {
-  margin-bottom: 0.5%;
+  margin-bottom: 0.6vw;
 }
 
+// lien vers un projet
 .project-link {
-  color: #000;
-  text-decoration: none;
-  font-size: 0.8vw;
   display: flex;
   align-items: center;
+  gap: 0.6vw;
+  color: white;
+  text-decoration: none;
+  font-size: 0.85vw;
   padding: 0.5vw;
-  background: rgba(255, 255, 255, 0.2);
   border-radius: 0.4vw;
-  transition: background 0.2s ease;
-  word-break: break-all;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
 }
 
+// effet au survol
 .project-link:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(0.3vw);
+}
+
+// image du projet
+.project-avatar {
+  width: 2vw;
+  height: 2vw;
+  border-radius: 0.3vw;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.project-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

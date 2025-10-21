@@ -29,6 +29,7 @@ export class App {
    utilisateurNombreProjets = 0;
    utilisateurWebUrl = '';
   utilisateurProjectLinks: string[] = [];
+   utilisateurProjects: any[] = [];
 
    groupName = '';
    groupDescription = '';
@@ -57,14 +58,14 @@ selectedType: string = '';  // project, user ou group
    }
 
 
-  onUtilisateurSelected(utilisateur: { name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }) {
+  onUtilisateurSelected(utilisateur: { name: string, webUrl: string, nombreProjets: number, projectLinks: string[], projects: any[] }) {
     this.utilisateurName = utilisateur.name;
     this.utilisateurWebUrl = utilisateur.webUrl;
     this.utilisateurNombreProjets = utilisateur.nombreProjets;
     this.utilisateurProjectLinks = utilisateur.projectLinks || [];
-    //le type de sélection est un utilisateur
+    this.utilisateurProjects = utilisateur.projects || [];
     this.selectedType = 'user';
-    this.infoVisible = true; // Affiche la boîte d'information automatiquement
+    this.infoVisible = true;
   }
 
   onGroupSelected(group: { name: string, description: string, webUrl: string, createdAt: string }) {

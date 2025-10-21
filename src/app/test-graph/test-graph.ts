@@ -27,7 +27,7 @@ export class TestGraph implements OnInit {
   //une sortie qui peut stocker l'id du projet sélectionné
 
   @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
-  @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[] }>();
+  @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[], projects: any[] }>();
   @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string }>();
 
 
@@ -123,7 +123,8 @@ selectedNodes: string[] = [];
         name: this.network.getNodeDataByID(nodeId).name,
         webUrl: this.network.getNodeDataByID(nodeId).web_url,
         nombreProjets: projects.length,
-        projectLinks: links
+        projectLinks: links,
+        projects: projects
       };
       this.utilisateurSelected.emit(userData);
     });

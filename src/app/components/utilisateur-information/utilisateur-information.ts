@@ -9,14 +9,12 @@ import { CommonModule } from '@angular/common';
 })
 export class UtilisateurInformation {
 
-
-  //on recoit les informations de lapp parent app.ts
   @Input() utilisateurName: string = '';
   @Input() utilisateurWebUrl: string = '';
   @Input() utilisateurNombreProjets: number = 0;
   @Input() projectLinks: string[] = [];
+  @Input() projects: any[] = [];
 
-  // state pour afficher/masquer la liste des projets
   showProjects: boolean = false;
 
   toggleProjects() {
