@@ -39,11 +39,12 @@
           <p class="no-members">Aucun membre trouvé</p>
         } @else {
           <ul class="member-links">
-            @for (member of members; track member) {
+            @for (member of members; track member.id) { <!--track pour identifier le membre-->
               <li>
-                <div class="member-link">
-                  <span class="member-name">Membre #{{ member }}</span>
-                </div>
+                <a [href]="member.webUrl" target="_blank" class="member-link">
+                  <span class="member-name">{{ member.name }}</span>
+                  <img src="open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw;">
+                </a>
               </li>
             }
           </ul>

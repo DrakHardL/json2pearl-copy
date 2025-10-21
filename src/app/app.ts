@@ -35,7 +35,7 @@ export class App {
    groupDescription = '';
    groupWebUrl = '';
    groupCreatedAt = '';
-   groupMembers: number[] = [];
+   groupMembers: any[] = [];
    
 // état pour la visibilité de la boîte d'infos et type de sélection
 
@@ -69,7 +69,7 @@ selectedType: string = '';  // project, user ou group
     this.infoVisible = true;
   }
 
-  onGroupSelected(group: { name: string, description: string, webUrl: string, createdAt: string, members: number[] }) {
+  onGroupSelected(group: { name: string, description: string, webUrl: string, createdAt: string, members: any[] }) {
     this.groupName = group.name;
     this.groupDescription = group.description;
     this.groupWebUrl = group.webUrl;
