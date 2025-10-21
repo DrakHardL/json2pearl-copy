@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { Project } from '../model/project.model';
@@ -34,5 +34,23 @@ export class GroupApiService extends ApiService {
 
   getGroup(id: number): Observable<Group> {
     return this.http.get<Group>(`${this.REST_URL}/groups/${id}`);
+  }
+
+  getGroupMembersID(id: number) {
+    const url: string = `${this.graphql_url}?query={groups(ids:"gid://gitlab/Group/${id}"){nodes{groupMembers(search:""){nodes{user{id}}}}}}`;
+
+    interface t {
+      data: { groups: { nodes: { groupMembers: { nodes: { user: { id: string } }[] } }[] } };
+    }
+    return this.http.post<t>(url, '').pipe(
+      map((response) => {
+        const members =
+          response?.data?.groups?.nodes?.[0]?.groupMembers?.nodes?.map((member) => {
+            const userId = member.user.id.replace('gid://gitlab/User/', '');
+            return Number(userId);
+          }) || [];
+        return { members };
+      })
+    );
   }
 }
