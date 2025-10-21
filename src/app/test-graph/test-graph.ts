@@ -5,7 +5,7 @@ import { GraphForge, GroupApiService, NodeShape, ProjectApiService, TopicApiServ
 enum NodeColor {
   PROJECT = "#E0AC54",
   USER = "#78B1DD",
-  GROUP = "#55D764"
+  GROUP = "#54A075"
 }
 
 enum NodeType {
