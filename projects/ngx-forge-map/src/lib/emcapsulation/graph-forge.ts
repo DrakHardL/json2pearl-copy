@@ -100,7 +100,6 @@ export class GraphForge {
     }
 
     const id = this.dataSet_nodes.add(node)[0];
-    console.log("Un noeud avec l'identifiant :", id);
     return id as string;
   }
 
