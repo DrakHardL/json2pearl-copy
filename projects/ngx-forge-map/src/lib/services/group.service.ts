@@ -53,4 +53,32 @@ export class GroupApiService extends ApiService {
       })
     );
   }
+
+  getGroupMembers(id: number): Observable<any> {
+    const url: string = `${this.graphql_url}?query={groups(ids:"gid://gitlab/Group/${id}"){nodes{groupMembers(search:""){nodes{user{id,name,webUrl}}}}}}`;
+
+    return this.http
+      .post<{
+        data: {
+          groups: {
+            nodes: {
+              groupMembers: { nodes: { user: { id: string; name: string; webUrl: string } }[] };
+            }[];
+          };
+        };
+      }>(url, '')
+      .pipe(
+        map((response) => {
+          const members =
+            response?.data?.groups?.nodes?.[0]?.groupMembers?.nodes?.map((member) => {
+              const userId = member.user.id.replace('gid://gitlab/User/', '');
+              return { id: Number(userId), name: member.user.name, webUrl: member.user.webUrl };
+            }) || [];
+          console.log(response, members);
+          return {
+            members,
+          };
+        })
+      );
+  }
 }

@@ -1,33 +1,31 @@
-import { EventEmitter } from "@angular/core";
-import { DataSet, Edge, Network, Node, Options } from "vis-network/standalone";
+import { EventEmitter } from '@angular/core';
+import { DataSet, Edge, Network, Node, Options } from 'vis-network/standalone';
 
 interface NodeGraph extends Node {
   data?: {
-    id: string,
-  },
-  type?: string | number,
+    id: string;
+  };
+  type?: string | number;
 }
 
 interface EdgeGraph extends Edge {
-  data?: any,
+  data?: any;
 }
 
 export enum NodeShape {
-  SQUARE = "square",
-  IMAGE = "image",
-  CIRCULAR_IMAGE = "circularImage",
-  DIAMOND = "diamond",
-  DOT = "dot",
-  STAR = "star",
-  TRIANGLE = "triangle",
-  TRIANGLE_DOWN = "triangleDown",
-  HEXAGON = "hexagon",
-  ICON = "icon",
+  SQUARE = 'square',
+  IMAGE = 'image',
+  CIRCULAR_IMAGE = 'circularImage',
+  DIAMOND = 'diamond',
+  DOT = 'dot',
+  STAR = 'star',
+  TRIANGLE = 'triangle',
+  TRIANGLE_DOWN = 'triangleDown',
+  HEXAGON = 'hexagon',
+  ICON = 'icon',
 }
 
-
 export class GraphForge {
-
   private readonly _config: Options = {
     nodes: {
       font: { color: '#333', size: 16 },
@@ -48,19 +46,21 @@ export class GraphForge {
       zoomView: true,
       multiselect: true,
     },
-  }
+  };
 
   private readonly _network;
 
   private readonly dataSet_nodes = new DataSet<NodeGraph>();
   private readonly dataSet_edges = new DataSet<EdgeGraph>();
-  private readonly ref_nodes = new Map<NodeShape, Map<number, string>>()
-  private readonly reverse_ref_node = new Map<string, { type: NodeShape, id: number }>();
+  private readonly ref_nodes = new Map<NodeShape, Map<number, string>>();
+  private readonly reverse_ref_node = new Map<string, { type: NodeShape; id: number }>();
 
-  constructor(
-    private readonly container: HTMLElement
-  ) {
-    this._network = new Network(container, { nodes: this.dataSet_nodes, edges: this.dataSet_edges }, this._config);
+  constructor(private readonly container: HTMLElement) {
+    this._network = new Network(
+      container,
+      { nodes: this.dataSet_nodes, edges: this.dataSet_edges },
+      this._config
+    );
   }
 
   /**
@@ -82,7 +82,8 @@ export class GraphForge {
     type: number,
     shape: NodeShape,
     color: string,
-    data?: any
+    data?: any,
+    size: number = 0,
   ): string {
     const node: NodeGraph = {
       id: this.generateID(type, data.id),
@@ -91,9 +92,10 @@ export class GraphForge {
       shape: shape,
       color: {
         background: color,
-        border: "#000000",
+        border: '#000000',
       },
-      data: data
+      data: data,
+      size: 50 + size * 2
     };
     if (this.dataSet_nodes.getIds().includes(node.id!)) {
       return node.id as string;
@@ -104,17 +106,24 @@ export class GraphForge {
   }
 
   generateID(type: number, id: string): string {
-    return `==${type}==${id}==`
+    return `==${type}==${id}==`;
   }
 
   private readonly resisted_edges = new Map<string, string>();
   connectNodes(id_1: string, id_2: string) {
-    if (this.resisted_edges.has(`||${id_1}||${id_2}||`) || this.resisted_edges.has(`||${id_2}||${id_1}||`)) return;
-    const id = this.dataSet_edges.add({ to: id_1, from: id_2, arrows: { from: false, to: false } })[0] as string;
+    if (
+      this.resisted_edges.has(`||${id_1}||${id_2}||`) ||
+      this.resisted_edges.has(`||${id_2}||${id_1}||`)
+    )
+      return;
+    const id = this.dataSet_edges.add({
+      to: id_1,
+      from: id_2,
+      arrows: { from: false, to: false },
+    })[0] as string;
 
     this.resisted_edges.set(`||${id_1}||${id_2}||`, id);
     this.resisted_edges.set(`||${id_2}||${id_1}||`, id);
-
   }
 
   clear(): void {
@@ -125,7 +134,7 @@ export class GraphForge {
   }
 
   getSelectedNodes(): string[] {
-    return this._network.getSelectedNodes() as string[]
+    return this._network.getSelectedNodes() as string[];
   }
 
   getNodeType(id: string): number {
@@ -145,10 +154,10 @@ export class GraphForge {
   onNodeDoubleClick() {
     const event = new EventEmitter<string>();
     const temp = new EventEmitter<string>();
-    temp.subscribe(id => {
+    temp.subscribe((id) => {
       event.emit(id);
-    })
-    this._network.on("doubleClick", (e) => {
+    });
+    this._network.on('doubleClick', (e) => {
       temp.emit(e.nodes[0]);
     });
 
@@ -158,10 +167,10 @@ export class GraphForge {
   onNodeSelect() {
     const event = new EventEmitter<string>();
     const temp = new EventEmitter<string>();
-    temp.subscribe(id => {
+    temp.subscribe((id) => {
       event.emit(id);
-    })
-    this._network.on("selectNode", (e) => {
+    });
+    this._network.on('selectNode', (e) => {
       temp.emit(e.nodes[0]);
     });
 
@@ -173,6 +182,6 @@ export class GraphForge {
   }
 
   getNodeDataByID(id: string): any {
-    return (this.dataSet_nodes.get(id) as NodeGraph).data
+    return (this.dataSet_nodes.get(id) as NodeGraph).data;
   }
 }

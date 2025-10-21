@@ -16,6 +16,9 @@ export class TopicApiService extends ApiService {
     return this.http.get<Topic>(`${this.REST_URL}/topics/${id}`);
   }
 
+  getTopicLinks(id: number) {
+  }
+
   getTopicsMatchSearch(search: string): Observable<Topic[]> {
     return this.getAllRessource(`${this.REST_URL}/topics?search=${search}`);
   }
