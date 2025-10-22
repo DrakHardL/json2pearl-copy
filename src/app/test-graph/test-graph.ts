@@ -26,7 +26,7 @@ export class TestGraph implements OnInit {
 
   //une sortie qui peut stocker l'id du projet sélectionné
 
-  @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}>();
+  @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string, readme: string }>();
   @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[], projects: any[] }>();
   @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string, members: any[] }>();
 
@@ -92,18 +92,22 @@ selectedNodes: string[] = [];
   //fonction pour afficher les infos projet
   private showProjectInfo(nodeId: string) {
     const projectId = this.network.getNodeID(nodeId);
-    this.projectsAPI.getProject(projectId as number).subscribe(project => {
-      const projectData = {
-        name: project.name,
-        description: project.description,
-        thematic: project.topics.join(', '),
-        version: project.default_branch,
-        createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
-        creator: project.namespace.name,
-        originalLink: project.http_url_to_repo
-      };
-      this.projectSelected.emit(projectData);
-    });
+      this.projectsAPI.getProject(projectId as number).subscribe(project => {
+        // recup le readme
+  this.projectsAPI.getReadmeProject(projectId as number).subscribe((readme: string) => {
+          const projectData = {
+            name: project.name,
+            description: project.description,
+            thematic: project.topics.join(', '),
+            version: project.default_branch,
+            createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
+            creator: project.namespace.name,
+            originalLink: project.http_url_to_repo,
+            readme: readme
+          };
+          this.projectSelected.emit(projectData);
+  });
+      });
   }
 
 

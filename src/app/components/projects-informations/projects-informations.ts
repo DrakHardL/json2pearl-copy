@@ -15,4 +15,5 @@ export class ProjectsInformations {
   @Input() projectCreatedDate: string = '';
   @Input() projectCreator: string = '';
   @Input() projectOriginalLink: string = '';
+  @Input() projectReadme: string = '';
 }

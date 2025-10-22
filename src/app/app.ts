@@ -24,6 +24,7 @@ export class App {
    selectedProjectCreatedDate = '';
    selectedProjectCreator = '';
    selectedProjectOriginalLink = '';
+   selectedProjectReadme = '';
 
    utilisateurName = '';
    utilisateurNombreProjets = 0;
@@ -45,7 +46,7 @@ selectedType: string = '';  // project, user ou group
 
 
 //fonction qui permet d'affecter les informations du projet sélectionné aux variables correspondantes
-   onProjectSelected(project: {name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string}) {
+   onProjectSelected(project: {name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string, readme: string}) {
      this.selectedProjectName = project.name;
      this.selectedProjectDescription = project.description;
      this.selectedProjectThematic = project.thematic;
@@ -56,6 +57,7 @@ selectedType: string = '';  // project, user ou group
      //le type de sélection est un projet
      this.selectedType = 'project';
      this.infoVisible = true; // Affiche la boîte d'information automatiquement
+     this.selectedProjectReadme = project.readme;
    }
 
 
