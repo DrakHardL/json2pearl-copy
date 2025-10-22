@@ -1,0 +1,108 @@
+
+// bloc de base du rectangle d'informations sur les projets 
+.rectangle {
+  position: fixed;
+  top: 10%;
+  right: 2%;
+  width: 20vw;
+  height: 60vh;
+  flex-shrink: 0;
+  border-radius: 1vw;
+  border: 1px solid #B8B8B8;
+  background: #E3924F;
+  box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5%;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.project-header {
+  text-align: center;
+  margin-bottom: 3%;
+}
+
+.project-header h3 {
+  margin: 0;
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: #000;
+}
+
+.description-section {
+  margin-bottom: 2.5%;
+  flex: 1 1 auto;  // prend tout l'espace disponible
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.9vw;
+  font-weight: bold;
+  margin: 0 0 1% 0;
+  color: #000;
+}
+
+.description {
+  font-size: 0.8vw;
+  line-height: 1.4;
+  margin: 0;
+  color: #000;
+  flex: 1 1 auto;
+  overflow-y: auto;  // scrollbar si description trop longue
+}
+
+.info-section {
+  margin-bottom: 2%;
+}
+
+.info-value {
+  font-size: 0.8vw;
+  margin: 0;
+  color: #000;
+}
+
+.creator-section {
+  margin-top: auto;  // pousse vers le bas
+  margin-bottom: 0;
+}
+
+.creator-label {
+  font-size: 0.8vw;
+  margin: 0;
+  color: #000;
+}
+
+.creator-name {
+  font-weight: bold;
+}
+
+.link-section {
+  margin-top: auto;
+  margin-bottom: 2%;
+}
+
+.project-link {
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5vw;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.4vw;
+  transition: background 0.2s ease;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.project-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.text {
+  font-size: 0.8vw;
+}

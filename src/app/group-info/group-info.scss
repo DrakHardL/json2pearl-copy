@@ -1,0 +1,78 @@
+.rectangleInfoGroup {
+  position: fixed;
+  top: 10%;
+  right: 2%;
+  width: 20vw;
+  height: 60vh;
+  border-radius: 1vw;
+  border: 1px solid #B8B8B8;
+  background: #55D764;
+  box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
+  padding: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  overflow-y: auto;
+}
+
+.group-header {
+  margin-bottom: 0.5vw;
+}
+
+.group-header h3 {
+  font-size: 1.2vw;
+  font-weight: 600;
+  margin: 0;
+}
+
+.description-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vw;
+}
+
+.label {
+  font-size: 0.9vw;
+  font-weight: 500;
+  margin: 0;
+}
+
+.description {
+  font-size: 0.8vw;
+  margin: 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.info-section {
+  margin: 0.5vw 0;
+}
+
+.info-value {
+  font-size: 0.85vw;
+  margin: 0.3vw 0;
+}
+
+.path-section {
+  margin: 0.5vw 0;
+}
+
+.path-value {
+  font-weight: 400;
+}
+
+.link-section {
+  margin-top: auto;
+}
+
+.group-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #334443;
+  padding: 0.5vw;
+}
+
+.text {
+  font-size: 0.85vw;
+}
