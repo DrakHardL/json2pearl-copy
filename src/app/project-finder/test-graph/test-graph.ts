@@ -26,13 +26,13 @@ export class TestGraph implements OnInit {
 
   //une sortie qui peut stocker l'id du projet sélectionné
 
-  @Output() projectSelected = new EventEmitter<{name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string, readme: string }>();
+  @Output() projectSelected = new EventEmitter<{ name: string, description: string, thematic: string, version: string, createdDate: string, creator: string, originalLink: string, readme: string }>();
   @Output() utilisateurSelected = new EventEmitter<{ name: string, webUrl: string, nombreProjets: number, projectLinks: string[], projects: any[] }>();
   @Output() groupSelected = new EventEmitter<{ name: string, description: string, webUrl: string, createdAt: string, members: any[] }>();
 
 
   network!: GraphForge;
-selectedNodes: string[] = [];  
+  selectedNodes: string[] = [];
 
 
   constructor(
@@ -69,11 +69,11 @@ selectedNodes: string[] = [];
     if (this.selectedNodes.length === 0) return;
 
     const nodeType = this.network.getNodeType(nodeId);
-   
+
 
     // convertir nodeType en number car getNodeType retourne un string
     const nodeTypeNumber = Number(nodeType);
-    
+
     if (nodeTypeNumber === NodeType.PROJECT) {
       //appel de la fonction pour afficher les infos projet
       this.showProjectInfo(nodeId);
@@ -92,22 +92,22 @@ selectedNodes: string[] = [];
   //fonction pour afficher les infos projet
   private showProjectInfo(nodeId: string) {
     const projectId = this.network.getNodeID(nodeId);
-      this.projectsAPI.getProject(projectId as number).subscribe(project => {
-        // recup le readme
-  this.projectsAPI.getReadmeProject(projectId as number).subscribe((readme: string) => {
-          const projectData = {
-            name: project.name,
-            description: project.description,
-            thematic: project.topics.join(', '),
-            version: project.default_branch,
-            createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
-            creator: project.namespace.name,
-            originalLink: project.http_url_to_repo,
-            readme: readme
-          };
-          this.projectSelected.emit(projectData);
-  });
+    this.projectsAPI.getProject(projectId as number).subscribe(project => {
+      // recup le readme
+      this.projectsAPI.getReadmeProject(projectId as number).subscribe((readme: string) => {
+        const projectData = {
+          name: project.name,
+          description: project.description,
+          thematic: project.topics.join(', '),
+          version: project.default_branch,
+          createdDate: new Date(project.created_at).toLocaleDateString('fr-FR'),
+          creator: project.namespace.name,
+          originalLink: project.http_url_to_repo,
+          readme: readme
+        };
+        this.projectSelected.emit(projectData);
       });
+    });
   }
 
 
@@ -115,13 +115,13 @@ selectedNodes: string[] = [];
   private showUserInfo(nodeId: string) {
 
     const userId = this.network.getNodeID(nodeId);
-    
+
     this.userAPI.getUserProjects(userId.toString()).subscribe(projects => {
       // génère un tableau des urls des projets (web_url ou http_url_to_repo), en filtrant les valeurs non définies.
       const links = projects
         .map(p => p.web_url || p.http_url_to_repo)
         .filter(url => url);
-      
+
       const userData = {
         //name: userId.toString(),
         name: this.network.getNodeDataByID(nodeId).name,
@@ -166,7 +166,7 @@ selectedNodes: string[] = [];
 
   on2click(id: string) {
     this.extends(id);
-    
+
   }
 
   private extends(id: string) {
@@ -233,7 +233,7 @@ selectedNodes: string[] = [];
 
 
   // fonction pour supprimer les noeuds sélectionnés
-  
+
   removeSelectedNodes() {
     if (this.selectedNodes.length === 0) {
       alert('Sélectionnez des noeuds !');
@@ -243,10 +243,10 @@ selectedNodes: string[] = [];
     this.selectedNodes.forEach(nodeId => {
       this.network.removeNode(nodeId);
     });
-    
+
     this.selectedNodes = [];
   }
 
 
-  
+
 }

@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { TestGraph } from './test-graph/test-graph';
 import { TopicFinder } from './topic-finder/topic-finder.component';
+import { ProjectFinder } from './project-finder/project-finder';
 
 export const routes: Routes = [
   {
     path: '',
-    component: TestGraph,
+    component: ProjectFinder,
   },
   {
     path: 'subjects',
