@@ -19,7 +19,7 @@
     @if (webUrl) {
       <p class="label">Lien du groupe :</p>
       <a [href]="webUrl" target="_blank" class="group-link">
-        <img src="open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
+        <img src="../../../../public/open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
         <span class="text">Ouvrir le groupe</span>
       </a>
     }
@@ -29,7 +29,7 @@
     <div class="members-header">
       <p class="label">Membres :</p>
       <button class="members-toggle" (click)="toggleMembers()" aria-label="Afficher membres">
-        <img src="open.svg" alt="open" class="icon" />
+        <img src="../../../../public/open.svg" alt="open" class="icon" />
       </button>
     </div>
     
@@ -43,7 +43,7 @@
               <li>
                 <a [href]="member.webUrl" target="_blank" class="member-link">
                   <span class="member-name">{{ member.name }}</span>
-                  <img src="open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw;">
+                  <img src="../../../../public/open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw;">
                 </a>
               </li>
             }
