@@ -5,9 +5,7 @@ stages:
 
 variables:
   NODE_ENV: production
-  # Dossier de build Angular
-  BUILD_DIR: dist/json2pearl/browser
-  # Empêche npm d'utiliser le cache global
+  BUILD_DIR: dist/Json2pearl/browser
   NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
 
 cache:
@@ -18,9 +16,9 @@ cache:
 
 install_dependencies:
   stage: install
-  image: node:20
+  image: node:22
   script:
-    - npm ci --prefer-offline --no-audit
+    - npm ci
   artifacts:
     paths:
       - node_modules/
@@ -28,30 +26,28 @@ install_dependencies:
 
 build_app:
   stage: build
-  image: node:20
+  image: node:22
   script:
-    - npx ng build --configuration production
+    - npx ng build
   artifacts:
     paths:
-      - dist/
+      - $BUILD_DIR/
     expire_in: 1 week
   dependencies:
     - install_dependencies
   only:
-    - main
-    - tags
+    - master
 
-# Déploiement sur GitLab Pages
 pages:
   stage: deploy
-  image: node:20
+  image: node:22-alpine
   script:
     - mkdir -p public
-    - cp -r $BUILD_DIR/* public/ || (ls -la dist/ && exit 1)
+    - cp -r $BUILD_DIR/* public/
   artifacts:
     paths:
       - public
   dependencies:
     - build_app
   only:
-    - main
+    - master
