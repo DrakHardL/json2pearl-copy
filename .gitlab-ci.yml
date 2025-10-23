@@ -21,7 +21,7 @@ install_dependencies:
   image: node:20
   script:
     - npm ci
-    - npm i -g @angular/cli
+    - sudo npm i -g @angular/cli
   artifacts:
     paths:
       - node_modules/
