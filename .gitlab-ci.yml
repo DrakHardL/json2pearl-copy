@@ -1,21 +1,64 @@
-# The Docker image that will be used to build your app
-default:
-  image: node:20.19.0
-  before_script:
-    - npm i
-
 stages:
+  - install
+  - test
   - build
+  - deploy
 
-create-pages:
+variables:
+  NODE_ENV: production
+  # Dossier de build Angular
+  BUILD_DIR: dist/my-angular-app
+  # Empêche npm d'utiliser le cache global
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/
+
+install_dependencies:
+  stage: install
+  image: node:20
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1h
+
+run_tests:
+  stage: test
+  image: node:20
+  script:
+    - npm run test -- --watch=false --browsers=ChromeHeadless
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+
+build_app:
   stage: build
-  pages:
-    # The folder that contains the files to be exposed at the Page URL
-    publish: dist/json2pearl/browser
-  rules:
-    # This ensures that only pushes to the default branch will trigger
-    # a pages deploy
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  # Functions that should be executed before the build script is run
+  image: node:20
   script:
     - npm run build
+  artifacts:
+    paths:
+      - $BUILD_DIR/
+    expire_in: 1 week
+  only:
+    - main
+    - tags
+
+# Exemple de déploiement sur GitLab Pages
+deploy_pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - mkdir .public
+    - cp -r $BUILD_DIR/* .public/
+  artifacts:
+    paths:
+      - .public
+  only:
+    - main
