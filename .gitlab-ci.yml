@@ -43,6 +43,8 @@ pages:
   image: node:22-alpine
   script:
     - mkdir -p public
+    - echo "Contenu courant :"
+    - ls -R .
     - cp -r $BUILD_DIR/* public/
   artifacts:
     paths:
