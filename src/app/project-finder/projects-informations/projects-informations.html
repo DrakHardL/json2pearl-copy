@@ -21,9 +21,10 @@
 <!--read me section-->
   <div class="readme-section">
     <p class="label">README :</p>
-    <p class="readme-content">{{ projectReadme }}</p>
+    <div class="readme-content">
+      <markdown [data]="projectReadme"></markdown>
+    </div>
   </div>
-
 
 
   <div class="creator-section">

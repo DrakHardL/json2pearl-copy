@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MarkdownModule } from 'ngx-markdown';
+
 
 @Component({
   selector: 'app-projects-informations',
-  imports: [CommonModule],
+  imports: [CommonModule, MarkdownModule],
   templateUrl: './projects-informations.html',
   styleUrl: './projects-informations.scss',
 })

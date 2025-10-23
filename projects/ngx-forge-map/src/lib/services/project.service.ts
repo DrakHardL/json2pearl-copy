@@ -96,7 +96,7 @@ getReadmeProject(project_id: number): Observable<string> {
       
       if (readme) {
         return this.http.get<any>(`${this.REST_URL}/projects/${project_id}/repository/files/${readme.path}?ref=HEAD`).pipe(
-        map(fileData => atob(fileData.content).split('\n').slice(0, 10).join('\n'))
+        map(fileData => atob(fileData.content))//.split('\n').slice(0, 10).join('\n'))
         );
       } else {
         return of('readme indisponible');
