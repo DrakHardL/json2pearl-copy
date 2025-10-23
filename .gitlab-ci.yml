@@ -28,7 +28,13 @@ build_app:
   stage: build
   image: node:22
   script:
-    - npx run build
+    - set -e
+    - echo "Node version:" && node -v
+    - echo "NPM version:" && npm -v
+    - echo "Angular CLI version:" && npx ng version
+    - npx ng build --configuration production
+    - echo "Vérifions le contenu de dist/"
+    - ls -R dist || echo "⚠️ Dossier dist non trouvé"
   artifacts:
     paths:
       - $BUILD_DIR/
