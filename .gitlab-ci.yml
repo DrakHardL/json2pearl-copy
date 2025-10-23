@@ -31,6 +31,8 @@ build_app:
     - set -e
     - echo "Node version:" && node -v
     - echo "NPM version:" && npm -v
+    # Installer Angular CLI localement si nécessaire
+    - npm install @angular/cli@20 --no-save
     - echo "Angular CLI version:" && npx ng version
     - npx ng build --configuration production
     - echo "Vérifions le contenu de dist/"
