@@ -5,7 +5,7 @@ stages:
 
 variables:
   NODE_ENV: production
-  BUILD_DIR: dist/Json2pearl/browser
+  BUILD_DIR: dist/json2pearl
   NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
 
 cache:
