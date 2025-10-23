@@ -38,8 +38,7 @@ build_app:
   dependencies:
     - install_dependencies
   only:
-    - main
-    - tags
+    - master
 
 # Déploiement sur GitLab Pages
 pages:
@@ -54,4 +53,4 @@ pages:
   dependencies:
     - build_app
   only:
-    - main
+    - master
