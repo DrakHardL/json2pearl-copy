@@ -39,15 +39,15 @@ build_app:
     - main
     - tags
 
-# Exemple de déploiement sur GitLab Pages
-deploy_pages:
+# Déploiement sur GitLab Pages
+pages:
   stage: deploy
-  image: alpine:latest
+  image: node:20-alpine
   script:
-    - mkdir .public
-    - cp -r $BUILD_DIR/* .public/
+    - mkdir -p public
+    - cp -r $BUILD_DIR/* public/
   artifacts:
     paths:
-      - .public
+      - public
   only:
     - main
