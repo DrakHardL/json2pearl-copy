@@ -1,0 +1,33 @@
+<div class="container" style="height: 800px">
+  <div #repartitionChart style="height: 800px; border: 1px solid lightgray"></div>
+
+  <div class="list-subjects">
+    <div class="search-bar">
+      <input #search type="text" name="search" (input)="onSearch($event.target.value)" placeholder="Rechercher un sujet"/>
+    </div>
+
+    <div class="subject-display">
+      <div class="table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th">Sujet</div>
+            <div class="th">Nombre projets</div>
+          </div>
+        </div>
+        <div class="tbody">
+          @for (topic of topics; track $index) {
+          <div
+            class="tr"
+            (click)="subjectSelected(topic)"
+            [class.selected]="topic.id == selected_topic?.id"
+            [class.hoverable]="topic.id != selected_topic?.id"
+          >
+            <div class="td">{{ topic.name }}</div>
+            <div class="td">{{ topic.total_projects_count }}</div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
