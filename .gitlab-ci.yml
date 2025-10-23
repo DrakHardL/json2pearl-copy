@@ -28,7 +28,7 @@ build_app:
   stage: build
   image: node:22
   script:
-    - npm run build
+    - npx run build
   artifacts:
     paths:
       - $BUILD_DIR/
