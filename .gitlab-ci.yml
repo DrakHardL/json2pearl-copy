@@ -1,0 +1,53 @@
+stages:
+  - install
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: production
+  BUILD_DIR: dist/Json2pearl/browser
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/
+
+install_dependencies:
+  stage: install
+  image: node:22
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1h
+
+build_app:
+  stage: build
+  image: node:22
+  script:
+    - npx ng build
+  artifacts:
+    paths:
+      - $BUILD_DIR/
+    expire_in: 1 week
+  dependencies:
+    - install_dependencies
+  only:
+    - master
+
+pages:
+  stage: deploy
+  image: node:22-alpine
+  script:
+    - mkdir -p public
+    - cp -r $BUILD_DIR/* public/
+  artifacts:
+    paths:
+      - public
+  dependencies:
+    - build_app
+  only:
+    - master
