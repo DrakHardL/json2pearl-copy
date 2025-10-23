@@ -30,7 +30,7 @@ build_app:
   stage: build
   image: node:20
   script:
-    - npm run build
+    - npx ng build
   artifacts:
     paths:
       - $BUILD_DIR/
