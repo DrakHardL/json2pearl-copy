@@ -40,14 +40,6 @@ export class TestGraph implements OnInit {
     this.network.onNodeSelect().subscribe(id => {
       console.log("node selected :", id);
     })
-
-    this.topicAPI.getTopics().subscribe(topics => {
-      console.log(topics);
-    });
-
-    this.projectsAPI.getProjectsIdByTopic("maths").subscribe(ids => {
-      console.log(ids); 
-    })
   }
 
   onSearch(_t3: HTMLInputElement) {
@@ -59,7 +51,6 @@ export class TestGraph implements OnInit {
 
   on2click(id: string) {
     this.extends(id);
-    
   }
 
   private extends(id: string) {
