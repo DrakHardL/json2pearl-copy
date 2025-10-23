@@ -83,7 +83,7 @@ export class GraphForge {
     shape: NodeShape,
     color: string,
     data?: any,
-    size: number = 0,
+    size: number = 0
   ): string {
     const node: NodeGraph = {
       id: this.generateID(type, data.id),
@@ -95,7 +95,7 @@ export class GraphForge {
         border: '#000000',
       },
       data: data,
-      size: 50 + size * 2
+      size: 50 + size * 2,
     };
     if (this.dataSet_nodes.getIds().includes(node.id!)) {
       return node.id as string;
@@ -183,5 +183,9 @@ export class GraphForge {
 
   getNodeDataByID(id: string): any {
     return (this.dataSet_nodes.get(id) as NodeGraph).data;
+  }
+
+  selectNode(id: string) {
+    this._network.selectNodes([id]);
   }
 }
