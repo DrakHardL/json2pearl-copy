@@ -1,8 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { GraphForge, NodeShape, TopicApiService } from 'ngx-forge-map';
 import { Subscription } from 'rxjs';
 
-interface Topic {
+export interface Topic {
   id: number;
   name: string;
   title: string;
@@ -35,7 +36,7 @@ export class TopicFinder {
   @ViewChild('repartitionChart', { static: true }) repartitionChart!: ElementRef;
   protected repartition!: GraphForge;
 
-  constructor(private readonly topicAPI: TopicApiService) {}
+  constructor(private readonly topicAPI: TopicApiService, private readonly router: Router) {}
 
   protected topics: Topic[] = [];
   protected selected_topic: any;
@@ -44,6 +45,15 @@ export class TopicFinder {
     this.repartition = new GraphForge(this.repartitionChart.nativeElement);
     this.repartition.onNodeSelect().subscribe((id) => {
       this.onNodeSelected(this.repartition.getNodeID(id));
+    });
+
+    this.repartition.onNodeDoubleClick().subscribe((rep) => {
+      const topic_id: number = this.repartition.getNodeID(rep);
+      const topic: Topic | undefined = this.getTopicByID(topic_id);
+
+      if (topic) {
+        this.router.navigate(['/projects'], { queryParams: { topic: topic.name } });
+      }
     });
   }
 
