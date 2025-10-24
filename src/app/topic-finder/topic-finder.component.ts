@@ -76,8 +76,6 @@ export class TopicFinder {
         topic.total_projects_count
       );
 
-      console.log(topic);
-
       this.topics.push(topic);
     });
     this.topics.sort((a: any, b: any) => b.total_projects_count - a.total_projects_count);
@@ -85,6 +83,9 @@ export class TopicFinder {
 
   private current_search_request: Subscription | undefined;
   protected async onSearch(query: string) {
+    if (query.length == 0) {
+      return this.showAllTopics();
+    }
     if (this.current_search_request) {
       this.current_search_request.unsubscribe();
     }
