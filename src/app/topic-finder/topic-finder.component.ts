@@ -55,6 +55,8 @@ export class TopicFinder {
         this.router.navigate(['/projects'], { queryParams: { topic: topic.name } });
       }
     });
+
+    this.showAllTopics();
   }
 
   protected showAllTopics() {
