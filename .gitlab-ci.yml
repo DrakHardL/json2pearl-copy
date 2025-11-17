@@ -1,12 +1,63 @@
-stages:
-  - verify
+image: node:22
 
-verify_node:
-  stage: verify
+stages:
+  - test
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+lint:
+  stage: test
   script:
-    - export NVM_DIR="$HOME/.nvm"
-    - source "$NVM_DIR/nvm.sh"
-    - nvm install 20
-    - nvm use 20
-    - node -v
-    - npm -v
+    - npm ci
+    - npm run lint
+  only:
+    - branches
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run build -- --configuration production
+  only:
+    - development
+
+pages:
+  stage: deploy
+  script:
+    - npm ci
+
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "staging" ]; then
+        export BASE_HREF="/staging/"
+      else
+        export BASE_HREF="/"
+      fi
+
+    - npm run build -- --configuration production --base-href "$BASE_HREF"
+
+    - rm -rf public
+    - mkdir -p public
+
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "staging" ]; then
+        mkdir -p public/staging
+        cp -r dist/angular-playground/browser/* public/staging
+        cp public/staging/index.html public/staging/404.html
+      else
+        cp -r dist/angular-playground/browser/* public
+        cp public/index.html public/404.html
+      fi
+
+  artifacts:
+    paths:
+      - public
+
+  only:
+    - main
+    - staging
+
+  allow_failure: true
