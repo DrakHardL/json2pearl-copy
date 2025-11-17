@@ -7,3 +7,5 @@ build-job:
   script:
     - npm install
     - npm install @angular/cli@20 --no-save
+    - ECHO "Version d'angular client :"
+    - npx ng version
