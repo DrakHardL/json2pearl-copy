@@ -7,7 +7,3 @@ build-job:
   script:
     - npm install
     - npm install @angular/cli@20 --no-save
-    - npx ng build
-  artifacts:
-    paths:
-      - "build/"
