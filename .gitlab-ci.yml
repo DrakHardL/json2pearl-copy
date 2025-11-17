@@ -6,3 +6,8 @@ build-job:
   image: node:22
   script:
     - npm install
+    - npm install @angular/cli@20 --no-save
+    - npm run build
+  artifacts:
+    paths:
+      - "build/"
