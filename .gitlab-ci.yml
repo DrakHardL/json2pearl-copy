@@ -1,21 +1,8 @@
 stages:          # List of stages for jobs and their order of execution
   - build
-  - deploy
 
 build-job:
   stage: build   # Set this job to run in the `build` stage
   image: node:22
   script:
     - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - "build/"
-
-pages:
-  stage: deploy  # Set this new job to run in the `deploy` stage
-  script:
-    - mv build/ public/
-  artifacts:
-    paths:
-      - "public/"
