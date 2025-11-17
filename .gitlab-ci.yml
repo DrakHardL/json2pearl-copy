@@ -1,8 +1,12 @@
-stages:          # List of stages for jobs and their order of execution
-  - build
+stages:
+  - verify
 
-build-job:
-  stage: build   # Set this job to run in the `build` stage
-  image: node:22
+verify_node:
+  stage: verify
   script:
+    - export NVM_DIR="$HOME/.nvm"
+    - source "$NVM_DIR/nvm.sh"
+    - nvm install 20
+    - nvm use 20
     - node -v
+    - npm -v
