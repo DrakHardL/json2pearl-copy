@@ -4,7 +4,7 @@ stages:          # List of stages for jobs and their order of execution
 
 build-job:
   stage: build   # Set this job to run in the `build` stage
-  image: node:20
+  image: node:22
   script:
     - npm install
     - npm run build
