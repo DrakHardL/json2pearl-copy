@@ -188,4 +188,14 @@ export class GraphForge {
   selectNode(id: string) {
     this._network.selectNodes([id]);
   }
+
+  getNodesIDByType(type: number): number[] {
+    let nodes: NodeGraph[] = this.dataSet_nodes.get();
+    console.log(nodes);
+
+    nodes = nodes.filter((n) => (n.id?.toString().split('==')[1] as unknown as number) == type);
+    console.log(nodes);
+
+    return nodes.map((n) => n.id!.toString().split('==')[2] as unknown as number);
+  }
 }
