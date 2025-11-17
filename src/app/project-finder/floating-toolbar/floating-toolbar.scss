@@ -16,6 +16,9 @@
 
   width: auto;
   z-index: 1000;
+  gap: 0.4rem; //espade constant entre boutons
+  max-width: 90vw; //évite que la toolbar dépasse de l'écran sur mobile
+  flex-wrap: wrap; //si besoin, passe a la ligne
 }
 
 .toolbar-button {
@@ -42,8 +45,8 @@
 }
 
 .icon-image {
-  width: 1.5vw;
-  height: 1.5vw;
+  width: clamp(22px, 1.5vw, 28px); /* +responsive : taille d'icône adaptable */
+  height: clamp(22px, 1.5vw, 28px);
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -67,9 +70,57 @@
   box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.2);
 }
 
-
 //le texte devient visible au survole de la souris
-
 .toolbar-button:hover .text {
   opacity: 1;
 }
+
+
+//responsive part (tablette/petit laptop)
+@media (max-width: 992px) {
+  .toolbar {
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.6rem;
+  }
+}
+
+//responsive part (tablette portrait)
+@media (max-width: 768px) {
+  .toolbar {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .toolbar-button {
+    padding: 0.6rem;
+    margin-right: 0;
+  }
+
+  .text {
+    font-size: 12px;
+  }
+}
+
+//responsive part (téléphone)
+@media (max-width: 600px) {
+  .toolbar {
+    bottom: 16px;
+    max-width: 94vw;
+    flex-wrap: nowrap; //une seule ligne
+    overflow-x: none;  /* autorise le scroll horizontal si ça dépasse */
+  }
+}
+
+//responsive part (petit téléphone)
+@media (max-width: 480px) {
+  .toolbar {
+    bottom: 12px;
+    max-width: 80vw;
+    padding: 0.5rem;
+    flex-wrap: nowrap; 
+    overflow-x: none;  
+    gap: 0.3rem;
+  }
+}
+
