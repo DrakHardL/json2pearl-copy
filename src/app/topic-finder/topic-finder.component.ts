@@ -1,8 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { GraphForge, NodeShape, TopicApiService } from 'ngx-forge-map';
 import { Subscription } from 'rxjs';
 
-interface Topic {
+export interface Topic {
   id: number;
   name: string;
   title: string;
@@ -35,7 +36,7 @@ export class TopicFinder {
   @ViewChild('repartitionChart', { static: true }) repartitionChart!: ElementRef;
   protected repartition!: GraphForge;
 
-  constructor(private readonly topicAPI: TopicApiService) {}
+  constructor(private readonly topicAPI: TopicApiService, private readonly router: Router) {}
 
   protected topics: Topic[] = [];
   protected selected_topic: any;
@@ -45,6 +46,17 @@ export class TopicFinder {
     this.repartition.onNodeSelect().subscribe((id) => {
       this.onNodeSelected(this.repartition.getNodeID(id));
     });
+
+    this.repartition.onNodeDoubleClick().subscribe((rep) => {
+      const topic_id: number = this.repartition.getNodeID(rep);
+      const topic: Topic | undefined = this.getTopicByID(topic_id);
+
+      if (topic) {
+        this.router.navigate(['/projects'], { queryParams: { topic: topic.name } });
+      }
+    });
+
+    this.showAllTopics();
   }
 
   protected showAllTopics() {
@@ -64,8 +76,6 @@ export class TopicFinder {
         topic.total_projects_count
       );
 
-      console.log(topic);
-
       this.topics.push(topic);
     });
     this.topics.sort((a: any, b: any) => b.total_projects_count - a.total_projects_count);
@@ -73,6 +83,9 @@ export class TopicFinder {
 
   private current_search_request: Subscription | undefined;
   protected async onSearch(query: string) {
+    if (query.length == 0) {
+      return this.showAllTopics();
+    }
     if (this.current_search_request) {
       this.current_search_request.unsubscribe();
     }
