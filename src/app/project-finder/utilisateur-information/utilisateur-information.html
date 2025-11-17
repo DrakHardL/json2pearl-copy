@@ -14,7 +14,7 @@
     <p class="label">Lien du compte :</p>
     @if (utilisateurWebUrl) {
       <a [href]="utilisateurWebUrl" target="_blank" class="user-link">
-        <img src="opens.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
+        <img src="open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
         <span>Ouvrir le profil</span>
       </a>
     } @else {
@@ -34,7 +34,7 @@
     <div class="projects-header">
       <p class="label">Projets :</p>
       <button class="projects-toggle" (click)="toggleProjects()" aria-label="Afficher projets">
-        <img src="opens.svg" alt="open" class="icon" />
+        <img src="open.svg" alt="open" class="icon" />
       </button>
     </div>
     
