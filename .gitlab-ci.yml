@@ -5,11 +5,4 @@ build-job:
   stage: build   # Set this job to run in the `build` stage
   image: node:22
   script:
-    - echo "Installation des modules npm :"
-    - npm install
-
-    - echo "Installation d'angular client (ng/cli) :"
-    - npm install @angular/cli@20
-    
-    - echo "Version d'angular client :"
-    - npx ng version
+    - node -v
