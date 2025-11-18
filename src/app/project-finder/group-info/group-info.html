@@ -1,7 +1,7 @@
 <div class="rectangleInfoGroup" style="z-index: 1000;">
   <div class="group-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
-      <img src="GroupIcon.svg" alt="Group Icon" style="width: 1.5vw; height: 1.5vw;">
+      <img src="GroupIcon.svg" alt="Group Icon" class="group-header-icon">
       <h3>{{ name || 'Groupe sans nom' }}</h3>
     </div>
   </div>
@@ -19,7 +19,7 @@
     @if (webUrl) {
       <p class="label">Lien du groupe :</p>
       <a [href]="webUrl" target="_blank" class="group-link">
-        <img src="open.svg" alt="Open" style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw;">
+        <img src="open.svg" alt="Open" class="group-link-icon">
         <span class="text">Ouvrir le groupe</span>
       </a>
     }
@@ -43,7 +43,7 @@
               <li>
                 <a [href]="member.webUrl" target="_blank" class="member-link">
                   <span class="member-name">{{ member.name }}</span>
-                  <img src="open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw;">
+                  <img src="open.svg" alt="Ouvrir" class="member-link-icon">
                 </a>
               </li>
             }

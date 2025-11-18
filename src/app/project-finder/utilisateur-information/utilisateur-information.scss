@@ -33,6 +33,11 @@
   color: #000;
 }
 
+.user-header-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .info-section {
   margin-bottom: 2.5%;
 }
@@ -65,6 +70,13 @@
   transition: background 0.2s ease;
   margin: 0 auto;
   width: fit-content;
+}
+
+.user-link-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
 }
 
 .user-link:hover {
@@ -160,4 +172,139 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// responsive part (tablette/petit laptop)
+@media (max-width: 1020px) {
+  .rectangleInfoUtilisateur {
+    width: clamp(240px, 32vw, 360px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    padding: 2.5%;
+  }
+
+  .user-header-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .user-link-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-right: 0.45rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+// responsive part (tablette portrait)
+@media (max-width: 768px) {
+  .rectangleInfoUtilisateur {
+    width: clamp(240px, 34vw, 400px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    max-height: 70vh;
+    padding: 3%;
+  }
+
+  .user-header h3,
+  .label,
+  .info-value {
+    font-size: 1rem;
+  }
+
+  .user-header-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .user-link {
+    font-size: 1rem;
+    padding: 0.65rem;
+  }
+
+  .user-link-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-right: 0.5rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+// responsive part (téléphone)
+@media (max-width: 600px) {
+  .rectangleInfoUtilisateur {
+    width: 80vw;
+    right: 2%;
+    left: auto;
+    padding: 3.5%;
+  }
+
+  .user-header-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  .user-link-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+// responsive part (petit téléphone)
+@media (max-width: 480px) {
+  .rectangleInfoUtilisateur {
+    width: 88vw;
+    right: 2%;
+    left: auto;
+    max-height: 75vh;
+  }
+
+  .user-header-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+
+  .user-link-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-right: 0.55rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
 }
