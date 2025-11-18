@@ -1,3 +1,24 @@
 import { Routes } from '@angular/router';
+import { TestGraph } from './test-graph/test-graph';
+import { TopicFinder } from './topic-finder/topic-finder.component';
+import { TestProjectFinder } from './test-project-finder/test-project-finder.component';
+import { TestFavoris } from './test-favoris/test-favoris';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: '',
+    component: TestGraph,
+  },
+  {
+    path: 'subjects',
+    component: TopicFinder,
+  },
+  {
+    path: 'projects',
+    component: TestProjectFinder,
+  },
+  {
+    path: 'favoris',
+    component: TestFavoris,
+  },
+];
