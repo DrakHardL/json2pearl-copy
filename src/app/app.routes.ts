@@ -1,24 +1,28 @@
+import { ProjectsComponent } from './pages/projects-page/projects-page.component';
+import { AccueilComponent } from './pages/accueil-page/accueil-page.component';
+import { FavorisComponent } from './pages/favoris-page/favoris-page.component';
+import { TopicsComponent } from './pages/topics-page/topics-page.component';
 import { Routes } from '@angular/router';
-import { TopicFinder } from './topic-finder/topic-finder.component';
-import { ProjectFinder } from './project-finder/project-finder';
-import { TestProjectFinder } from './test-project-finder/test-project-finder.component';
-import { TestFavoris } from './test-favoris/test-favoris';
 
 export const routes: Routes = [
   {
-    path: '',
-    component: ProjectFinder,
-  },
-  {
     path: 'subjects',
-    component: TopicFinder,
+    component: TopicsComponent,
   },
   {
     path: 'projects',
-    component: TestProjectFinder,
+    component: ProjectsComponent,
   },
   {
     path: 'favoris',
-    component: TestFavoris,
+    component: FavorisComponent,
+  },
+  {
+    path: 'accueil',
+    component: AccueilComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '/accueil',
   },
 ];
