@@ -1,7 +1,10 @@
 import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToolBarItem as ToolbarItem } from './data/toolbar-item';
-import { GraphForge } from 'ngx-forge-map';
+import { GraphForge, NodeShape, ProjectApiService } from 'ngx-forge-map';
+import { Subscription } from 'rxjs';
+import { NodeColor } from './data/node-color';
+import { NodeType } from './data/node-type';
 
 @Component({
   selector: 'app-projects-page',
@@ -13,6 +16,10 @@ export class ProjectsComponent implements OnInit {
   @ViewChild('projectsChart', { static: true }) projects_chart!: ElementRef;
   protected projects_graph!: GraphForge;
 
+  protected projects: any[] = [];
+
+  constructor(private readonly projectAPI: ProjectApiService) {}
+
   ngOnInit(): void {
     this.projects_graph = new GraphForge(this.projects_chart.nativeElement);
     this.projects_graph.onNodeDoubleClick().subscribe((id) => this.onDoubleClick(id));
@@ -21,6 +28,42 @@ export class ProjectsComponent implements OnInit {
 
   protected onToolbarItemClicked(event: ToolbarItem): void {
     console.log('item clicked :', event);
+  }
+
+  private current_search_request: Subscription | undefined;
+  protected async onSearch(query: string) {
+    if (query.length == 0) {
+      return;
+      // return this.showAllTopics();
+    }
+    if (this.current_search_request) {
+      this.current_search_request.unsubscribe();
+    }
+    this.projects = [];
+    this.projects_graph.clear();
+    this.current_search_request = await this.projectAPI
+      .getProjectsMatchSearch(query)
+      .subscribe((rep) => {
+        console.log(rep);
+
+        this.fill(rep);
+      });
+  }
+
+  private fill(topics: any[]) {
+    topics.forEach((topic) => {
+      this.projects_graph.createNode(
+        topic.name,
+        NodeType.SUBJECT,
+        NodeShape.HEXAGON,
+        NodeColor.GROUP,
+        topic,
+        topic.total_projects_count
+      );
+
+      this.projects.push(topic);
+    });
+    // this.projects.sort((a: any, b: any) => b.total_projects_count - a.total_projects_count);
   }
 
   /** TODO implements this methods */

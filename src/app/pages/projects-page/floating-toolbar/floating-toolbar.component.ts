@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TestGraph } from '../test-graph/test-graph';
-import { CommonModule } from '@angular/common';
 import { ToolBarItem } from '../data/toolbar-item';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-floating-toolbar',

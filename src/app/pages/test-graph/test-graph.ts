@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-import { NodeColor } from '../data/node-color';
-import { NodeType } from '../data/node-type';
+import { NodeColor } from '../projects-page/data/node-color';
+import { NodeType } from '../projects-page/data/node-type';
 import {
   GraphForge,
   GroupApiService,

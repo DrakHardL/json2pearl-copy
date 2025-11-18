@@ -1,6 +1,39 @@
 <div class="app-container">
   <div class="graph" #projectsChart style="height: 100vh; border: 1px solid lightgray"></div>
 
+  <div class="list-element">
+    <div class="search-bar">
+      <input
+        #search
+        type="text"
+        name="search"
+        (input)="onSearch($event.target.value)"
+        placeholder="Rechercher un projet"
+      />
+    </div>
+
+    <hr />
+
+    <div class="element-display">
+      <div class="table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th">Element</div>
+            <!-- <div class="th">Nombre projets</div> -->
+          </div>
+        </div>
+        <div class="tbody">
+          @for (project of projects; track $index) {
+          <div class="tr">
+            <div class="td">{{ project.name }}</div>
+            <div class="td">{{ project.total_projects_count }}</div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- <app-test-graph
     #testGraph
     (projectSelected)="onProjectSelected($event)"
