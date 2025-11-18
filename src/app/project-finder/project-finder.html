@@ -1,0 +1,47 @@
+<div class="app-container">
+  <app-test-graph #testGraph (projectSelected)="onProjectSelected($event)" (utilisateurSelected)="onUtilisateurSelected($event)" (groupSelected)="onGroupSelected($event)"></app-test-graph>
+  
+   
+  <app-floating-toolbar 
+    [testGraph]="testGraph"
+    (informationClicked)="onInformationClicked()">
+  </app-floating-toolbar>
+
+  <!-- affiche seulement app-projects-informations si infoVisible est true et qu'un projet est sélectionné -->
+  @if (infoVisible && selectedType === 'project') {
+    <app-projects-informations 
+      [projectName]="selectedProjectName"
+      [projectDescription]="selectedProjectDescription"
+      [projectThematic]="selectedProjectThematic"
+      [projectVersion]="selectedProjectVersion"
+      [projectCreatedDate]="selectedProjectCreatedDate"
+      [projectCreator]="selectedProjectCreator"
+      [projectOriginalLink]="selectedProjectOriginalLink"
+      [projectReadme]="selectedProjectReadme">
+    </app-projects-informations>
+  }
+
+  @if (infoVisible && selectedType === 'user') {
+    <app-utilisateur-information
+      [utilisateurName]="utilisateurName"
+      [utilisateurWebUrl]="utilisateurWebUrl"
+      [utilisateurNombreProjets]="utilisateurNombreProjets"
+      [projectLinks]="utilisateurProjectLinks"
+      [projects]="utilisateurProjects">
+    </app-utilisateur-information>
+  }
+
+  @if (infoVisible && selectedType === 'group') {
+    <app-group-info
+      [name]="groupName"
+      [description]="groupDescription"
+      [webUrl]="groupWebUrl"
+      [createdAt]="groupCreatedAt"
+      [members]="groupMembers">
+    </app-group-info>
+  }
+
+</div>
+
+
+

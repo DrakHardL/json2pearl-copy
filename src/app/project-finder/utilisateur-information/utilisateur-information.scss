@@ -1,0 +1,163 @@
+// conteneur principal
+.rectangleInfoUtilisateur {
+  position: fixed;
+  top: 10%;
+  right: 2%;
+  width: 20vw;
+  height: 60vh;
+  flex-shrink: 0;
+  border-radius: 1vw;
+  border: 1px solid #B8B8B8;
+  background: #9AABDC;
+  box-shadow: 0 0.3vw 0.3vw 0 rgba(0, 0, 0, 0.25);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5%;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+    // animation d'agrandissement avec effet de rebond 
+
+
+}
+
+.user-header {
+  text-align: center;
+  margin-bottom: 3%;
+}
+
+.user-header h3 {
+  margin: 0;
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: #000;
+}
+
+.info-section {
+  margin-bottom: 2.5%;
+}
+
+
+.label {
+  font-size: 0.9vw;
+  font-weight: bold;
+  margin: 0 0 1% 0;
+  color: #000;
+}
+
+.info-value {
+  font-size: 0.8vw;
+  margin: 0;
+  color: #000;
+}
+
+// lien vers le profil de l'utilisateur
+.user-link {
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5vw;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.4vw;
+  transition: background 0.2s ease;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.user-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+// section contenant la liste des projets
+.projects-section {
+  margin-top: auto;
+  margin-bottom: 2%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.projects-header {
+  display: flex;
+  align-items: center;
+  gap: 1%;
+  margin-bottom: 1%;
+}
+
+// bouton pour afficher/masquer les projets
+.projects-toggle {
+  background: transparent;
+  border: none;
+  padding: 0.3%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.projects-toggle .icon {
+  width: 1.5vw;
+  height: 1.5vw;
+  display: block;
+}
+
+// conteneur de la liste des projets
+.projects-list {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+// Message quand aucun projet n'est trouvé
+.no-projects {
+  font-size: 0.7vw;
+  margin: 0;
+  color: #000;
+  font-style: italic;
+}
+
+.project-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-links li {
+  margin-bottom: 0.6vw;
+}
+
+// lien vers un projet
+.project-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8vw;
+  padding: 0.5vw;
+  border-radius: 0.4vw;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.2s ease;
+}
+
+.project-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+// image du projet
+.project-avatar {
+  width: 2vw;
+  height: 2vw;
+  border-radius: 0.3vw;
+  object-fit: cover;
+}
+
+.project-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

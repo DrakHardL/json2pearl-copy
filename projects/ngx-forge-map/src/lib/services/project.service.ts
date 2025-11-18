@@ -86,4 +86,28 @@ export class ProjectApiService extends ApiService {
   getProjectGroups(project_id: number): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.REST_URL}/projects/${project_id}/groups`);
   }
+
+
+
+getReadmeProject(project_id: number): Observable<string> {
+  return this.http.get<any[]>(`${this.REST_URL}/projects/${project_id}/repository/tree`).pipe(
+    switchMap(items => {
+      const readme = items.find(item => item.name.toLowerCase().startsWith("readme"));
+      
+      if (readme) {
+        return this.http.get<any>(`${this.REST_URL}/projects/${project_id}/repository/files/${readme.path}?ref=HEAD`).pipe(
+        map(fileData => atob(fileData.content))//.split('\n').slice(0, 10).join('\n'))
+        );
+      } else {
+        return of('readme indisponible');
+      }
+    })
+  );
+}
+      
+
+
+
+
+
 }
