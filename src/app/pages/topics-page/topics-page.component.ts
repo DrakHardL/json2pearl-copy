@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { GraphForge, NodeShape, TopicApiService } from 'ngx-forge-map';
 import { Subscription } from 'rxjs';
 
@@ -28,9 +28,9 @@ enum NodeType {
 
 @Component({
   selector: 'app-topic-finder',
-  imports: [],
   templateUrl: './topics-page.component.html',
   styleUrl: './topics-page.component.scss',
+  imports: [RouterLink],
 })
 export class TopicsComponent {
   @ViewChild('repartitionChart', { static: true }) repartitionChart!: ElementRef;
@@ -123,5 +123,10 @@ export class TopicsComponent {
   protected subjectSelected(topic: Topic) {
     this.selected_topic = topic;
     this.repartition.selectNode(this.repartition.generateID(NodeType.SUBJECT, topic.id.toString()));
+  }
+
+  protected test2click(event: Event) {
+    console.log(event);
+
   }
 }

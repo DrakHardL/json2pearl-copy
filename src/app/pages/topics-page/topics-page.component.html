@@ -1,10 +1,18 @@
 <div class="container" style="height: 800px">
-  <div #repartitionChart style="height: 800px; border: 1px solid lightgray"></div>
+  <div class="graph" #repartitionChart style="height: 100vh; border: 1px solid lightgray"></div>
 
   <div class="list-subjects">
     <div class="search-bar">
-      <input #search type="text" name="search" (input)="onSearch($event.target.value)" placeholder="Rechercher un sujet"/>
+      <input
+        #search
+        type="text"
+        name="search"
+        (input)="onSearch($event.target.value)"
+        placeholder="Rechercher un sujet"
+      />
     </div>
+
+    <hr />
 
     <div class="subject-display">
       <div class="table">
@@ -19,6 +27,7 @@
           <div
             class="tr"
             (click)="subjectSelected(topic)"
+            (dblclick)="test2click($event)"
             [class.selected]="topic.id == selected_topic?.id"
             [class.hoverable]="topic.id != selected_topic?.id"
           >
@@ -29,5 +38,12 @@
         </div>
       </div>
     </div>
+
+    <button
+      [disabled]="!selected_topic"
+      [routerLink]="['/projects', { topics: selected_topic?.name }]"
+    >
+      Explore
+    </button>
   </div>
 </div>
