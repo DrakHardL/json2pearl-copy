@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FloatingToolbar } from './floating-toolbar';
+import { FloatingToolbar } from './floating-toolbar.component';
 
 describe('FloatingToolbar', () => {
   let component: FloatingToolbar;

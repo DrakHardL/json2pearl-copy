@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
-
+import { NodeColor } from '../data/node-color';
+import { NodeType } from '../data/node-type';
 import {
   GraphForge,
   GroupApiService,
@@ -8,18 +9,6 @@ import {
   TopicApiService,
   UserApiService,
 } from 'ngx-forge-map';
-
-enum NodeColor {
-  PROJECT = '#E0AC54',
-  USER = '#78B1DD',
-  GROUP = '#54A075',
-}
-
-enum NodeType {
-  PROJECT,
-  USER,
-  GROUP,
-}
 
 @Component({
   selector: 'app-test-graph',
@@ -64,7 +53,6 @@ export class TestGraph implements OnInit {
     private readonly projectsAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
     private readonly userAPI: UserApiService,
-    private readonly topicAPI: TopicApiService
   ) {}
 
   ngOnInit() {
@@ -72,16 +60,7 @@ export class TestGraph implements OnInit {
 
     this.network.onNodeDoubleClick().subscribe((id) => this.on2click(id));
     this.network.onNodeSelect().subscribe((id) => {
-      console.log('node selected :', id);
       this.onNodeSelected(id);
-    });
-
-    this.topicAPI.getTopics().subscribe((topics) => {
-      console.log(topics);
-    });
-
-    this.projectsAPI.getProjectsIdByTopic('maths').subscribe((ids) => {
-      console.log(ids);
     });
   }
 

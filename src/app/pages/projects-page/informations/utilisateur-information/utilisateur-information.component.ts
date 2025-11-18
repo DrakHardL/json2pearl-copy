@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-utilisateur-information',
   imports: [CommonModule],
-  templateUrl: './utilisateur-information.html',
-  styleUrl: './utilisateur-information.scss',
+  templateUrl: './utilisateur-information.component.html',
+  styleUrl: './utilisateur-information.component.scss',
 })
 export class UtilisateurInformation {
   @Input() utilisateurName: string = '';

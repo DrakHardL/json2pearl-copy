@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { GraphForge, NodeShape, TopicApiService } from 'ngx-forge-map';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { NodeColor } from '../projects-page/data/node-color';
+import { NodeType } from '../projects-page/data/node-type';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 export interface Topic {
@@ -13,42 +15,28 @@ export interface Topic {
   avatar_url: string | null;
 }
 
-enum NodeColor {
-  PROJECT = '#E0AC54',
-  USER = '#78B1DD',
-  GROUP = '#55D764',
-}
-
-enum NodeType {
-  PROJECT,
-  USER,
-  GROUP,
-  SUBJECT,
-}
-
 @Component({
-  selector: 'app-topic-finder',
+  selector: 'app-topics-page',
   templateUrl: './topics-page.component.html',
   styleUrl: './topics-page.component.scss',
   imports: [RouterLink],
 })
 export class TopicsComponent {
-  @ViewChild('repartitionChart', { static: true }) repartitionChart!: ElementRef;
-  protected repartition!: GraphForge;
-
-  constructor(private readonly topicAPI: TopicApiService, private readonly router: Router) {}
-
+  @ViewChild('topicsChart', { static: true }) topicsChart!: ElementRef;
+  protected topics_graph!: GraphForge;
   protected topics: Topic[] = [];
   protected selected_topic: any;
 
+  constructor(private readonly topicAPI: TopicApiService, private readonly router: Router) {}
+
   ngOnInit() {
-    this.repartition = new GraphForge(this.repartitionChart.nativeElement);
-    this.repartition.onNodeSelect().subscribe((id) => {
-      this.onNodeSelected(this.repartition.getNodeID(id));
+    this.topics_graph = new GraphForge(this.topicsChart.nativeElement);
+    this.topics_graph.onNodeSelect().subscribe((id) => {
+      this.onNodeSelected(this.topics_graph.getNodeID(id));
     });
 
-    this.repartition.onNodeDoubleClick().subscribe((rep) => {
-      const topic_id: number = this.repartition.getNodeID(rep);
+    this.topics_graph.onNodeDoubleClick().subscribe((rep) => {
+      const topic_id: number = this.topics_graph.getNodeID(rep);
       const topic: Topic | undefined = this.getTopicByID(topic_id);
 
       if (topic) {
@@ -59,7 +47,7 @@ export class TopicsComponent {
     this.showAllTopics();
   }
 
-  protected showAllTopics() {
+  private showAllTopics() {
     this.topicAPI.getTopics().subscribe((topics) => {
       this.fill(topics);
     });
@@ -67,7 +55,7 @@ export class TopicsComponent {
 
   private fill(topics: Topic[]) {
     topics.forEach((topic) => {
-      this.repartition.createNode(
+      this.topics_graph.createNode(
         topic.name,
         NodeType.SUBJECT,
         NodeShape.HEXAGON,
@@ -91,7 +79,7 @@ export class TopicsComponent {
     }
     if (query.length >= 1) {
       this.topics = [];
-      this.repartition.clear();
+      this.topics_graph.clear();
       this.current_search_request = await this.topicAPI
         .getTopicsMatchSearch(query)
         .subscribe((rep) => {
@@ -122,11 +110,10 @@ export class TopicsComponent {
 
   protected subjectSelected(topic: Topic) {
     this.selected_topic = topic;
-    this.repartition.selectNode(this.repartition.generateID(NodeType.SUBJECT, topic.id.toString()));
+    this.topics_graph.selectNode(this.topics_graph.generateID(NodeType.SUBJECT, topic.id.toString()));
   }
 
   protected test2click(event: Event) {
     console.log(event);
-
   }
 }

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupInfo } from './group-info';
+import { GroupInfo } from './group-informations';
 
 describe('GroupInfo', () => {
   let component: GroupInfo;
