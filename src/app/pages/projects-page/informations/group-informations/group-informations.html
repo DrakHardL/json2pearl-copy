@@ -2,25 +2,25 @@
   <div class="group-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
       <img src="GroupIcon.svg" alt="Group Icon" style="width: 1.5vw; height: 1.5vw" />
-      <h3>{{ name || 'Groupe sans nom' }}</h3>
+      <h3>{{ group?.name || 'Groupe sans nom' }}</h3>
     </div>
   </div>
 
   <div class="info-section">
     <p class="info-value">
-      {{ createdAt ? (createdAt | date : 'dd/MM/yyyy') : 'Date non spécifiée' }}
+      {{ group?.created_at ? (group?.created_at | date : 'dd/MM/yyyy') : 'Date non spécifiée' }}
     </p>
   </div>
 
   <div class="description-section">
     <p class="label">Description :</p>
-    <p class="description">{{ description || 'Aucune description disponible' }}</p>
+    <p class="description">{{ group?.description || 'Aucune description disponible' }}</p>
   </div>
 
   <div class="link-section">
-    @if (webUrl) {
+    @if (group?.web_url) {
     <p class="label">Lien du groupe :</p>
-    <a [href]="webUrl" target="_blank" class="group-link">
+    <a [href]="group?.web_url" target="_blank" class="group-link">
       <img
         src="open.svg"
         alt="Open"

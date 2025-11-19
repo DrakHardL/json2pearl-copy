@@ -1,32 +1,34 @@
 <div class="app-container">
   <div class="graph" #projectsChart style="height: 100vh; border: 1px solid lightgray"></div>
 
-  <div class="list-element">
+  <div class="list-elements">
     <div class="search-bar">
       <input
         #search
         type="text"
         name="search"
         (input)="onSearch($event.target.value)"
-        placeholder="Rechercher un projet"
+        placeholder="Rechercher un sujet"
       />
     </div>
 
-    <hr />
+    <div class="nb-elements">element charger : {{ elements.length }}</div>
 
-    <div class="element-display">
+    @if (isLoading) {
+    <div><img src="images/projects.png" sizes="12px" /></div>
+    }
+
+    <div class="subject-display">
       <div class="table">
         <div class="thead">
           <div class="tr">
             <div class="th">Element</div>
-            <!-- <div class="th">Nombre projets</div> -->
           </div>
         </div>
         <div class="tbody">
-          @for (project of projects; track $index) {
-          <div class="tr">
-            <div class="td">{{ project.name }}</div>
-            <div class="td">{{ project.total_projects_count }}</div>
+          @for (elt of elements; track $index) {
+          <div class="tr" (click)="onItemSelected(elt, 'project')">
+            {{ elt.id }}
           </div>
           }
         </div>
@@ -34,12 +36,29 @@
     </div>
   </div>
 
-  <!-- <app-test-graph
-    #testGraph
-    (projectSelected)="onProjectSelected($event)"
-    (utilisateurSelected)="onUtilisateurSelected($event)"
-    (groupSelected)="onGroupSelected($event)"
-  ></app-test-graph> -->
+  @switch (selected_elements?.type) { @case ('project') {
+  <app-projects-informations [project]="selected_elements" />
+  } @case ('group') {
+  <app-group-informations [group]="selected_elements" />
+  } @case ('user') {
+  <app-utilisateur-information [user]="selected_elements" />
+  } }
+
+  <div class="description-element">
+    <div class="subject-display">
+      <div class="table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th">Element</div>
+          </div>
+        </div>
+        <div class="tbody">
+          {{ selected_elements?.id }}
+          {{ selected_elements?.name }}
+        </div>
+      </div>
+    </div>
+  </div>
 
   <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />
 
