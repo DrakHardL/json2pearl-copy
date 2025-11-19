@@ -1,0 +1,55 @@
+<div class="rectangleInfoGroup" style="z-index: 1000;">
+  <div class="group-header">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw;">
+      <img src="GroupIcon.svg" alt="Group Icon" class="group-header-icon">
+      <h3>{{ name || 'Groupe sans nom' }}</h3>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <p class="info-value">{{ createdAt ? (createdAt | date:'dd/MM/yyyy') : 'Date non spécifiée' }}</p>
+  </div>
+
+  <div class="description-section">
+    <p class="label">Description :</p>
+    <p class="description">{{ description || 'Aucune description disponible' }}</p>
+  </div>
+
+  <div class="link-section">
+    @if (webUrl) {
+      <p class="label">Lien du groupe :</p>
+      <a [href]="webUrl" target="_blank" class="group-link">
+        <img src="open.svg" alt="Open" class="group-link-icon">
+        <span class="text">Ouvrir le groupe</span>
+      </a>
+    }
+  </div>
+<!-- section des membres -->
+  <div class="members-section">
+    <div class="members-header">
+      <p class="label">Membres :</p>
+      <button class="members-toggle" (click)="toggleMembers()" aria-label="Afficher membres">
+        <img src="open.svg" alt="open" class="icon" />
+      </button>
+    </div>
+    
+    @if (showMembers) {
+      <div class="members-list">
+        @if (!members || members.length === 0) {
+          <p class="no-members">Aucun membre trouvé</p>
+        } @else {
+          <ul class="member-links">
+            @for (member of members; track member.id) { <!--track pour identifier le membre-->
+              <li>
+                <a [href]="member.webUrl" target="_blank" class="member-link">
+                  <span class="member-name">{{ member.name }}</span>
+                  <img src="open.svg" alt="Ouvrir" class="member-link-icon">
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
+</div>
