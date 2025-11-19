@@ -28,7 +28,7 @@
         <div class="tbody">
           @for (elt of elements; track $index) {
           <div class="tr" (click)="onItemSelected(elt, 'project')">
-            {{ elt.id }}
+            {{ elt.name }}
           </div>
           }
         </div>

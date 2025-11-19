@@ -2,7 +2,13 @@ import { UtilisateurInformation } from './informations/utilisateur-information/u
 import { ProjectsInformations } from './informations/projects-informations/projects-informations';
 import { GroupInformations } from './informations/group-informations/group-informations';
 import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
-import { GraphForge, NodeShape, ProjectApiService } from 'ngx-forge-map';
+import {
+  GraphForge,
+  GroupApiService,
+  NodeShape,
+  ProjectApiService,
+  UserApiService,
+} from 'ngx-forge-map';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToolBarItem as ToolbarItem } from './data/toolbar-item';
 import { NodeColor } from './data/node-color';
@@ -23,7 +29,11 @@ export class ProjectsComponent implements OnInit {
   protected selected_elements: any;
   protected isLoading: boolean = false;
 
-  constructor(private readonly projectAPI: ProjectApiService) {}
+  constructor(
+    private readonly projectAPI: ProjectApiService,
+    private readonly groupAPI: GroupApiService,
+    private readonly userAPI: UserApiService
+  ) {}
 
   ngOnInit(): void {
     this.projects_graph = new GraphForge(this.projects_chart.nativeElement);
@@ -65,8 +75,6 @@ export class ProjectsComponent implements OnInit {
         })
       )
       .subscribe((rep) => {
-        console.log(rep);
-
         this.fill(rep);
       });
   }
@@ -75,9 +83,9 @@ export class ProjectsComponent implements OnInit {
     topics.forEach((topic) => {
       this.projects_graph.createNode(
         topic.name,
-        NodeType.SUBJECT,
-        NodeShape.HEXAGON,
-        NodeColor.GROUP,
+        NodeType.PROJECT,
+        NodeShape.SQUARE,
+        NodeColor.PROJECT,
         topic,
         topic.total_projects_count
       );
@@ -88,10 +96,68 @@ export class ProjectsComponent implements OnInit {
   }
 
   /** TODO implements this methods */
-  private onDoubleClick(id: string): void {}
+  private onDoubleClick(id_1: string): void | Subscription {
+    if (!id_1) return;
+
+    const node_id = this.projects_graph.getNodeID(id_1);
+    const node_type = this.projects_graph.getNodeType(id_1);
+
+    console.log(node_id, node_type as NodeType, NodeType.PROJECT);
+
+    if (node_type == NodeType.PROJECT) {
+      this.projectAPI.getProjectUsers(node_id).subscribe((users) => {
+        users.forEach((user) => {
+          const id_2 = this.createUser(user);
+          this.connect2nodes(id_1, id_2);
+        });
+      });
+
+      return this.projectAPI.getProjectGroups(node_id).subscribe((groups) => {
+        groups.forEach(group => {
+          const id_2 = this.createGroup(group);
+          this.connect2nodes(id_1, id_2);
+        })
+      });
+    }
+
+    if (node_type == NodeType.USER) {
+      return this.userAPI.getUserProjects(node_id.toString()).subscribe((projects) => {
+        projects.forEach((project) => {
+          const id_2 = this.createProject(project);
+          this.connect2nodes(id_1, id_2);
+        });
+      });
+    }
+
+    if (node_type == NodeType.GROUP) {
+      return this.groupAPI.getGroupProjects(node_id).subscribe((projects) => {
+        projects.forEach((project) => {
+          const id_2 = this.createProject(project);
+          this.connect2nodes(id_1, id_2);
+        });
+      });
+    }
+  }
+
   private onSimpleClick(id: string): void {}
-  private createNode(): void {}
-  private createUser(): void {}
-  private createProject(): void {}
-  private createGroup(): void {}
+
+  private createNode(elt: any, type: NodeType, shape: NodeShape, color: NodeColor): string {
+    return this.projects_graph.createNode(elt.name, type, shape, color, elt);
+  }
+
+  private createUser(user: any): string {
+    return this.createNode(user, NodeType.USER, NodeShape.DOT, NodeColor.USER);
+  }
+
+  private connect2nodes(id_1: string, id_2: string): void {
+    return this.projects_graph.connectNodes(id_1, id_2);
+  }
+
+  private createProject(project: any): string {
+    return this.createNode(project, NodeType.PROJECT, NodeShape.SQUARE, NodeColor.PROJECT);
+  }
+
+  private createGroup(group: any): string {
+    return this.createNode(group, NodeType.GROUP, NodeShape.TRIANGLE, NodeColor.GROUP);
+  }
 }
