@@ -27,7 +27,7 @@
           <div
             class="tr"
             (click)="subjectSelected(topic)"
-            (dblclick)="test2click($event)"
+            (dblclick)="test2clickEvent(topic)"
             [class.selected]="topic.id == selected_topic?.id"
             [class.hoverable]="topic.id != selected_topic?.id"
           >

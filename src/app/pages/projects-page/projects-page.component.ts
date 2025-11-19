@@ -32,6 +32,12 @@ export class ProjectsComponent implements OnInit {
   }
 
   protected onToolbarItemClicked(event: ToolbarItem): void {
+    switch (event) {
+      case ToolbarItem.DEVELOPPE:
+        console.log('le bouton developpe est cliqué !!');
+
+        return;
+    }
     console.log('item clicked :', event);
   }
 

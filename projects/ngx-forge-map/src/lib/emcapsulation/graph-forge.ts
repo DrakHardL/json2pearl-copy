@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { DataSet, Edge, Network, Node, Options } from 'vis-network/standalone';
+import { DataSet, Edge, network, Network, Node, Options } from 'vis-network/standalone';
 
 interface NodeGraph extends Node {
   data?: {
@@ -197,5 +197,18 @@ export class GraphForge {
     console.log(nodes);
 
     return nodes.map((n) => n.id!.toString().split('==')[2] as unknown as number);
+  }
+
+  fit(): void {
+    this._network.fit({
+      animation: {
+        duration: 2000,
+        easingFunction: 'easeOutCubic'
+      }
+    });
+  }
+
+  focus(id: string): void {
+    this._network.focus(id);
   }
 }

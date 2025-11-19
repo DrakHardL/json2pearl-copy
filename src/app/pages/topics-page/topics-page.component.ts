@@ -3,7 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NodeColor } from '../projects-page/data/node-color';
 import { NodeType } from '../projects-page/data/node-type';
 import { Router, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 export interface Topic {
   id: number;
@@ -32,7 +32,7 @@ export class TopicsComponent {
   ngOnInit() {
     this.topics_graph = new GraphForge(this.topicsChart.nativeElement);
     this.topics_graph.onNodeSelect().subscribe((id) => {
-      this.onNodeSelected(this.topics_graph.getNodeID(id));
+      this.onNodeSelect(id);
     });
 
     this.topics_graph.onNodeDoubleClick().subscribe((rep) => {
@@ -82,6 +82,11 @@ export class TopicsComponent {
       this.topics_graph.clear();
       this.current_search_request = await this.topicAPI
         .getTopicsMatchSearch(query)
+        .pipe(
+          finalize(() => {
+            this.topics_graph.fit();
+          })
+        )
         .subscribe((rep) => {
           console.log(rep);
           this.fill(rep);
@@ -101,8 +106,9 @@ export class TopicsComponent {
     return rep;
   }
 
-  private onNodeSelected(id: number) {
-    const topic = this.getTopicByID(id);
+  private onNodeSelect(id: string) {
+    const true_id = this.topics_graph.getNodeID(id);
+    const topic = this.getTopicByID(true_id);
     if (topic) {
       this.selected_topic = topic;
     }
@@ -110,10 +116,15 @@ export class TopicsComponent {
 
   protected subjectSelected(topic: Topic) {
     this.selected_topic = topic;
-    this.topics_graph.selectNode(this.topics_graph.generateID(NodeType.SUBJECT, topic.id.toString()));
+    this.topics_graph.selectNode(
+      this.topics_graph.generateID(NodeType.SUBJECT, topic.id.toString())
+    );
   }
 
-  protected test2click(event: Event) {
-    console.log(event);
+  private on2Click(node_id: string): void {}
+
+  protected test2clickEvent(elt: any): void {
+    let t = this.topics_graph.generateID(elt?.type, elt.id);
+    console.log(elt, t);
   }
 }
