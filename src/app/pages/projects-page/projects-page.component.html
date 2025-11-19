@@ -37,28 +37,63 @@
   </div>
 
   @switch (selected_elements?.type) { @case ('project') {
-  <app-projects-informations [project]="selected_elements" />
+  <div class="description-element">
+    <div class="project-header">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
+        <img
+          src="CarreProject.svg"
+          alt="Projet"
+          style="width: 1.3vw; height: 1.3vw; min-width: 16px; min-height: 16px"
+        />
+        <h3 style="margin: 0">{{ selected_elements?.name || 'Nom du projet' }}</h3>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <p class="info-value">{{ selected_elements?.created_at || 'Non spécifiée' }}</p>
+    </div>
+
+    <div class="description-section">
+      <p class="label">Description :</p>
+      <p class="description">{{ selected_elements?.description || 'Aucune description disponible' }}</p>
+    </div>
+
+    <div class="readme-section">
+      <p class="label">README :</p>
+      <div class="readme-content">
+        <markdown [data]="selected_elements?.getReadmeProject(selected_elements?.id)"></markdown>
+      </div>
+    </div>
+
+    <div class="creator-section">
+      <p class="creator-label">
+        Créer par :
+        <span class="creator-name">{{ selected_elements?.namespace?.name || 'Non spécifiée' }}</span>
+      </p>
+    </div>
+
+    <div class="link-section">
+      <p class="label">Lien du projet :</p>
+      @if (selected_elements?.web_url) {
+      <a [href]="selected_elements?.web_url" target="_blank" class="project-link">
+        <img
+          src="open.svg"
+          alt="Open"
+          class="project-link-icon"
+          style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw"
+        />
+        <span>Ouvrir le projet</span>
+      </a>
+      } @else {
+      <p class="info-value">Lien non disponible</p>
+      }
+    </div>
+  </div>
   } @case ('group') {
   <app-group-informations [group]="selected_elements" />
   } @case ('user') {
   <app-utilisateur-information [user]="selected_elements" />
   } }
-
-  <div class="description-element">
-    <div class="subject-display">
-      <div class="table">
-        <div class="thead">
-          <div class="tr">
-            <div class="th">Element</div>
-          </div>
-        </div>
-        <div class="tbody">
-          {{ selected_elements?.id }}
-          {{ selected_elements?.name }}
-        </div>
-      </div>
-    </div>
-  </div>
 
   <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />
 
