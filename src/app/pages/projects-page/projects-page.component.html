@@ -1,0 +1,78 @@
+<div class="app-container">
+  <div class="graph" #projectsChart style="height: 100vh; border: 1px solid lightgray"></div>
+
+  <div class="list-element">
+    <div class="search-bar">
+      <input
+        #search
+        type="text"
+        name="search"
+        (input)="onSearch($event.target.value)"
+        placeholder="Rechercher un projet"
+      />
+    </div>
+
+    <hr />
+
+    <div class="element-display">
+      <div class="table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th">Element</div>
+            <!-- <div class="th">Nombre projets</div> -->
+          </div>
+        </div>
+        <div class="tbody">
+          @for (project of projects; track $index) {
+          <div class="tr">
+            <div class="td">{{ project.name }}</div>
+            <div class="td">{{ project.total_projects_count }}</div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <app-test-graph
+    #testGraph
+    (projectSelected)="onProjectSelected($event)"
+    (utilisateurSelected)="onUtilisateurSelected($event)"
+    (groupSelected)="onGroupSelected($event)"
+  ></app-test-graph> -->
+
+  <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />
+
+  <!-- affiche seulement app-projects-informations si infoVisible est true et qu'un projet est sélectionné -->
+  <!-- @if (infoVisible && selectedType === 'project') {
+  <app-projects-informations
+    [projectName]="selectedProjectName"
+    [projectDescription]="selectedProjectDescription"
+    [projectThematic]="selectedProjectThematic"
+    [projectVersion]="selectedProjectVersion"
+    [projectCreatedDate]="selectedProjectCreatedDate"
+    [projectCreator]="selectedProjectCreator"
+    [projectOriginalLink]="selectedProjectOriginalLink"
+    [projectReadme]="selectedProjectReadme"
+  >
+  </app-projects-informations>
+  } @if (infoVisible && selectedType === 'user') {
+  <app-utilisateur-information
+    [utilisateurName]="utilisateurName"
+    [utilisateurWebUrl]="utilisateurWebUrl"
+    [utilisateurNombreProjets]="utilisateurNombreProjets"
+    [projectLinks]="utilisateurProjectLinks"
+    [projects]="utilisateurProjects"
+  >
+  </app-utilisateur-information>
+  } @if (infoVisible && selectedType === 'group') {
+  <app-group-info
+    [name]="groupName"
+    [description]="groupDescription"
+    [webUrl]="groupWebUrl"
+    [createdAt]="groupCreatedAt"
+    [members]="groupMembers"
+  >
+  </app-group-info>
+  } -->
+</div>

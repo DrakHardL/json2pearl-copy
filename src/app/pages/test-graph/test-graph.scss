@@ -1,0 +1,83 @@
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #d9d9d9;
+  border-radius: 0.8vw;
+  padding: 0.4vw 0.8vw;
+  margin: 0.5vw auto 0.2vw auto;
+  max-width: 30vw;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.4vw;
+  color: #334443;
+}
+
+.search-box input::placeholder {
+  color: rgba(51, 68, 67, 0.6);
+}
+
+.search-icon {
+  height: clamp(20px, 1.5vw, 28px);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  margin-left: 0.5vw;
+  flex-shrink: 0;
+}
+
+.search-icon:hover {
+  opacity: 1;
+}
+
+button {
+  background-color: #334443;
+  border: none;
+  color: #faf8f1;
+  padding: 0.8vw 1.5vw;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 0.2vw;
+  margin: 0.2vw;
+}
+
+//responsive part
+@media (max-width: 992px) {
+  .search-box {
+    width: 90vw;
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-box {
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+  }
+
+  .search-box input {
+    padding: 0.6rem 0;
+    min-width: 0;
+  }
+}
+
+//téléphone
+@media (max-width: 600px) {
+  .search-box {
+    width: 75vw;
+  }
+}
+
+//petit téléphone
+@media (max-width: 480px) {
+  .search-box {
+    width: 75vw;
+    padding: 0.65rem 0.9rem;
+  }
+}

@@ -1,0 +1,8 @@
+<div class="toolbar">
+  @for (tool of buttons; track tool.text) {
+  <div class="toolbar-button" (click)="toolClick(tool.id)">
+    <img [src]="tool.image" [alt]="tool.text" class="icon-image" />
+    <span class="text">{{ tool.text }}</span>
+  </div>
+  }
+</div>
