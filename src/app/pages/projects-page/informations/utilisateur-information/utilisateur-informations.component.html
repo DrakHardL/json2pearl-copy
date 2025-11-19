@@ -2,15 +2,15 @@
   <div class="user-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
       <img src="UserIcon.png" alt="User Icon" style="width: 1.5vw; height: 1.5vw" />
-      <h3>{{ utilisateurName || 'Utilisateur sans nom' }}</h3>
+      <h3>{{ user?.name || 'Utilisateur sans nom' }}</h3>
     </div>
   </div>
 
   <!-- url du compte -->
   <div class="info-section">
     <p class="label">Lien du compte :</p>
-    @if (utilisateurWebUrl) {
-    <a [href]="utilisateurWebUrl" target="_blank" class="user-link">
+    @if (user?.web_url) {
+    <a [href]="user?.web_url" target="_blank" class="user-link">
       <img
         src="open.svg"
         alt="Open"
@@ -24,7 +24,7 @@
   </div>
 
   <div class="info-section">
-    <p class="info-value">{{ utilisateurNombreProjets || 0 }} projets</p>
+    <!-- <p class="info-value">{{ utilisateurNombreProjets || 0 }} projets</p> -->
   </div>
 
   <!-- projets -->
@@ -36,7 +36,7 @@
       </button>
     </div>
 
-    @if (showProjects) {
+    <!-- @if (showProjects) {
     <div class="projects-list">
       @if (!projects || projects.length === 0) {
       <p class="no-projects">Aucun projet trouvé</p>
@@ -57,6 +57,6 @@
       </ul>
       }
     </div>
-    }
+    } -->
   </div>
 </div>

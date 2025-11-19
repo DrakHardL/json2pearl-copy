@@ -1,18 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { User } from 'ngx-forge-map';
 
 @Component({
   selector: 'app-utilisateur-information',
   imports: [CommonModule],
-  templateUrl: './utilisateur-information.component.html',
-  styleUrl: './utilisateur-information.component.scss',
+  templateUrl: './utilisateur-informations.component.html',
+  styleUrl: './utilisateur-informations.component.scss',
 })
 export class UtilisateurInformation {
-  @Input() utilisateurName: string = '';
-  @Input() utilisateurWebUrl: string = '';
-  @Input() utilisateurNombreProjets: number = 0;
-  @Input() projectLinks: string[] = [];
-  @Input() projects: any[] = [];
+
+  @Input() user?: User;
 
   showProjects: boolean = false;
 

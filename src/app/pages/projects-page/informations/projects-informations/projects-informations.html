@@ -6,38 +6,38 @@
         alt="Projet"
         style="width: 1.3vw; height: 1.3vw; min-width: 16px; min-height: 16px"
       />
-      <h3 style="margin: 0">{{ projectName || 'Nom du projet' }}</h3>
+      <h3 style="margin: 0">{{ project?.name || 'Nom du projet' }}</h3>
     </div>
   </div>
 
   <div class="info-section">
-    <p class="info-value">{{ projectCreatedDate || 'Non spécifiée' }}</p>
-    <p class="info-value">{{ projectVersion || 'Non spécifiée' }}</p>
+    <p class="info-value">{{ project?.created_at || 'Non spécifiée' }}</p>
+    <!-- <p class="info-value">{{ project?.projectVersion || 'Non spécifiée' }}</p> -->
   </div>
 
   <div class="description-section">
     <p class="label">Description :</p>
-    <p class="description">{{ projectDescription || 'Aucune description disponible' }}</p>
+    <p class="description">{{ project?.description || 'Aucune description disponible' }}</p>
   </div>
 
   <!--read me section-->
   <div class="readme-section">
     <p class="label">README :</p>
     <div class="readme-content">
-      <markdown [data]="projectReadme"></markdown>
+      <markdown [data]="project?.readme_url"></markdown>
     </div>
   </div>
 
   <div class="creator-section">
     <p class="creator-label">
-      Créer par : <span class="creator-name">{{ projectCreator || 'Non spécifié' }}</span>
+      Créer par : <span class="creator-name">{{ project?.namespace?.name || 'Non spécifiée' }}</span>
     </p>
   </div>
 
   <div class="link-section">
     <p class="label">Lien du projet :</p>
-    @if (projectOriginalLink) {
-    <a [href]="projectOriginalLink" target="_blank" class="project-link">
+    @if (project?.web_url) {
+    <a [href]="project?.web_url" target="_blank" class="project-link">
       <img
         src="open.svg"
         alt="Open"
