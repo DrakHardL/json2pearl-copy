@@ -35,7 +35,9 @@ export class ProjectsComponent implements OnInit {
   protected elements: any[] = [];
   protected selected_elements: any;
   protected isLoading: boolean = false;
+  protected selected_user_projects: any[] = [];
 
+  private current_user_projects_request: Subscription | undefined;
   constructor(
     private readonly projectAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
@@ -96,6 +98,7 @@ export class ProjectsComponent implements OnInit {
 
   private onSimpleClick(id: string): void {
     const node_type = this.projects_graph.getNodeType(id);
+    this.selected_user_projects = [];
 
     if (node_type == NodeType.PROJECT) {
       this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'project' };
@@ -109,6 +112,7 @@ export class ProjectsComponent implements OnInit {
 
     if (node_type == NodeType.USER) {
       this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'user' };
+      this.loadUserProjects(this.projects_graph.getNodeID(id));
       return;
     }
   }
@@ -172,5 +176,27 @@ export class ProjectsComponent implements OnInit {
 
   private createGroup(group: any): string {
     return this.createNode(group, NodeType.GROUP, NodeShape.TRIANGLE, NodeColor.GROUP);
+  }
+
+  private loadUserProjects(userId: number | string): void {
+    if (!userId && userId !== 0) {
+      this.selected_user_projects = [];
+      return;
+    }
+
+    if (this.current_user_projects_request) {
+      this.current_user_projects_request.unsubscribe();
+    }
+
+    this.selected_user_projects = [];
+
+    this.current_user_projects_request = this.userAPI.getUserProjects(userId.toString()).subscribe({
+      next: (projects) => {
+        this.selected_user_projects = projects || [];
+      },
+      error: () => {
+        this.selected_user_projects = [];
+      },
+    });
   }
 }
