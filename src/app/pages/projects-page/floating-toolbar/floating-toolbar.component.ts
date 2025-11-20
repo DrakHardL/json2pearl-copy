@@ -17,6 +17,7 @@ export class FloatingToolbar {
     { id: ToolBarItem.VERSIONS, text: 'Afficher Versions', image: 'versions.png' },
     { id: ToolBarItem.HIDE, text: 'Cacher la sélection', image: 'Group 7.png' },
     { id: ToolBarItem.INFORMATION, text: 'Information', image: 'Group 12.png' },
+    { id: ToolBarItem.FAVORIS, text: 'Copy link', image: 'icons/copy_icon.svg' },
   ];
 
   protected toolClick(tool_id: ToolBarItem): void {

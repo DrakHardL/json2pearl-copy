@@ -1,4 +1,4 @@
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { expand, forkJoin, map, Observable, of, Subscription, switchMap } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 import { Project } from '../model/project.model';
@@ -111,4 +111,152 @@ export class ProjectApiService extends ApiService {
       })
     );
   }
+
+  getRootProjectsIdMathSearch(search: string, cursor: string) {
+    const query: string = `{projects(search: "${search}", after: "${cursor}"){pageInfo{endCursor},nodes{isForked,id}}}`;
+    return this.http.post<any>(`${this.graphql_url}?query=${query}`, '').pipe(
+      map((rep) => {
+        return rep['error'] ? { data: {} } : rep;
+      })
+    );
+  }
+
+  // getRootProjectsMathSearch(search: string, cursor: string = '') {
+  //   const query = `{ projects(search: "${search}", after: "${cursor}") {
+  //       pageInfo { endCursor }, nodes { isForked, id  } } } }`;
+
+  //   return this.getPageGraphQL(query).pipe(
+  //     expand((rep) => {
+  //       console.log(rep);
+  //       return [];
+  //     }),
+  //     map((rep) => {
+  //       rep;
+  //     })
+  //   );
+
+  //   interface Response {
+  //     data: {
+  //       projects: {
+  //         pageInfo: {
+  //           hasNextPage: boolean;
+  //           endCursor: string;
+  //         };
+  //         nodes: {
+  //           id: string;
+  //           description: string;
+  //           name: string;
+  //           isForked: boolean;
+  //           nameWithNamespace: string;
+  //           path: string;
+  //           createdAt: string;
+  //           topics: [];
+  //           sshUrlToRepo: string;
+  //           httpUrlToRepo: string;
+  //           webUrl: string;
+  //           forksCount: number;
+  //           avatarUrl: string;
+  //           starCount: number;
+  //           lastActivityAt: string;
+  //           namespace: {
+  //             id: string;
+  //             name: string;
+  //             path: string;
+  //             fullPath: string;
+  //             avatarUrl: string;
+  //             webUrl: string;
+  //           };
+  //         }[];
+  //       };
+  //     };
+  //   }
+
+  //   return this.http.post<Response>(`${this.graphql_url}?query=${query}`, '').pipe(
+  //     map((response) => {
+  //       const elements = response.data.projects.nodes
+  //         .filter((p) => !p.isForked)
+  //         .map((elt) => {
+  //           const project: Project = {
+  //             id: elt.id as unknown as number,
+  //             description: elt.description,
+  //             name: elt.name,
+  //             name_with_namespace: elt.nameWithNamespace,
+  //             path: elt.path,
+  //             path_with_namespace: elt.nameWithNamespace,
+  //             created_at: elt.createdAt,
+  //             default_branch: 'unset',
+  //             tag_list: elt.topics,
+  //             topics: elt.topics,
+  //             ssh_url_to_repo: elt.sshUrlToRepo,
+  //             http_url_to_repo: elt.httpUrlToRepo,
+  //             web_url: elt.webUrl,
+  //             readme_url: 'unset',
+  //             forks_count: elt.forksCount,
+  //             avatar_url: undefined,
+  //             star_count: elt.starCount,
+  //             last_activity_at: elt.lastActivityAt,
+  //             namespace: {
+  //               id: elt.namespace.id as unknown as number,
+  //               name: elt.namespace.name,
+  //               path: elt.namespace.path,
+  //               kind: 'unset',
+  //               full_path: elt.namespace.fullPath,
+  //               parent_id: undefined,
+  //               avatar_url: undefined,
+  //               web_url: elt.webUrl,
+  //             },
+  //           };
+  //           return project;
+  //         });
+
+  //       return { projects: elements, next: response.data.projects.pageInfo.endCursor };
+  //     })
+  //   );
+  // }
 }
+
+// const query: string = `${this.graphql_url}?query={groups(ids:"gid://gitlab/Group/${id}"){nodes{groupMembers(search:""){nodes{user{id}}}}}}`;
+// return this.http.post<any>(query, '').pipe(
+//   map((response) => {
+//     console.log(response);
+
+//     const projects: any[] = response.data.projects.nodes;
+//     const filteredProjects = projects.filter(project => !project.isForked);
+
+//     console.log(filteredProjects);
+
+//     const convertedProjects: Project[] = filteredProjects.map((p) => {
+//       const gidMatch = /(\d+)$/.exec(p.id);
+//       const id = gidMatch ? Number(gidMatch[1]) : Number(p.id) || 0;
+
+//       return {
+//         id,
+//         name: p.name,
+//         description: p.description ?? null,
+//         path: p.path,
+//         nameWithNamespace: p.nameWithNamespace,
+//         createdAt: p.createdAt,
+//         topics: p.topics ?? [],
+//         sshUrlToRepo: p.sshUrlToRepo,
+//         httpUrlToRepo: p.httpUrlToRepo,
+//         webUrl: p.webUrl,
+//         forksCount: p.forksCount ?? 0,
+//         avatarUrl: p.avatarUrl ?? null,
+//         starCount: p.starCount ?? 0,
+//         lastActivityAt: p.lastActivityAt,
+//         namespace: p.namespace ?? null,
+//       } as unknown as Project;
+//     });
+
+//     return convertedProjects;
+
+//     return {filteredProjects};
+
+//     // const members =
+//     //   response?.data?.groups?.nodes?.[0]?.groupMembers?.nodes?.map((member) => {
+//     //     const userId = member.user.id.replace('gid://gitlab/User/', '');
+//     //     return Number(userId);
+//     //   }) || [];
+//     return { response };
+//   })
+// );

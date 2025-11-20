@@ -4,4 +4,5 @@ export enum ToolBarItem {
   VERSIONS,
   HIDE,
   INFORMATION,
+  FAVORIS,
 }
