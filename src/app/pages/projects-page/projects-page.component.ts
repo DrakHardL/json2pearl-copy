@@ -18,7 +18,13 @@ import { ProjectsInformations } from "./informations/projects-informations/proje
 
 @Component({
   selector: 'app-projects-page',
-  imports: [FloatingToolbar, GroupInformations, UtilisateurInformation, MarkdownModule, ProjectsInformations],
+  imports: [
+    FloatingToolbar,
+    GroupInformations,
+    UtilisateurInformation,
+    MarkdownModule,
+    ProjectsInformations,
+  ],
   templateUrl: './projects-page.component.html',
   styleUrl: './projects-page.component.scss',
 })
@@ -81,30 +87,20 @@ export class ProjectsComponent implements OnInit {
       });
   }
 
-  private fill(topics: any[]) {
-    topics.forEach((topic) => {
-      this.projects_graph.createNode(
-        topic.name,
-        NodeType.PROJECT,
-        NodeShape.SQUARE,
-        NodeColor.PROJECT,
-        topic,
-        topic.total_projects_count
-      );
-
-      this.elements.push(topic);
+  private fill(elts: any[]) {
+    elts.forEach((elt) => {
+      this.createProject(elt);
+      this.elements.push(elt);
     });
-    // this.projects.sort((a: any, b: any) => b.total_projects_count - a.total_projects_count);
   }
 
-  /** TODO implements this methods */
+  private onSimpleClick(id: string): void {}
+
   private onDoubleClick(id_1: string): void | Subscription {
     if (!id_1) return;
 
     const node_id = this.projects_graph.getNodeID(id_1);
     const node_type = this.projects_graph.getNodeType(id_1);
-
-    console.log(node_id, node_type as NodeType, NodeType.PROJECT);
 
     if (node_type == NodeType.PROJECT) {
       this.projectAPI.getProjectUsers(node_id).subscribe((users) => {
@@ -115,10 +111,10 @@ export class ProjectsComponent implements OnInit {
       });
 
       return this.projectAPI.getProjectGroups(node_id).subscribe((groups) => {
-        groups.forEach(group => {
+        groups.forEach((group) => {
           const id_2 = this.createGroup(group);
           this.connect2nodes(id_1, id_2);
-        })
+        });
       });
     }
 
@@ -140,8 +136,6 @@ export class ProjectsComponent implements OnInit {
       });
     }
   }
-
-  private onSimpleClick(id: string): void {}
 
   private createNode(elt: any, type: NodeType, shape: NodeShape, color: NodeColor): string {
     return this.projects_graph.createNode(elt.name, type, shape, color, elt);
