@@ -14,7 +14,7 @@ import { NodeColor } from './data/node-color';
 import { finalize, Subscription } from 'rxjs';
 import { NodeType } from './data/node-type';
 import { MarkdownModule } from 'ngx-markdown';
-import { ProjectsInformations } from "./informations/projects-informations/projects-informations";
+import { ProjectsInformations } from './informations/projects-informations/projects-informations';
 
 @Component({
   selector: 'app-projects-page',
@@ -94,7 +94,24 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  private onSimpleClick(id: string): void {}
+  private onSimpleClick(id: string): void {
+    const node_type = this.projects_graph.getNodeType(id);
+
+    if (node_type == NodeType.PROJECT) {
+      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'project' };
+      return;
+    }
+
+    if (node_type == NodeType.GROUP) {
+      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'group' };
+      return;
+    }
+
+    if (node_type == NodeType.USER) {
+      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'user' };
+      return;
+    }
+  }
 
   private onDoubleClick(id_1: string): void | Subscription {
     if (!id_1) return;
