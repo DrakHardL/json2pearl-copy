@@ -6,7 +6,6 @@ import { Group } from '../model/group.model';
 import { User } from '../model/user.model';
 import { ApiService } from './api.service';
 
-
 interface ProjectsResponse {
   data: {
     projects: {
@@ -88,32 +87,28 @@ export class ProjectApiService extends ApiService {
     return this.http.get<Group[]>(`${this.REST_URL}/projects/${project_id}/groups`);
   }
 
+  getReadmeProject(project_id: number): Observable<string> {
+    return this.http.get<any[]>(`${this.REST_URL}/projects/${project_id}/repository/tree`).pipe(
+      switchMap((items) => {
+        const readme = items.find((item) => item.name.toLowerCase().startsWith('readme'));
 
-
-getReadmeProject(project_id: number): Observable<string> {
-  return this.http.get<any[]>(`${this.REST_URL}/projects/${project_id}/repository/tree`).pipe(
-    switchMap(items => {
-      const readme = items.find(item => item.name.toLowerCase().startsWith("readme"));
-      
-      if (readme) {
-        return this.http.get<any>(`${this.REST_URL}/projects/${project_id}/repository/files/${readme.path}?ref=HEAD`).pipe(
-          map(fileData => {
-            // Décodage base64 -> Uint8Array -> UTF-8 pour éviter les caractères cassés.
-            const binary = atob(fileData.content);
-            const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-            return new TextDecoder('utf-8').decode(bytes);
-          })
-        );
-      } else {
-        return of('readme indisponible');
-      }
-    })
-  );
-}
-      
-
-
-
-
-
+        if (readme) {
+          return this.http
+            .get<any>(
+              `${this.REST_URL}/projects/${project_id}/repository/files/${readme.path}?ref=HEAD`
+            )
+            .pipe(
+              map((fileData) => {
+                // Décodage base64 -> Uint8Array -> UTF-8 pour éviter les caractères cassés.
+                const binary = atob(fileData.content);
+                const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+                return new TextDecoder('utf-8').decode(bytes);
+              })
+            );
+        } else {
+          return of('readme indisponible');
+        }
+      })
+    );
+  }
 }

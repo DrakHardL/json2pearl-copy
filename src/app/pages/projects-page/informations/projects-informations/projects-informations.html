@@ -1,0 +1,52 @@
+  <div class="description-element">
+    <div class="project-header">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
+        <img
+          src="CarreProject.svg"
+          alt="Projet"
+          style="width: 1.3vw; height: 1.3vw; min-width: 16px; min-height: 16px"
+        />
+        <h3 style="margin: 0">{{ project?.name || 'Nom du projet' }}</h3>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <p class="info-value">{{ project?.created_at || 'Non spécifiée' }}</p>
+    </div>
+
+    <div class="description-section">
+      <p class="label">Description :</p>
+      <p class="description">{{ project?.description || 'Aucune description disponible' }}</p>
+    </div>
+
+    <div class="readme-section">
+      <p class="label">README :</p>
+      <div class="readme-content">
+        <markdown [data]="readme"></markdown>
+      </div>
+    </div>
+
+    <div class="creator-section">
+      <p class="creator-label">
+        Créer par :
+        <span class="creator-name">{{ project?.namespace?.name || 'Non spécifiée' }}</span>
+      </p>
+    </div>
+
+    <div class="link-section">
+      <p class="label">Lien du projet :</p>
+      @if (project?.web_url) {
+      <a [href]="project?.web_url" target="_blank" class="project-link">
+        <img
+          src="open.svg"
+          alt="Open"
+          class="project-link-icon"
+          style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw"
+        />
+        <span>Ouvrir le projet</span>
+      </a>
+      } @else {
+      <p class="info-value">Lien non disponible</p>
+      }
+    </div>
+  </div>

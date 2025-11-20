@@ -14,10 +14,11 @@ import { NodeColor } from './data/node-color';
 import { finalize, Subscription } from 'rxjs';
 import { NodeType } from './data/node-type';
 import { MarkdownModule } from 'ngx-markdown';
+import { ProjectsInformations } from "./informations/projects-informations/projects-informations";
 
 @Component({
   selector: 'app-projects-page',
-  imports: [FloatingToolbar, GroupInformations, UtilisateurInformation, MarkdownModule],
+  imports: [FloatingToolbar, GroupInformations, UtilisateurInformation, MarkdownModule, ProjectsInformations],
   templateUrl: './projects-page.component.html',
   styleUrl: './projects-page.component.scss',
 })
@@ -53,6 +54,7 @@ export class ProjectsComponent implements OnInit {
 
   protected onItemSelected(item: any, type: string): void {
     this.selected_elements = { ...item, type: type };
+    console.log(this.selected_elements);
   }
 
   private current_search_request: Subscription | undefined;
