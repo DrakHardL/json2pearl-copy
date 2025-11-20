@@ -39,7 +39,7 @@
   @switch (selected_elements?.type) { @case ('project') {
   <app-projects-informations [project]="selected_elements" />
   } @case ('group') {
-  <app-group-informations [group]="selected_elements" />
+  <app-group-informations [group]="selected_elements" [members]="selected_group_members" />
   } @case ('user') {
   <app-utilisateur-information
     [user]="selected_elements"
