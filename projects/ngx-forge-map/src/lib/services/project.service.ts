@@ -6,6 +6,7 @@ import { Group } from '../model/group.model';
 import { User } from '../model/user.model';
 import { ApiService } from './api.service';
 
+
 interface ProjectsResponse {
   data: {
     projects: {
@@ -96,7 +97,12 @@ getReadmeProject(project_id: number): Observable<string> {
       
       if (readme) {
         return this.http.get<any>(`${this.REST_URL}/projects/${project_id}/repository/files/${readme.path}?ref=HEAD`).pipe(
-        map(fileData => atob(fileData.content))//.split('\n').slice(0, 10).join('\n'))
+          map(fileData => {
+            // Décodage base64 -> Uint8Array -> UTF-8 pour éviter les caractères cassés.
+            const binary = atob(fileData.content);
+            const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+            return new TextDecoder('utf-8').decode(bytes);
+          })
         );
       } else {
         return of('readme indisponible');

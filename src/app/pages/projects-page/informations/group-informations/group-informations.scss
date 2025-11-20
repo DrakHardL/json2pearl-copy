@@ -29,6 +29,11 @@
   color: #000;
 }
 
+.group-header-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .description-section {
   margin-bottom: 2.5%;
   display: flex;
@@ -73,6 +78,13 @@
   background: rgba(255, 255, 255, 0.2);
   border-radius: 0.4vw;
   transition: background 0.2s ease;
+}
+
+.group-link-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
 }
 
 .group-link:hover {
@@ -150,6 +162,12 @@
   transition: background 0.2s ease;
 }
 
+.member-link-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
 .member-link:hover {
   background: rgba(255, 255, 255, 0.4);
 }
@@ -159,4 +177,147 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+
+
+
+
+
+
+// responsive part (tablette/petit laptop)
+@media (max-width: 1020px) {
+  .rectangleInfoGroup {
+    width: clamp(240px, 32vw, 360px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    padding: 2.5%;
+  }
+
+  /* tailles texte et icônes */
+  .group-link {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+  .text {
+    font-size: 0.95rem;
+  }
+  .group-link-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-right: 0.45rem;
+  }
+  .members-toggle .icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .member-name {
+    font-size: 0.95rem;
+  }
+}
+
+// responsive part (tablette portrait)
+@media (max-width: 768px) {
+  .rectangleInfoGroup {
+    width: clamp(240px, 34vw, 400px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    max-height: 70vh;
+    padding: 3%;
+  }
+
+  .group-header h3,
+  .label,
+  .description,
+  .info-value {
+    font-size: 1rem;
+  }
+
+  .group-link {
+    font-size: 1rem;
+    padding: 0.65rem;
+  }
+  .text {
+    font-size: 1rem;
+  }
+  .group-link-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-right: 0.5rem;
+  }
+  .members-toggle .icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .member-name {
+    font-size: 1rem;
+  }
+}
+
+// responsive part (téléphone)
+@media (max-width: 600px) {
+  .rectangleInfoGroup {
+    width: 80vw;
+    right: 2%;
+    left: auto;
+    padding: 3.5%;
+  }
+
+  .group-link {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+  .text {
+    font-size: 0.95rem;
+  }
+  .group-link-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+  .members-toggle .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .member-name {
+    font-size: 0.95rem;
+  }
+}
+
+// responsive part (petit téléphone)
+@media (max-width: 480px) {
+  .rectangleInfoGroup {
+    width: 88vw;
+    right: 2%;
+    left: auto;
+    max-height: 75vh;
+  }
+
+  .group-link {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+  .text {
+    font-size: 0.95rem;
+  }
+  .group-link-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-right: 0.55rem;
+  }
+  .members-toggle .icon {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  .member-name {
+    font-size: 0.95rem;
+  }
 }

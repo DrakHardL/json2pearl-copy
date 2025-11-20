@@ -1,5 +1,4 @@
 import { UtilisateurInformation } from './informations/utilisateur-information/utilisateur-informations.component';
-import { ProjectsInformations } from './informations/projects-informations/projects-informations';
 import { GroupInformations } from './informations/group-informations/group-informations';
 import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
 import {
@@ -14,10 +13,11 @@ import { ToolBarItem as ToolbarItem } from './data/toolbar-item';
 import { NodeColor } from './data/node-color';
 import { finalize, Subscription } from 'rxjs';
 import { NodeType } from './data/node-type';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-projects-page',
-  imports: [FloatingToolbar, ProjectsInformations, GroupInformations, UtilisateurInformation],
+  imports: [FloatingToolbar, GroupInformations, UtilisateurInformation, MarkdownModule],
   templateUrl: './projects-page.component.html',
   styleUrl: './projects-page.component.scss',
 })
