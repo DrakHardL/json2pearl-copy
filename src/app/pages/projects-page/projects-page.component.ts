@@ -18,6 +18,7 @@ import { ProjectsInformations } from './informations/projects-informations/proje
 import { Route } from '@angular/router';
 import * as LZString from 'lz-string';
 import { Router } from '@angular/router';
+import { UrlManager } from '../../services/url-manager/url-manager';
 
 @Component({
   selector: 'app-projects-page',
@@ -43,7 +44,8 @@ export class ProjectsComponent implements OnInit {
     private readonly projectAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
     private readonly userAPI: UserApiService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly urlManager: UrlManager
   ) {}
 
   ngOnInit(): void {
@@ -58,18 +60,9 @@ export class ProjectsComponent implements OnInit {
   }
 
   private load_state(): void {
-    let ids_projects: string[] = history.state.data.projects || [];
-    if (ids_projects[0] == '') {
-      ids_projects = [];
-    }
-    let ids_users: string[] = history.state.data.users || [];
-    if (ids_users[0] == '') {
-      ids_users = [];
-    }
-    let ids_groups: string[] = history.state.data.groups || [];
-    if (ids_groups[0] == '') {
-      ids_groups = [];
-    }
+    let ids_projects: number[] = history.state.data.projects || [];
+    let ids_users: number[] = history.state.data.users || [];
+    let ids_groups: number[] = history.state.data.groups || [];
 
     ids_projects.forEach((id) => {
       this.projectAPI.getProject(id as unknown as number).subscribe((project) => {
@@ -77,7 +70,7 @@ export class ProjectsComponent implements OnInit {
 
         this.projectAPI.getProjectUsers(id as unknown as number).subscribe((users) => {
           users.forEach((user) => {
-            if (ids_users.indexOf(user.id.toString()) != -1) {
+            if (ids_users.indexOf(user.id) != -1) {
               const id_2 = this.createUser(user);
               this.connect_2_nodes(id_1, id_2);
             }
@@ -85,7 +78,7 @@ export class ProjectsComponent implements OnInit {
         });
         this.projectAPI.getProjectGroups(id as unknown as number).subscribe((groups) => {
           groups.forEach((group) => {
-            if (ids_groups.indexOf(group.id.toString()) != -1) {
+            if (ids_groups.indexOf(group.id) != -1) {
               const id_2 = this.createGroup(group);
               this.connect_2_nodes(id_1, id_2);
             }
@@ -138,18 +131,13 @@ export class ProjectsComponent implements OnInit {
     const ids_users = this.projects_graph.getNodesIDByType(NodeType.USER);
     const ids_groups = this.projects_graph.getNodesIDByType(NodeType.GROUP);
 
-    const url2 = this.router.createUrlTree(['favoris'], {
-      queryParams: {
-        projects: LZString.compressToEncodedURIComponent(ids_projects.join(',')),
-        users: LZString.compressToEncodedURIComponent(ids_users.join(',')),
-        groups: LZString.compressToEncodedURIComponent(ids_groups.join(',')),
-      },
-    });
+    const url = this.urlManager.getEncodedUrl([
+      { key: 'projects', value: ids_projects },
+      { key: 'users', value: ids_users },
+      { key: 'groups', value: ids_groups },
+    ]);
 
-    const finalUrl = window.location.origin + this.router.serializeUrl(url2);
-
-    // Copier dans le presse-papiers
-    navigator.clipboard.writeText(finalUrl);
+    console.log(url);
   }
 
   private onHideToolClicked(): void {
