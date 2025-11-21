@@ -9,3 +9,5 @@ export * from './lib/model/group.model';
 export * from './lib/model/project.model';
 export * from './lib/model/topic.model';
 export * from './lib/model/user.model';
+
+export * from './lib/pages/graph-demo/graph-demo';
