@@ -40,7 +40,7 @@ export class TopicsComponent {
       const topic: Topic | undefined = this.getTopicByID(topic_id);
 
       if (topic) {
-        this.router.navigate(['/projects'], { queryParams: { topic: topic.name } });
+        this.router.navigate(['/projects'], { queryParams: { topics: topic.name } });
       }
     });
 

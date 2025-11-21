@@ -15,7 +15,7 @@ import { expand, finalize, firstValueFrom, map, Observable, Subscription, takeWh
 import { NodeType } from './data/node-type';
 import { MarkdownModule } from 'ngx-markdown';
 import { ProjectsInformations } from './informations/projects-informations/projects-informations';
-import { Route } from '@angular/router';
+import { ActivatedRoute, Route } from '@angular/router';
 import * as LZString from 'lz-string';
 import { Router } from '@angular/router';
 import { UrlManager } from '../../services/url-manager/url-manager';
@@ -35,20 +35,23 @@ import { UrlManager } from '../../services/url-manager/url-manager';
 export class ProjectsComponent implements OnInit {
   @ViewChild('projectsChart', { static: true }) projects_chart!: ElementRef;
   protected projects_graph!: GraphForge;
-
-  protected elements: any[] = [];
-  protected selected_elements: any;
   protected isLoading: boolean = false;
+  protected selected_elements: any;
+  protected elements: any[] = [];
+
+  private restriction_topics: string | undefined;
 
   constructor(
     private readonly projectAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
     private readonly userAPI: UserApiService,
-    private readonly router: Router,
-    private readonly urlManager: UrlManager
+    private readonly urlManager: UrlManager,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+
     this.projects_graph = new GraphForge(this.projects_chart.nativeElement);
 
     this.projects_graph.onNodeDoubleClick().subscribe((id) => this.onDoubleClick(id));
@@ -56,6 +59,12 @@ export class ProjectsComponent implements OnInit {
 
     if (history.state.data) {
       return this.load_state();
+    }
+
+    const snapshotParams = this.route.snapshot.queryParamMap;
+    if (snapshotParams.has('topics')) {
+      this.restriction_topics = snapshotParams.get('topics')!;
+      this.showAllProjectMatchTopic();
     }
   }
 
@@ -152,9 +161,8 @@ export class ProjectsComponent implements OnInit {
 
   private current_search_request: Subscription | undefined;
   protected async onSearch(query: string) {
-    if (query.length == 0) {
-      return;
-      // return this.showAllTopics();
+    if (query.length == 0 || this.restriction_topics) {
+      return this.showAllProjectMatchTopic();
     }
     if (this.current_search_request) {
       this.current_search_request.unsubscribe();
@@ -172,6 +180,14 @@ export class ProjectsComponent implements OnInit {
       .subscribe((rep) => {
         this.fill(rep);
       });
+  }
+
+  private showAllProjectMatchTopic() {
+    if (!this.restriction_topics) return;
+
+    this.projectAPI.getProjectsMatchTopic(this.restriction_topics).subscribe((projects) => {
+      this.fill(projects);
+    });
   }
 
   private fill(elts: any[]) {
