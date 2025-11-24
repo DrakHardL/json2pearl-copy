@@ -5,7 +5,7 @@ import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { expand, finalize, map, Observable, Subscription } from 'rxjs';
 import { UrlManager } from '../../services/url-manager/url-manager';
-import { ToolBarItem as ToolbarItem } from '../../data/toolbar-item';
+import { ToolBarItem as ToolbarItem } from '../../models/toolbar-item';
 import { ActivatedRoute } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import {
