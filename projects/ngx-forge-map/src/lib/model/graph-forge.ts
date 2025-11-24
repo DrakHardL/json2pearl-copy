@@ -1,5 +1,9 @@
 import { EventEmitter } from '@angular/core';
 import { DataSet, Edge, network, Network, Node, Options } from 'vis-network/standalone';
+import { Project } from './project.model';
+import { Topic } from './topic.model';
+import { Group } from './group.model';
+import { User } from './user.model';
 
 interface NodeGraph extends Node {
   data?: {
@@ -23,6 +27,19 @@ export enum NodeShape {
   TRIANGLE_DOWN = 'triangleDown',
   HEXAGON = 'hexagon',
   ICON = 'icon',
+}
+
+export enum NodeType {
+  PROJECT,
+  USER,
+  GROUP,
+  SUBJECT,
+}
+
+enum NodeColor {
+  PROJECT = '#E0AC54',
+  USER = '#78B1DD',
+  GROUP = '#55D764',
 }
 
 export class GraphForge {
@@ -50,12 +67,13 @@ export class GraphForge {
 
   private readonly _network;
 
+  private readonly resisted_edges = new Map<string, string>();
   private readonly dataSet_nodes = new DataSet<NodeGraph>();
   private readonly dataSet_edges = new DataSet<EdgeGraph>();
   private readonly ref_nodes = new Map<NodeShape, Map<number, string>>();
   private readonly reverse_ref_node = new Map<string, { type: NodeShape; id: number }>();
 
-  constructor(private readonly container: HTMLElement) {
+  constructor(container: HTMLElement) {
     this._network = new Network(
       container,
       { nodes: this.dataSet_nodes, edges: this.dataSet_edges },
@@ -63,20 +81,6 @@ export class GraphForge {
     );
   }
 
-  /**
-   * Creates a new node in the graph with the specified properties.
-   *
-   * @param label - The display label for the node.
-   * @param type - The type identifier for the node.
-   * @param shape - The shape of the node, as defined by `NodeShape`.
-   * @param color - The background color of the node (CSS color string).
-   * @param data - Optional additional data to associate with the node.
-   *
-   * @remarks
-   * - The node ID is generated based on the type and the `data.id` property.
-   * - If a node with the same ID already exists, the method will log a warning and not create a duplicate.
-   * - The new node is added to the internal node dataset and can be referenced by its generated ID.
-   */
   createNode(
     label: string,
     type: number,
@@ -109,8 +113,7 @@ export class GraphForge {
     return `==${type}==${id}==`;
   }
 
-  private readonly resisted_edges = new Map<string, string>();
-  connectNodes(id_1: string, id_2: string) {
+  connectNodes(id_1: string, id_2: string): void {
     if (
       this.resisted_edges.has(`||${id_1}||${id_2}||`) ||
       this.resisted_edges.has(`||${id_2}||${id_1}||`)
@@ -151,7 +154,7 @@ export class GraphForge {
     return elt_id as unknown as number;
   }
 
-  onNodeDoubleClick() {
+  onNodeDoubleClick(): EventEmitter<string> {
     const event = new EventEmitter<string>();
     const temp = new EventEmitter<string>();
     temp.subscribe((id) => {
@@ -164,7 +167,7 @@ export class GraphForge {
     return event;
   }
 
-  onNodeSelect() {
+  onNodeSelect(): EventEmitter<string> {
     const event = new EventEmitter<string>();
     const temp = new EventEmitter<string>();
     temp.subscribe((id) => {
@@ -177,7 +180,7 @@ export class GraphForge {
     return event;
   }
 
-  removeNode(id: string) {
+  removeNode(id: string): void {
     this.dataSet_nodes.remove(id);
   }
 
@@ -185,16 +188,14 @@ export class GraphForge {
     return (this.dataSet_nodes.get(id) as NodeGraph).data;
   }
 
-  selectNode(id: string) {
+  selectNode(id: string): void {
     this._network.selectNodes([id]);
   }
 
   getNodesIDByType(type: number): number[] {
     let nodes: NodeGraph[] = this.dataSet_nodes.get();
-    console.log(nodes);
 
     nodes = nodes.filter((n) => (n.id?.toString().split('==')[1] as unknown as number) == type);
-    console.log(nodes);
 
     return nodes.map((n) => n.id!.toString().split('==')[2] as unknown as number);
   }
@@ -203,12 +204,51 @@ export class GraphForge {
     this._network.fit({
       animation: {
         duration: 2000,
-        easingFunction: 'easeOutCubic'
-      }
+        easingFunction: 'easeOutCubic',
+      },
     });
   }
 
   focus(id: string): void {
     this._network.focus(id);
+  }
+
+  // ========== UPDATE ========== //
+
+  public createProject(project: Project, size?: number): string {
+    return this.createNode(
+      project.name,
+      NodeType.PROJECT,
+      NodeShape.SQUARE,
+      NodeColor.PROJECT,
+      project,
+      size
+    );
+  }
+
+  public createTopic(topic: Topic, size?: number): string {
+    return this.createNode(
+      topic.name,
+      NodeType.SUBJECT,
+      NodeShape.HEXAGON,
+      NodeColor.GROUP,
+      topic,
+      size
+    );
+  }
+
+  public createGroup(group: Group, size?: number): string {
+    return this.createNode(
+      group.name,
+      NodeType.GROUP,
+      NodeShape.TRIANGLE,
+      NodeColor.GROUP,
+      group,
+      size
+    );
+  }
+
+  public createUser(user: User, size?: number): string {
+    return this.createNode(user.name, NodeType.USER, NodeShape.DOT, NodeColor.USER, user, size);
   }
 }

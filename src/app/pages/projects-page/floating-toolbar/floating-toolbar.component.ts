@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ToolBarItem } from '../data/toolbar-item';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { ToolBarItem } from '../../../models/toolbar-item';
 import { CommonModule } from '@angular/common';
 
 @Component({
