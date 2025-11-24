@@ -1,6 +1,6 @@
 import { UrlManager } from '../../services/url-manager/url-manager';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-favoris',
@@ -11,7 +11,6 @@ import { Component, OnInit } from '@angular/core';
 export class FavorisComponent implements OnInit {
   constructor(
     private readonly router: Router,
-    private readonly route: ActivatedRoute,
     private readonly urlManager: UrlManager
   ) {}
 
