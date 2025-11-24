@@ -1,9 +1,7 @@
-import { GraphForge, NodeShape, TopicApiService } from 'ngx-forge-map';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { NodeColor } from '../projects-page/data/node-color';
-import { NodeType } from '../projects-page/data/node-type';
-import { Router, RouterLink } from '@angular/router';
+import { GraphForge, NodeType, TopicApiService } from 'ngx-forge-map';
 import { finalize, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface Topic {
   id: number;
@@ -19,79 +17,59 @@ export interface Topic {
   selector: 'app-topics-page',
   templateUrl: './topics-page.component.html',
   styleUrl: './topics-page.component.scss',
-  imports: [RouterLink],
 })
 export class TopicsComponent {
   @ViewChild('topicsChart', { static: true }) topicsChart!: ElementRef;
-  protected topics_graph!: GraphForge;
-  protected topics: Topic[] = [];
-  protected selected_topic: any;
+  private current_search_request?: Subscription;
 
-  constructor(private readonly topicAPI: TopicApiService, private readonly router: Router) {}
+  protected topicGraph!: GraphForge;
+  protected topics: Topic[] = [];
+  protected selectedTopic: any;
+
+  constructor(private readonly topicService: TopicApiService, private readonly router: Router) {}
 
   ngOnInit() {
-    this.topics_graph = new GraphForge(this.topicsChart.nativeElement);
-    this.topics_graph.onNodeSelect().subscribe((id) => {
-      this.onNodeSelect(id);
-    });
+    this.topicGraph = new GraphForge(this.topicsChart.nativeElement);
 
-    this.topics_graph.onNodeDoubleClick().subscribe((rep) => {
-      const topic_id: number = this.topics_graph.getNodeID(rep);
-      const topic: Topic | undefined = this.getTopicByID(topic_id);
-
-      if (topic) {
-        this.router.navigate(['/projects'], { queryParams: { topics: topic.name } });
-      }
-    });
+    this.topicGraph.onNodeSelect().subscribe((id) => this.onNodeClicked(id));
+    this.topicGraph.onNodeDoubleClick().subscribe((id) => this.onNodeDoubleClicked(id));
 
     this.showAllTopics();
   }
 
-  private showAllTopics() {
-    this.topicAPI.getTopics().subscribe((topics) => {
+  // ========== PRIVATE METHODES ========== //
+
+  private onNodeDoubleClicked(id: string): void {
+    const topic_id: number = this.topicGraph.getNodeID(id);
+    const topic: Topic | undefined = this.getTopicByID(topic_id);
+
+    if (topic) this.redirectToProjects(topic);
+  }
+
+  private redirectToProjects(topic: Topic): void {
+    this.router.navigate(['/projects'], { queryParams: { topics: topic.name } });
+  }
+
+  private onNodeClicked(id: string) {
+    const true_id = this.topicGraph.getNodeID(id);
+    const topic = this.getTopicByID(true_id);
+    if (topic) {
+      this.selectedTopic = topic;
+    }
+  }
+
+  private showAllTopics(): Subscription {
+    return this.topicService.getTopics().subscribe((topics) => {
       this.fill(topics);
     });
   }
 
   private fill(topics: Topic[]) {
     topics.forEach((topic) => {
-      this.topics_graph.createNode(
-        topic.name,
-        NodeType.SUBJECT,
-        NodeShape.HEXAGON,
-        NodeColor.GROUP,
-        topic,
-        topic.total_projects_count
-      );
-
+      this.topicGraph.createTopic(topic, topic.total_projects_count);
       this.topics.push(topic);
     });
     this.topics.sort((a: any, b: any) => b.total_projects_count - a.total_projects_count);
-  }
-
-  private current_search_request: Subscription | undefined;
-  protected async onSearch(query: string) {
-    if (query.length == 0) {
-      return this.showAllTopics();
-    }
-    if (this.current_search_request) {
-      this.current_search_request.unsubscribe();
-    }
-    if (query.length >= 1) {
-      this.topics = [];
-      this.topics_graph.clear();
-      this.current_search_request = await this.topicAPI
-        .getTopicsMatchSearch(query)
-        .pipe(
-          finalize(() => {
-            this.topics_graph.fit();
-          })
-        )
-        .subscribe((rep) => {
-          console.log(rep);
-          this.fill(rep);
-        });
-    }
   }
 
   private getTopicByID(id: number): Topic | undefined {
@@ -106,25 +84,41 @@ export class TopicsComponent {
     return rep;
   }
 
-  private onNodeSelect(id: string) {
-    const true_id = this.topics_graph.getNodeID(id);
-    const topic = this.getTopicByID(true_id);
-    if (topic) {
-      this.selected_topic = topic;
+  // ========== PROTECTED METHODES ========== //
+
+  protected serach(query: string): void {
+    if (this.current_search_request) this.current_search_request.unsubscribe();
+
+    if (query.length == 0) {
+      this.current_search_request = this.showAllTopics();
+      return;
     }
+
+    this.topics = [];
+    this.topicGraph.clear();
+    this.current_search_request = this.topicService
+      .getTopicsMatchSearch(query)
+      .pipe(
+        finalize(() => {
+          this.topicGraph.fit();
+        })
+      )
+      .subscribe((rep) => {
+        this.fill(rep);
+      });
   }
 
   protected subjectSelected(topic: Topic) {
-    this.selected_topic = topic;
-    this.topics_graph.selectNode(
-      this.topics_graph.generateID(NodeType.SUBJECT, topic.id.toString())
-    );
+    this.selectedTopic = topic;
+    this.topicGraph.selectNode(this.topicGraph.generateID(NodeType.SUBJECT, topic.id.toString()));
   }
 
-  private on2Click(node_id: string): void {}
-
   protected test2clickEvent(elt: any): void {
-    let t = this.topics_graph.generateID(elt?.type, elt.id);
+    let t = this.topicGraph.generateID(elt?.type, elt.id);
     console.log(elt, t);
+  }
+
+  protected exploreClick(): void {
+    this.redirectToProjects(this.selectedTopic);
   }
 }

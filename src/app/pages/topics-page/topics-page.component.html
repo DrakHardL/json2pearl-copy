@@ -7,7 +7,7 @@
         #search
         type="text"
         name="search"
-        (input)="onSearch($event.target.value)"
+        (input)="serach($event.target.value)"
         placeholder="Rechercher un sujet"
       />
     </div>
@@ -28,8 +28,8 @@
             class="tr"
             (click)="subjectSelected(topic)"
             (dblclick)="test2clickEvent(topic)"
-            [class.selected]="topic.id == selected_topic?.id"
-            [class.hoverable]="topic.id != selected_topic?.id"
+            [class.selected]="topic.id == selectedTopic?.id"
+            [class.hoverable]="topic.id != selectedTopic?.id"
           >
             <div class="td">{{ topic.name }}</div>
             <div class="td">{{ topic.total_projects_count }}</div>
@@ -40,8 +40,8 @@
     </div>
 
     <button
-      [disabled]="!selected_topic"
-      [routerLink]="['/projects', { topics: selected_topic?.name }]"
+      [disabled]="!selectedTopic"
+      (click)="exploreClick()"
     >
       Explore
     </button>

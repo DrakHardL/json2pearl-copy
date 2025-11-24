@@ -1,24 +1,20 @@
 import { UtilisateurInformation } from './informations/utilisateur-information/utilisateur-informations.component';
+import { ProjectsInformations } from './informations/projects-informations/projects-informations';
 import { GroupInformations } from './informations/group-informations/group-informations';
 import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { expand, finalize, map, Observable, Subscription } from 'rxjs';
+import { UrlManager } from '../../services/url-manager/url-manager';
+import { ToolBarItem as ToolbarItem } from '../../data/toolbar-item';
+import { ActivatedRoute } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
 import {
   GraphForge,
   GroupApiService,
-  NodeShape,
+  NodeType,
   ProjectApiService,
   UserApiService,
 } from 'ngx-forge-map';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ToolBarItem as ToolbarItem } from './data/toolbar-item';
-import { NodeColor } from './data/node-color';
-import { expand, finalize, firstValueFrom, map, Observable, Subscription, takeWhile } from 'rxjs';
-import { NodeType } from './data/node-type';
-import { MarkdownModule } from 'ngx-markdown';
-import { ProjectsInformations } from './informations/projects-informations/projects-informations';
-import { ActivatedRoute, Route } from '@angular/router';
-import * as LZString from 'lz-string';
-import { Router } from '@angular/router';
-import { UrlManager } from '../../services/url-manager/url-manager';
 
 @Component({
   selector: 'app-projects-page',
@@ -33,7 +29,8 @@ import { UrlManager } from '../../services/url-manager/url-manager';
   styleUrl: './projects-page.component.scss',
 })
 export class ProjectsComponent implements OnInit {
-  @ViewChild('projectsChart', { static: true }) projects_chart!: ElementRef;
+  @ViewChild('projectsChart', { static: true })
+  protected projects_chart!: ElementRef;
   protected projects_graph!: GraphForge;
   protected isLoading: boolean = false;
   protected selected_elements: any;
@@ -46,12 +43,10 @@ export class ProjectsComponent implements OnInit {
     private readonly groupAPI: GroupApiService,
     private readonly userAPI: UserApiService,
     private readonly urlManager: UrlManager,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-
     this.projects_graph = new GraphForge(this.projects_chart.nativeElement);
 
     this.projects_graph.onNodeDoubleClick().subscribe((id) => this.onDoubleClick(id));
@@ -257,12 +252,8 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
-  private createNode(elt: any, type: NodeType, shape: NodeShape, color: NodeColor): string {
-    return this.projects_graph.createNode(elt.name, type, shape, color, elt);
-  }
-
   private createUser(user: any): string {
-    return this.createNode(user, NodeType.USER, NodeShape.DOT, NodeColor.USER);
+    return this.projects_graph.createUser(user);
   }
 
   private connect2nodes(id_1: string, id_2: string): void {
@@ -270,10 +261,10 @@ export class ProjectsComponent implements OnInit {
   }
 
   private createProject(project: any): string {
-    return this.createNode(project, NodeType.PROJECT, NodeShape.SQUARE, NodeColor.PROJECT);
+    return this.projects_graph.createProject(project);
   }
 
   private createGroup(group: any): string {
-    return this.createNode(group, NodeType.GROUP, NodeShape.TRIANGLE, NodeColor.GROUP);
+    return this.projects_graph.createGroup(group);
   }
 }
