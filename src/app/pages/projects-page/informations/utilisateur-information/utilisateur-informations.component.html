@@ -36,7 +36,7 @@
       </button>
     </div>
 
-    <!-- @if (showProjects) {
+    @if (showProjects) {
     <div class="projects-list">
       @if (!projects || projects.length === 0) {
       <p class="no-projects">Aucun projet trouvé</p>
@@ -44,9 +44,13 @@
       <ul class="project-links">
         @for (project of projects; track project.id) {
         <li>
-          <a [href]="project.web_url" target="_blank" class="project-link">
+          <a
+            [href]="project.web_url || project.http_url_to_repo"
+            target="_blank"
+            class="project-link"
+          >
             <img
-              [src]="project.avatar_url || 'default-project.svg'"
+              [src]="project.avatar_url || 'versions.png'"
               [alt]="project.name"
               class="project-avatar"
             />
@@ -57,6 +61,6 @@
       </ul>
       }
     </div>
-    } -->
+    }
   </div>
 </div>

@@ -41,7 +41,10 @@
   } @case ('group') {
   <app-group-informations [group]="selected_elements" />
   } @case ('user') {
-  <app-utilisateur-information [user]="selected_elements" />
+  <app-utilisateur-information
+    [user]="selected_elements"
+    [projects]="selected_user_projects"
+  />
   } }
 
   <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />

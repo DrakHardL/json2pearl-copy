@@ -11,6 +11,7 @@ import { User } from 'ngx-forge-map';
 export class UtilisateurInformation {
 
   @Input() user?: User;
+  @Input() projects: any[] = [];
 
   showProjects: boolean = false;
 
