@@ -7,6 +7,11 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "paths": {
+      "ngx-forge-map": [
+        "./dist/ngx-forge-map"
+      ]
+    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -29,6 +34,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ngx-forge-map/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-forge-map/tsconfig.spec.json"
     }
   ]
 }

@@ -28,8 +28,12 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "marked": "^16.4.1",
+    "ngx-markdown": "^20.1.0",
+    "lz-string": "^1.5.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "vis-network": "^10.0.2",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
@@ -43,6 +47,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^20.3.0",
     "typescript": "~5.9.2"
   }
 }

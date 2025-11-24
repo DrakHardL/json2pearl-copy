@@ -1,12 +1,21 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-
+import { MarkdownModule } from 'ngx-markdown';
 import { routes } from './app.routes';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+  importProvidersFrom,
+} from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
+    importProvidersFrom(MarkdownModule.forRoot({ loader: HttpClient })),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
-  ]
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes),
+    provideHttpClient(),
+  ],
 };

@@ -1,0 +1,68 @@
+.list-elements {
+  position: absolute;
+  background-color: white;
+  border: 0.0625rem solid black;
+  border-radius: 0.3125rem;
+  box-shadow: 0 0.25rem 0.25rem black;
+  height: 90vh;
+  top: 50%;
+  transform: translate(1.5vw, -50%);
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+
+  .subject-display {
+    overflow: scroll;
+  }
+
+  input,
+  button {
+    background-color: #ededed;
+    border: none;
+    outline: none;
+    padding: 0.3125rem 0.625rem;
+    font-size: 1rem;
+    border-radius: 0.1875rem;
+    margin: 0.3125rem;
+  }
+
+  button {
+    cursor: pointer;
+    &:disabled {
+      cursor: not-allowed;
+    }
+    &:hover {
+      background-color: #d4d4d4;
+    }
+  }
+
+  .tr {
+    margin: 0.3125rem;
+    padding: 0.3125rem;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0.125rem;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &.hoverable:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.selected {
+      background-color: #d8d8d8;
+    }
+  }
+
+  .tbody .tr {
+    cursor: pointer;
+  }
+
+  .nb-elements {
+    color: grey;
+    font-size: 0.625rem;
+  }
+}

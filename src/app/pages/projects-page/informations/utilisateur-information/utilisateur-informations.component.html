@@ -1,0 +1,62 @@
+<div class="rectangleInfoUtilisateur" style="z-index: 1000">
+  <div class="user-header">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
+      <img src="UserIcon.png" alt="User Icon" style="width: 1.5vw; height: 1.5vw" />
+      <h3>{{ user?.name || 'Utilisateur sans nom' }}</h3>
+    </div>
+  </div>
+
+  <!-- url du compte -->
+  <div class="info-section">
+    <p class="label">Lien du compte :</p>
+    @if (user?.web_url) {
+    <a [href]="user?.web_url" target="_blank" class="user-link">
+      <img
+        src="majesticons_open.svg"
+        alt="Open"
+        style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw"
+      />
+      <span>Ouvrir le profil</span>
+    </a>
+    } @else {
+    <p class="info-value">Non spécifiée</p>
+    }
+  </div>
+
+  <div class="info-section">
+    <!-- <p class="info-value">{{ utilisateurNombreProjets || 0 }} projets</p> -->
+  </div>
+
+  <!-- projets -->
+  <div class="projects-section">
+    <div class="projects-header">
+      <p class="label">Projets :</p>
+      <button class="projects-toggle" (click)="toggleProjects()" aria-label="Afficher projets">
+        <img src="majesticons_open.svg" alt="open" class="icon" />
+      </button>
+    </div>
+
+    <!-- @if (showProjects) {
+    <div class="projects-list">
+      @if (!projects || projects.length === 0) {
+      <p class="no-projects">Aucun projet trouvé</p>
+      } @else {
+      <ul class="project-links">
+        @for (project of projects; track project.id) {
+        <li>
+          <a [href]="project.web_url" target="_blank" class="project-link">
+            <img
+              [src]="project.avatar_url || 'default-project.svg'"
+              [alt]="project.name"
+              class="project-avatar"
+            />
+            <span class="project-name">{{ project.name }}</span>
+          </a>
+        </li>
+        }
+      </ul>
+      }
+    </div>
+    } -->
+  </div>
+</div>

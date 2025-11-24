@@ -1,0 +1,48 @@
+<div class="app-container">
+  <div class="graph" #projectsChart style="height: 100vh; border: 1px solid lightgray"></div>
+
+  <div class="list-elements">
+    <div class="search-bar">
+      <input
+        #search
+        type="text"
+        name="search"
+        (input)="onSearch($event.target.value)"
+        placeholder="Rechercher un sujet"
+      />
+    </div>
+
+    <div class="nb-elements">element charger : {{ elements.length }}</div>
+
+    @if (isLoading) {
+    <div><img src="images/projects.png" sizes="12px" /></div>
+    }
+
+    <div class="subject-display">
+      <div class="table">
+        <div class="thead">
+          <div class="tr">
+            <div class="th">Element</div>
+          </div>
+        </div>
+        <div class="tbody">
+          @for (elt of elements; track $index) {
+          <div class="tr" (click)="onItemSelected(elt, 'project')">
+            {{ elt.name }}
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @switch (selected_elements?.type) { @case ('project') {
+  <app-projects-informations [project]="selected_elements" />
+  } @case ('group') {
+  <app-group-informations [group]="selected_elements" />
+  } @case ('user') {
+  <app-utilisateur-information [user]="selected_elements" />
+  } }
+
+  <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />
+</div>

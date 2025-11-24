@@ -1,0 +1,124 @@
+.toolbar {
+  position: fixed;
+  left: 50%;
+  bottom: 2vw;
+  top: auto;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  background: #d9d9d9;
+  backdrop-filter: blur(10px);
+  border-radius: 0.6vw;
+  padding: 0.5vw;
+  box-shadow: 0 0.2vw 1vw rgba(0, 0, 0, 0.15);
+
+  width: auto;
+  z-index: 1000;
+  gap: 0.4rem; //espade constant entre boutons
+  max-width: 90vw; //évite que la toolbar dépasse de l'écran sur mobile
+  flex-wrap: wrap; //si besoin, passe a la ligne
+}
+
+.toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4vw;
+  cursor: pointer;
+  border-radius: 0.4vw;
+  margin-right: 0.3vw;
+
+  color: #334443;
+  transition: background-color 0.2s ease;
+  position: relative;
+  z-index: 1001;
+}
+
+.toolbar-button:last-child {
+  margin-right: 0;
+}
+
+.toolbar-button:hover {
+  background: rgba(51, 68, 67, 0.1);
+}
+
+.icon-image {
+  width: clamp(22px, 1.5vw, 28px); /* +responsive : taille d'icône adaptable */
+  height: clamp(22px, 1.5vw, 28px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.text {
+  position: absolute; // Placé par rapport au parent .toolbar-button
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5vw;
+  padding: 0.4vw 0.7vw;
+  background: #d9d9d9;
+  color: #030303;
+  font-size: 0.75vw;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 0.3vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.2);
+}
+
+//le texte devient visible au survole de la souris
+.toolbar-button:hover .text {
+  opacity: 1;
+}
+
+//responsive part (tablette/petit laptop)
+@media (max-width: 992px) {
+  .toolbar {
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.6rem;
+  }
+}
+
+//responsive part (tablette portrait)
+@media (max-width: 768px) {
+  .toolbar {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .toolbar-button {
+    padding: 0.6rem;
+    margin-right: 0;
+  }
+
+  .text {
+    font-size: 12px;
+  }
+}
+
+//responsive part (téléphone)
+@media (max-width: 600px) {
+  .toolbar {
+    bottom: 16px;
+    max-width: 94vw;
+    flex-wrap: nowrap; //une seule ligne
+    overflow-x: none; /* autorise le scroll horizontal si ça dépasse */
+  }
+}
+
+//responsive part (petit téléphone)
+@media (max-width: 480px) {
+  .toolbar {
+    bottom: 12px;
+    max-width: 80vw;
+    padding: 0.5rem;
+    flex-wrap: nowrap;
+    overflow-x: none;
+    gap: 0.3rem;
+  }
+}

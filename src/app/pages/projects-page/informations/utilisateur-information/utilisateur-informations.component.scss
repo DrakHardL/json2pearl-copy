@@ -1,0 +1,308 @@
+// conteneur principal
+.rectangleInfoUtilisateur {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 0.0625rem solid black;
+  border-radius: 0.3125rem;
+  box-shadow: 0 0.25rem 0.25rem black;
+  height: 90vh;
+  width: 24vw;
+  max-width: 24vw;
+  right: 0;
+  top: 50%;
+  transform: translate(-1.5vw, -50%);
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  color: #000;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.user-header {
+  text-align: center;
+  margin-bottom: 3%;
+}
+
+.user-header h3 {
+  margin: 0;
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: #000;
+}
+
+.user-header-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.info-section {
+  margin-bottom: 2.5%;
+}
+
+.label {
+  font-size: 0.9vw;
+  font-weight: bold;
+  margin: 0 0 1% 0;
+  color: #000;
+}
+
+.info-value {
+  font-size: 0.8vw;
+  margin: 0;
+  color: #000;
+}
+
+// lien vers le profil de l'utilisateur
+.user-link {
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5vw;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.4vw;
+  transition: background 0.2s ease;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.user-link-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+}
+
+.user-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+// section contenant la liste des projets
+.projects-section {
+  margin-top: auto;
+  margin-bottom: 2%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.projects-header {
+  display: flex;
+  align-items: center;
+  gap: 1%;
+  margin-bottom: 1%;
+}
+
+// bouton pour afficher/masquer les projets
+.projects-toggle {
+  background: transparent;
+  border: none;
+  padding: 0.3%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.projects-toggle .icon {
+  width: 1.5vw;
+  height: 1.5vw;
+  display: block;
+}
+
+// conteneur de la liste des projets
+.projects-list {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+// Message quand aucun projet n'est trouvé
+.no-projects {
+  font-size: 0.7vw;
+  margin: 0;
+  color: #000;
+  font-style: italic;
+}
+
+.project-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-links li {
+  margin-bottom: 0.6vw;
+}
+
+// lien vers un projet
+.project-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.8vw;
+  padding: 0.5vw;
+  border-radius: 0.4vw;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.2s ease;
+}
+
+.project-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+// image du projet
+.project-avatar {
+  width: 2vw;
+  height: 2vw;
+  border-radius: 0.3vw;
+  object-fit: cover;
+}
+
+.project-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// responsive part (tablette/petit laptop)
+@media (max-width: 1020px) {
+  .rectangleInfoUtilisateur {
+    width: clamp(240px, 32vw, 360px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    padding: 2.5%;
+  }
+
+  .user-header-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .user-link-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-right: 0.45rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+// responsive part (tablette portrait)
+@media (max-width: 768px) {
+  .rectangleInfoUtilisateur {
+    width: clamp(240px, 34vw, 400px); 
+    right: 2%;
+    left: auto;
+    transform: none;
+    height: auto;
+    max-height: 70vh;
+    padding: 3%;
+  }
+
+  .user-header h3,
+  .label,
+  .info-value {
+    font-size: 1rem;
+  }
+
+  .user-header-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .user-link {
+    font-size: 1rem;
+    padding: 0.65rem;
+  }
+
+  .user-link-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-right: 0.5rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+// responsive part (téléphone)
+@media (max-width: 600px) {
+  .rectangleInfoUtilisateur {
+    width: 80vw;
+    right: 2%;
+    left: auto;
+    padding: 3.5%;
+  }
+
+  .user-header-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  .user-link-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+// responsive part (petit téléphone)
+@media (max-width: 480px) {
+  .rectangleInfoUtilisateur {
+    width: 88vw;
+    right: 2%;
+    left: auto;
+    max-height: 75vh;
+  }
+
+  .user-header-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .user-link {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+
+  .user-link-icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-right: 0.55rem;
+  }
+
+  .projects-toggle .icon {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+}
