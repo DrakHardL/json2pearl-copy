@@ -39,8 +39,10 @@ export class ProjectsComponent implements OnInit {
   protected selected_elements: any;
   protected isLoading: boolean = false;
   protected selected_user_projects: any[] = [];
+  protected selected_group_members: any[] = [];
 
   private current_user_projects_request: Subscription | undefined;
+  private current_group_members_request: Subscription | undefined;
   constructor(
     private readonly projectAPI: ProjectApiService,
     private readonly groupAPI: GroupApiService,
@@ -198,6 +200,7 @@ export class ProjectsComponent implements OnInit {
   private onSimpleClick(id: string): void {
     const node_type = this.projects_graph.getNodeType(id);
     this.selected_user_projects = [];
+    this.selected_group_members = [];
 
     if (node_type == NodeType.PROJECT) {
       this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'project' };
@@ -206,6 +209,7 @@ export class ProjectsComponent implements OnInit {
 
     if (node_type == NodeType.GROUP) {
       this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'group' };
+      this.loadGroupMembers(this.projects_graph.getNodeID(id));
       return;
     }
 
@@ -297,5 +301,29 @@ export class ProjectsComponent implements OnInit {
         this.selected_user_projects = [];
       },
     });
+  }
+
+  private loadGroupMembers(groupId: number | string): void {
+    if (!groupId && groupId !== 0) {
+      this.selected_group_members = [];
+      return;
+    }
+
+    if (this.current_group_members_request) {
+      this.current_group_members_request.unsubscribe();
+    }
+
+    this.selected_group_members = [];
+
+    this.current_group_members_request = this.groupAPI
+      .getGroupMembers(groupId as number)
+      .subscribe({
+        next: (resp) => {
+          this.selected_group_members = resp?.members || [];
+        },
+        error: () => {
+          this.selected_group_members = [];
+        },
+      });
   }
 }
