@@ -42,6 +42,12 @@ enum NodeColor {
   GROUP = '#55D764',
 }
 
+export enum EdgeType {
+  FROM,
+  TO,
+  NONE,
+}
+
 export class GraphForge {
   private readonly _config: Options = {
     nodes: {
@@ -81,6 +87,17 @@ export class GraphForge {
     );
   }
 
+  setRepultion(distance: number): void {
+    this._network.setOptions({
+      physics: {
+        solver: 'repulsion',
+        repulsion: {
+          nodeDistance: distance,
+        },
+      },
+    });
+  }
+
   createNode(
     label: string,
     type: number,
@@ -113,7 +130,7 @@ export class GraphForge {
     return `==${type}==${id}==`;
   }
 
-  connectNodes(id_1: string, id_2: string): void {
+  connectNodes(id_1: string, id_2: string, type: EdgeType = EdgeType.NONE): void {
     if (
       this.resisted_edges.has(`||${id_1}||${id_2}||`) ||
       this.resisted_edges.has(`||${id_2}||${id_1}||`)
@@ -122,7 +139,10 @@ export class GraphForge {
     const id = this.dataSet_edges.add({
       to: id_1,
       from: id_2,
-      arrows: { from: false, to: false },
+      arrows: {
+        from: type === EdgeType.FROM || false,
+        to: type === EdgeType.TO || false,
+      },
     })[0] as string;
 
     this.resisted_edges.set(`||${id_1}||${id_2}||`, id);

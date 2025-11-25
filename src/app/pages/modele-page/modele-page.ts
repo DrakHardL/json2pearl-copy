@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GraphForge, Project, ProjectApiService } from 'ngx-forge-map';
+import { EdgeType, GraphForge, Project, ProjectApiService } from 'ngx-forge-map';
 
 @Component({
   selector: 'app-modele-page',
@@ -28,7 +28,7 @@ export class ModelePage implements OnInit {
     this.projectApiService.getProjectForks(id).subscribe((projects) => {
       const ids = this.displayProjects(projects);
       ids.forEach((id) => {
-        this.modeleGraph.connectNodes(node_id, id);
+        this.modeleGraph.connectNodes(node_id, id, EdgeType.TO);
       });
     });
   }
@@ -36,8 +36,13 @@ export class ModelePage implements OnInit {
   private displayProjects(projects: Project[]): string[] {
     const ids: string[] = [];
     projects.forEach((project) => {
-      ids.push(this.modeleGraph.createProject(project));
+      ids.push(this.modeleGraph.createProject(project, project.forks_count));
     });
     return ids;
+  }
+
+  protected onChange(e: Event): void {
+    const n: number = (e.currentTarget as HTMLInputElement).value as unknown as number;
+    this.modeleGraph.setRepultion(Number(n));
   }
 }
