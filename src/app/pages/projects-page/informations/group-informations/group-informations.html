@@ -1,7 +1,7 @@
 <div class="rectangleInfoGroup" style="z-index: 1000">
   <div class="group-header">
     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5vw">
-      <img src="GroupIcon.svg" alt="Group Icon" style="width: 1.5vw; height: 1.5vw" />
+      <img src="icons/GroupIcon.svg" alt="Group Icon" style="width: 1.5vw; height: 1.5vw" />
       <h3>{{ group?.name || 'Groupe sans nom' }}</h3>
     </div>
   </div>
@@ -22,7 +22,7 @@
     <p class="label">Lien du groupe :</p>
     <a [href]="group?.web_url" target="_blank" class="group-link">
       <img
-        src="majesticons_open.svg"
+        src="icons/majesticons_open.svg"
         alt="Open"
         style="width: 1.2vw; height: 1.2vw; vertical-align: middle; margin-right: 0.3vw"
       />
@@ -35,7 +35,7 @@
     <div class="members-header">
       <p class="label">Membres :</p>
       <button class="members-toggle" (click)="toggleMembers()" aria-label="Afficher membres">
-        <img src="majesticons_open.svg" alt="open" class="icon" />
+        <img src="icons/majesticons_open.svg" alt="open" class="icon" />
       </button>
     </div>
 
@@ -50,7 +50,7 @@
         <li>
           <a [href]="member.webUrl" target="_blank" class="member-link">
             <span class="member-name">{{ member.name }}</span>
-            <img src="majesticons_open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw" />
+            <img src="icons/majesticons_open.svg" alt="Ouvrir" style="width: 1vw; height: 1vw" />
           </a>
         </li>
         }
