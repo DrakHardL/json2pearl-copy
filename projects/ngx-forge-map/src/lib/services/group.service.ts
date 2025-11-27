@@ -118,7 +118,6 @@ export class GroupApiService extends ApiService {
               const userId = member.user.id.replace('gid://gitlab/User/', '');
               return { id: Number(userId), name: member.user.name, webUrl: member.user.webUrl };
             }) || [];
-          console.log(response, members);
           return {
             members,
           };

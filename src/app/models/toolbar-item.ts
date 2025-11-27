@@ -1,8 +1,8 @@
 export enum ToolBarItem {
-  DEVELOPPE,
+  EXPEND,
   MEMBRES,
   VERSIONS,
   HIDE,
-  INFORMATION,
-  FAVORIS,
+  INFO,
+  COPY,
 }

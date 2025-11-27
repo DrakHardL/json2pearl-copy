@@ -1,21 +1,25 @@
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
+import { finalize, Subscription } from 'rxjs';
+import {
+  GraphForge,
+  Group,
+  GroupApiService,
+  NodeType,
+  Project,
+  ProjectApiService,
+  User,
+  UserApiService,
+} from 'ngx-forge-map';
+
 import { UtilisateurInformation } from './informations/utilisateur-information/utilisateur-informations.component';
 import { ProjectsInformations } from './informations/projects-informations/projects-informations';
 import { GroupInformations } from './informations/group-informations/group-informations';
 import { FloatingToolbar } from './floating-toolbar/floating-toolbar.component';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { expand, finalize, map, Observable, Subscription } from 'rxjs';
-import { UrlManager } from '../../services/url-manager/url-manager';
+import { LoadingSpiner } from '../../models/loading-spiner/loading-spiner';
 import { ToolBarItem as ToolbarItem } from '../../models/toolbar-item';
-import { ActivatedRoute } from '@angular/router';
-import { MarkdownModule } from 'ngx-markdown';
-import {
-  GraphForge,
-  GroupApiService,
-  NodeType,
-  ProjectApiService,
-  UserApiService,
-} from 'ngx-forge-map';
-import { LoadingSpiner } from "../../models/loading-spiner/loading-spiner";
+import { UrlManager } from '../../services/url-manager/url-manager';
 
 @Component({
   selector: 'app-projects-page',
@@ -25,12 +29,14 @@ import { LoadingSpiner } from "../../models/loading-spiner/loading-spiner";
     UtilisateurInformation,
     MarkdownModule,
     ProjectsInformations,
-    LoadingSpiner
-],
+    LoadingSpiner,
+  ],
   templateUrl: './projects-page.component.html',
   styleUrl: './projects-page.component.scss',
 })
 export class ProjectsComponent implements OnInit {
+  protected display_informations_panel: boolean = false;
+
   @ViewChild('projectsChart', { static: true })
   protected projects_chart!: ElementRef;
   protected projects_graph!: GraphForge;
@@ -39,7 +45,12 @@ export class ProjectsComponent implements OnInit {
   protected selected_user_projects: any[] = [];
   protected selected_group_members: any[] = [];
   protected selected_elements: any;
-  protected elements: any[] = [];
+
+  protected elements: {
+    projects: any[];
+    users: any[];
+    groups: any[];
+  } = { projects: [], users: [], groups: [] };
 
   private restriction_topics: string | undefined;
 
@@ -83,7 +94,7 @@ export class ProjectsComponent implements OnInit {
           users.forEach((user) => {
             if (ids_users.indexOf(user.id) != -1) {
               const id_2 = this.createUser(user);
-              this.connect_2_nodes(id_1, id_2);
+              this.connectNodes(id_1, id_2);
             }
           });
         });
@@ -91,7 +102,7 @@ export class ProjectsComponent implements OnInit {
           groups.forEach((group) => {
             if (ids_groups.indexOf(group.id) != -1) {
               const id_2 = this.createGroup(group);
-              this.connect_2_nodes(id_1, id_2);
+              this.projects_graph.connectNodes(id_1, id_2);
             }
           });
         });
@@ -99,45 +110,54 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  private connect_2_nodes(id_1: string, id_2: string) {
-    return this.projects_graph.connectNodes(id_1, id_2);
+  private connectNodes(id_1: string, id_2: string) {
+    this.projects_graph.connectNodes(id_1, id_2);
   }
 
-  private fetchAllRootProjectIDMathSearch(search: string): Observable<any> {
-    return this.getPage(search, '').pipe(
-      expand(({ next }) => (next ? this.getPage(search, next) : [])),
-      map(({ rep }) => rep)
-    );
+  private createGroup(group: any) {
+    const obj = { ...group, type: 'group' };
+    if (!this._elementsAlreadyCreate(group, 'groups')) this.elements.groups.push(obj);
+    return this.projects_graph.createGroup({ ...group, type: 'group' });
   }
 
-  private getPage(search: string, cursor: string = '') {
-    return this.projectAPI.getRootProjectsIdMathSearch(search, cursor).pipe(
-      map((rep: any) => {
-        const requests: number[] = rep?.data?.projects?.nodes
-          .filter((p: { isForked: boolean; id: string }) => !p.isForked)
-          .map((p: { isForked: boolean; id: string }) => {
-            const projectId = Number(p.id.split('/').pop());
-            return projectId;
-          });
-        return { rep: requests, next: rep?.data?.projects?.pageInfo?.endCursor as string };
-      })
-    );
+  private createUser(user: any) {
+    const obj = { ...user, type: 'user' };
+    if (!this._elementsAlreadyCreate(user, 'users')) this.elements.users.push(obj);
+    return this.projects_graph.createUser({ ...user, type: 'user' });
   }
+
+  private createProject(project: any) {
+    const obj = { ...project, type: 'project' };
+    if (!this._elementsAlreadyCreate(project, 'projects')) this.elements.projects.push(obj);
+    return this.projects_graph.createProject(obj);
+  }
+
+  // ========== TOOLBAR-ACTION HANDLE ========== //
 
   protected onToolbarItemClicked(event: ToolbarItem): void {
     switch (event) {
-      case ToolbarItem.DEVELOPPE:
-        return;
-
+      case ToolbarItem.EXPEND:
+        return this.onExpendToolClicked();
       case ToolbarItem.HIDE:
         return this.onHideToolClicked();
-
-      case ToolbarItem.FAVORIS:
-        return this.onCopyLinkClicked();
+      case ToolbarItem.INFO:
+        return this.onInfoToolClicked();
+      case ToolbarItem.COPY:
+        return this.onCopyToolClicked();
     }
   }
 
-  private onCopyLinkClicked(): void {
+  private onInfoToolClicked(): void {
+    this.display_informations_panel = !this.display_informations_panel;
+  }
+
+  private onExpendToolClicked(): void {
+    this.projects_graph.getSelectedNodes().forEach((node_id) => {
+      this.onDoubleClick(node_id);
+    });
+  }
+
+  private onCopyToolClicked(): void {
     const ids_projects = this.projects_graph.getNodesIDByType(NodeType.PROJECT);
     const ids_users = this.projects_graph.getNodesIDByType(NodeType.USER);
     const ids_groups = this.projects_graph.getNodesIDByType(NodeType.GROUP);
@@ -153,12 +173,41 @@ export class ProjectsComponent implements OnInit {
 
   private onHideToolClicked(): void {
     this.projects_graph.getSelectedNodes().forEach((node_id) => {
-      this.projects_graph.removeNode(node_id);
+      const data: any = this.projects_graph.getNodeDataByID(node_id);
+
+      switch (data.type) {
+        case 'project':
+          return this.elements.projects.forEach((project) => {
+            if (project.id == data.id) {
+              this.elements.projects.splice(this.elements.projects.indexOf(project), 1);
+              this.projects_graph.removeNode(node_id);
+            }
+          });
+
+        case 'user':
+          return this.elements.users.forEach((user) => {
+            if (user.id == data.id) {
+              this.elements.users.splice(this.elements.users.indexOf(user), 1);
+              this.projects_graph.removeNode(node_id);
+            }
+          });
+
+        case 'group':
+          return this.elements.groups.forEach((group) => {
+            if (group.id == data.id) {
+              this.elements.groups.splice(this.elements.groups.indexOf(group), 1);
+              this.projects_graph.removeNode(node_id);
+            }
+          });
+
+        default:
+          console.warn('WTF ????');
+      }
     });
   }
 
-  protected onItemSelected(item: any, type: string): void {
-    this.selected_elements = { ...item, type: type };
+  protected onItemSelected(item: any): void {
+    this.selected_elements = item;
   }
 
   private current_search_request: Subscription | undefined;
@@ -169,7 +218,10 @@ export class ProjectsComponent implements OnInit {
     if (this.current_search_request) {
       this.current_search_request.unsubscribe();
     }
-    this.elements = [];
+    this.elements.projects = [];
+    this.elements.groups = [];
+    this.elements.users = [];
+
     this.projects_graph.clear();
     this.isLoading = true;
     this.current_search_request = await this.projectAPI
@@ -179,8 +231,10 @@ export class ProjectsComponent implements OnInit {
           this.isLoading = false;
         })
       )
-      .subscribe((rep) => {
-        this.fill(rep);
+      .subscribe((projects) => {
+        projects.forEach((project) => {
+          this.createProject(project);
+        });
       });
   }
 
@@ -188,14 +242,9 @@ export class ProjectsComponent implements OnInit {
     if (!this.restriction_topics) return;
 
     this.projectAPI.getProjectsMatchTopic(this.restriction_topics).subscribe((projects) => {
-      this.fill(projects);
-    });
-  }
-
-  private fill(elts: any[]) {
-    elts.forEach((elt) => {
-      this.createProject(elt);
-      this.elements.push(elt);
+      projects.forEach((project) => {
+        this.createProject(project);
+      });
     });
   }
 
@@ -205,18 +254,18 @@ export class ProjectsComponent implements OnInit {
     this.selected_group_members = [];
 
     if (node_type == NodeType.PROJECT) {
-      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'project' };
+      this.selected_elements = this.projects_graph.getNodeDataByID(id);
       return;
     }
 
     if (node_type == NodeType.GROUP) {
-      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'group' };
+      this.selected_elements = this.projects_graph.getNodeDataByID(id);
       this.loadGroupMembers(this.projects_graph.getNodeID(id));
       return;
     }
 
     if (node_type == NodeType.USER) {
-      this.selected_elements = { ...this.projects_graph.getNodeDataByID(id), type: 'user' };
+      this.selected_elements = this.projects_graph.getNodeDataByID(id);
       this.loadUserProjects(this.projects_graph.getNodeID(id));
       return;
     }
@@ -232,14 +281,14 @@ export class ProjectsComponent implements OnInit {
       this.projectAPI.getProjectUsers(node_id).subscribe((users) => {
         users.forEach((user) => {
           const id_2 = this.createUser(user);
-          this.connect2nodes(id_1, id_2);
+          this.connectNodes(id_1, id_2);
         });
       });
 
       return this.projectAPI.getProjectGroups(node_id).subscribe((groups) => {
         groups.forEach((group) => {
           const id_2 = this.createGroup(group);
-          this.connect2nodes(id_1, id_2);
+          this.connectNodes(id_1, id_2);
         });
       });
     }
@@ -248,7 +297,7 @@ export class ProjectsComponent implements OnInit {
       return this.userAPI.getUserProjects(node_id.toString()).subscribe((projects) => {
         projects.forEach((project) => {
           const id_2 = this.createProject(project);
-          this.connect2nodes(id_1, id_2);
+          this.connectNodes(id_1, id_2);
         });
       });
     }
@@ -257,26 +306,10 @@ export class ProjectsComponent implements OnInit {
       return this.groupAPI.getGroupProjects(node_id).subscribe((projects) => {
         projects.forEach((project) => {
           const id_2 = this.createProject(project);
-          this.connect2nodes(id_1, id_2);
+          this.connectNodes(id_1, id_2);
         });
       });
     }
-  }
-
-  private createUser(user: any): string {
-    return this.projects_graph.createUser(user);
-  }
-
-  private connect2nodes(id_1: string, id_2: string): void {
-    return this.projects_graph.connectNodes(id_1, id_2);
-  }
-
-  private createProject(project: any): string {
-    return this.projects_graph.createProject(project);
-  }
-
-  private createGroup(group: any): string {
-    return this.projects_graph.createGroup(group);
   }
 
   private loadUserProjects(userId: number | string): void {
@@ -299,6 +332,32 @@ export class ProjectsComponent implements OnInit {
         this.selected_user_projects = [];
       },
     });
+  }
+
+  private _elementsAlreadyCreate(element: any, type: 'projects' | 'users' | 'groups'): boolean {
+    let liste: any[] = [];
+
+    switch (type) {
+      case 'projects':
+        liste = this.elements.projects;
+        break;
+      case 'groups':
+        liste = this.elements.groups;
+        break;
+      case 'users':
+        liste = this.elements.users;
+        break;
+    }
+
+    for (let index = 0; index < liste.length; index++) {
+      const elt = liste[index];
+
+      if (element.id == elt.id) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private loadGroupMembers(groupId: number | string): void {

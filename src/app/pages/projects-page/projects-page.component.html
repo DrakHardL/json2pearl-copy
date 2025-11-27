@@ -12,7 +12,10 @@
       />
     </div>
 
-    <div class="nb-elements">element charger : {{ elements.length }}</div>
+    <div class="nb-elements">
+      element charger :
+      {{ elements.projects.length + elements.users.length + elements.groups.length }}
+    </div>
 
     @if (isLoading) {
     <div>
@@ -28,9 +31,23 @@
           </div>
         </div>
         <div class="tbody">
-          @for (elt of elements; track $index) {
-          <div class="tr" (click)="onItemSelected(elt, 'project')">
+          @for (elt of elements.projects; track $index) {
+          <div class="tr" (click)="onItemSelected(elt)">
+            <img src="icons/CarreProject.svg" alt="" />
             {{ elt.name }}
+            {{ elt.id }}
+          </div>
+          } @for (elt of elements.users; track $index) {
+          <div class="tr" (click)="onItemSelected(elt)">
+            <img src="images/UserIcon.png" alt="" />
+            {{ elt.name }}
+            {{ elt.id }}
+          </div>
+          } @for (elt of elements.groups; track $index) {
+          <div class="tr" (click)="onItemSelected(elt)">
+            <img src="icons/GroupIcon.svg" alt="" />
+            {{ elt.name }}
+            {{ elt.id }}
           </div>
           }
         </div>
@@ -38,13 +55,13 @@
     </div>
   </div>
 
-  @switch (selected_elements?.type) { @case ('project') {
+  @if(display_informations_panel) { @switch (selected_elements?.type) { @case ('project') {
   <app-projects-informations [project]="selected_elements" />
   } @case ('group') {
   <app-group-informations [group]="selected_elements" [members]="selected_group_members" />
   } @case ('user') {
   <app-utilisateur-information [user]="selected_elements" [projects]="selected_user_projects" />
-  } }
+  } } }
 
   <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />
 </div>

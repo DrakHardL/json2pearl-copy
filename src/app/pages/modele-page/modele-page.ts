@@ -19,7 +19,6 @@ export class ModelePage implements OnInit {
 
     this.projectApiService.getProjectsMatchTopic('modèle').subscribe((projects) => {
       this.displayProjects(projects);
-      console.log(projects);
     });
   }
 

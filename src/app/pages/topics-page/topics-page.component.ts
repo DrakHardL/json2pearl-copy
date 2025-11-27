@@ -128,7 +128,6 @@ export class TopicsComponent {
 
   protected test2clickEvent(elt: any): void {
     let t = this.topicGraph.generateID(elt?.type, elt.id);
-    console.log(elt, t);
   }
 
   protected exploreClick(): void {
