@@ -1,4 +1,4 @@
-import { expand, forkJoin, map, Observable, of, Subscription, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 import { Project } from '../model/project.model';
@@ -6,87 +6,98 @@ import { Group } from '../model/group.model';
 import { User } from '../model/user.model';
 import { ApiService } from './api.service';
 
-interface ProjectsResponse {
-  data: {
-    projects: {
-      nodes: {
-        id: string;
-      }[];
-    };
-  };
-}
-
+/**
+ * Service providing project-related API operations.
+ *
+ * Extends the base ApiService to perform REST and GraphQL calls related to projects,
+ * including fetching project details, searching projects, retrieving forks, collaborators,
+ * groups, and reading repository README files.
+ *
+ * All methods return RxJS Observables and are intended to be subscribed to by callers.
+ *
+ * @remarks
+ * This service assumes REST endpoints are available via `this.REST_URL` and a GraphQL
+ * endpoint via `this.graphql_url` (provided by the base ApiService).
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectApiService extends ApiService {
+  /**
+   * Retrieve a single project by its numeric identifier.
+   *
+   * @param project_id - Numeric identifier of the project to retrieve.
+   * @returns An Observable that emits the Project object for the given id.
+   */
   getProject(project_id: number): Observable<Project> {
     return this.http.get<Project>(`${this.REST_URL}/projects/${project_id}`);
   }
 
+  /**
+   * Search for projects matching a specific topic.
+   *
+   * @param topic - Topic string used to filter projects (exact or tag match depending on API).
+   * @returns An Observable that emits an array of Project objects matching the topic.
+   */
   getProjectsMatchTopic(topic: string): Observable<Project[]> {
     return this.getAllRessource(`${this.REST_URL}/projects?topic=${topic}`);
   }
 
-  /** Dépréciée */
-  getProjectsIdByTopic(topic: string): Observable<string[]> {
-    const query = `{ projects(topics: "${topic}") { nodes { id } } }`;
-    return this.http.post<ProjectsResponse>(this.graphql_url, { query }).pipe(
-      map((rep) =>
-        rep.data.projects.nodes
-          .map((node) => {
-            console.log(node);
-            const match = RegExp(/(\d+)$/).exec(node.id);
-            return match ? match[1] : null;
-          })
-          .filter((id): id is string => id !== null)
-      )
-    );
-  }
-
+  /**
+   * Search for projects using a free-text search query.
+   *
+   * @param search - Free-text search query.
+   * @returns An Observable that emits an array of Project objects matching the search.
+   *
+   * @remarks
+   * This method limits results to a page size of 20 (via the `per_page=20` query parameter).
+   */
   getProjectsMatchSearch(search: string): Observable<Project[]> {
     return this.getAllRessource(`${this.REST_URL}/projects?search=${search}&per_page=20`);
   }
 
-  /** Dépréciée */
-  searchProjects(search: string, amount: number = 20, page: number = 1): Observable<Project[]> {
-    const buildUrl = (page: number) =>
-      `${this.REST_URL}/projects?search=${search}&per_page=${amount}&page=${page}`;
-
-    return this.http.get<Project[]>(buildUrl(page), { observe: 'response' }).pipe(
-      switchMap((response) => {
-        console.log(response);
-
-        const totalPages = Number(response.headers.get('x-total-pages')) || 1;
-
-        const allProjects: Project[] = response.body || [];
-
-        if (totalPages <= 1) {
-          return of(allProjects);
-        }
-
-        const requests: Observable<Project[]>[] = [];
-        for (let page = 2; page <= totalPages; page++) {
-          requests.push(this.http.get<Project[]>(buildUrl(page)));
-        }
-
-        return forkJoin(requests).pipe(map((responses) => allProjects.concat(...responses)));
-      })
-    );
-  }
-
+  /**
+   * Get the forks of a given project.
+   *
+   * @param project_id - Numeric identifier of the project for which to retrieve forks.
+   * @returns An Observable that emits an array of Project objects representing forks.
+   */
   getProjectForks(project_id: number): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.REST_URL}/projects/${project_id}/forks`);
   }
 
+  /**
+   * Get the users associated with a given project.
+   *
+   * @param project_id - Numeric identifier of the project whose users are requested.
+   * @returns An Observable that emits an array of User objects associated with the project.
+   */
   getProjectUsers(project_id: number): Observable<User[]> {
     return this.http.get<User[]>(`${this.REST_URL}/projects/${project_id}/users`);
   }
 
+  /**
+   * Get the groups associated with a given project.
+   *
+   * @param project_id - Numeric identifier of the project whose groups are requested.
+   * @returns An Observable that emits an array of Group objects associated with the project.
+   */
   getProjectGroups(project_id: number): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.REST_URL}/projects/${project_id}/groups`);
   }
 
+  /**
+   * Retrieve the repository README file content for a project, if present.
+   *
+   * The method:
+   * - Lists the repository tree,
+   * - Finds the first entry whose name starts with "readme" (case-insensitive),
+   * - If found, fetches the file content and decodes it from Base64 to UTF-8 text,
+   * - If not found, returns a default string indicating the README is unavailable.
+   *
+   * @param project_id - Numeric identifier of the project whose README should be retrieved.
+   * @returns An Observable that emits the README file content as a UTF-8 string, or a fallback message.
+   */
   getReadmeProject(project_id: number): Observable<string> {
     return this.http.get<any[]>(`${this.REST_URL}/projects/${project_id}/repository/tree`).pipe(
       switchMap((items) => {
@@ -99,7 +110,6 @@ export class ProjectApiService extends ApiService {
             )
             .pipe(
               map((fileData) => {
-                // Décodage base64 -> Uint8Array -> UTF-8 pour éviter les caractères cassés.
                 const binary = atob(fileData.content);
                 const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
                 return new TextDecoder('utf-8').decode(bytes);
@@ -112,6 +122,21 @@ export class ProjectApiService extends ApiService {
     );
   }
 
+  /**
+   * Execute a GraphQL query to page through projects matching a search string.
+   *
+   * The query requests `pageInfo.endCursor` and, for each node, `isForked` and `id`.
+   * The method wraps the HTTP POST and normalizes error responses by returning a shape
+   * with an empty `data` object when an `error` property is present in the response.
+   *
+   * @param search - Free-text search string to filter projects.
+   * @param cursor - Cursor string for pagination; passed as the `after` argument in the GraphQL query.
+   * @returns An Observable that emits the raw GraphQL response (or a normalized object if an error is found).
+   *
+   * @remarks
+   * The returned structure depends on the remote GraphQL schema; callers should
+   * inspect `data.projects.pageInfo.endCursor` and `data.projects.nodes` for paging and node info.
+   */
   getRootProjectsIdMathSearch(search: string, cursor: string) {
     const query: string = `{projects(search: "${search}", after: "${cursor}"){pageInfo{endCursor},nodes{isForked,id}}}`;
     return this.http.post<any>(`${this.graphql_url}?query=${query}`, '').pipe(
@@ -120,143 +145,4 @@ export class ProjectApiService extends ApiService {
       })
     );
   }
-
-  // getRootProjectsMathSearch(search: string, cursor: string = '') {
-  //   const query = `{ projects(search: "${search}", after: "${cursor}") {
-  //       pageInfo { endCursor }, nodes { isForked, id  } } } }`;
-
-  //   return this.getPageGraphQL(query).pipe(
-  //     expand((rep) => {
-  //       console.log(rep);
-  //       return [];
-  //     }),
-  //     map((rep) => {
-  //       rep;
-  //     })
-  //   );
-
-  //   interface Response {
-  //     data: {
-  //       projects: {
-  //         pageInfo: {
-  //           hasNextPage: boolean;
-  //           endCursor: string;
-  //         };
-  //         nodes: {
-  //           id: string;
-  //           description: string;
-  //           name: string;
-  //           isForked: boolean;
-  //           nameWithNamespace: string;
-  //           path: string;
-  //           createdAt: string;
-  //           topics: [];
-  //           sshUrlToRepo: string;
-  //           httpUrlToRepo: string;
-  //           webUrl: string;
-  //           forksCount: number;
-  //           avatarUrl: string;
-  //           starCount: number;
-  //           lastActivityAt: string;
-  //           namespace: {
-  //             id: string;
-  //             name: string;
-  //             path: string;
-  //             fullPath: string;
-  //             avatarUrl: string;
-  //             webUrl: string;
-  //           };
-  //         }[];
-  //       };
-  //     };
-  //   }
-
-  //   return this.http.post<Response>(`${this.graphql_url}?query=${query}`, '').pipe(
-  //     map((response) => {
-  //       const elements = response.data.projects.nodes
-  //         .filter((p) => !p.isForked)
-  //         .map((elt) => {
-  //           const project: Project = {
-  //             id: elt.id as unknown as number,
-  //             description: elt.description,
-  //             name: elt.name,
-  //             name_with_namespace: elt.nameWithNamespace,
-  //             path: elt.path,
-  //             path_with_namespace: elt.nameWithNamespace,
-  //             created_at: elt.createdAt,
-  //             default_branch: 'unset',
-  //             tag_list: elt.topics,
-  //             topics: elt.topics,
-  //             ssh_url_to_repo: elt.sshUrlToRepo,
-  //             http_url_to_repo: elt.httpUrlToRepo,
-  //             web_url: elt.webUrl,
-  //             readme_url: 'unset',
-  //             forks_count: elt.forksCount,
-  //             avatar_url: undefined,
-  //             star_count: elt.starCount,
-  //             last_activity_at: elt.lastActivityAt,
-  //             namespace: {
-  //               id: elt.namespace.id as unknown as number,
-  //               name: elt.namespace.name,
-  //               path: elt.namespace.path,
-  //               kind: 'unset',
-  //               full_path: elt.namespace.fullPath,
-  //               parent_id: undefined,
-  //               avatar_url: undefined,
-  //               web_url: elt.webUrl,
-  //             },
-  //           };
-  //           return project;
-  //         });
-
-  //       return { projects: elements, next: response.data.projects.pageInfo.endCursor };
-  //     })
-  //   );
-  // }
 }
-
-// const query: string = `${this.graphql_url}?query={groups(ids:"gid://gitlab/Group/${id}"){nodes{groupMembers(search:""){nodes{user{id}}}}}}`;
-// return this.http.post<any>(query, '').pipe(
-//   map((response) => {
-//     console.log(response);
-
-//     const projects: any[] = response.data.projects.nodes;
-//     const filteredProjects = projects.filter(project => !project.isForked);
-
-//     console.log(filteredProjects);
-
-//     const convertedProjects: Project[] = filteredProjects.map((p) => {
-//       const gidMatch = /(\d+)$/.exec(p.id);
-//       const id = gidMatch ? Number(gidMatch[1]) : Number(p.id) || 0;
-
-//       return {
-//         id,
-//         name: p.name,
-//         description: p.description ?? null,
-//         path: p.path,
-//         nameWithNamespace: p.nameWithNamespace,
-//         createdAt: p.createdAt,
-//         topics: p.topics ?? [],
-//         sshUrlToRepo: p.sshUrlToRepo,
-//         httpUrlToRepo: p.httpUrlToRepo,
-//         webUrl: p.webUrl,
-//         forksCount: p.forksCount ?? 0,
-//         avatarUrl: p.avatarUrl ?? null,
-//         starCount: p.starCount ?? 0,
-//         lastActivityAt: p.lastActivityAt,
-//         namespace: p.namespace ?? null,
-//       } as unknown as Project;
-//     });
-
-//     return convertedProjects;
-
-//     return {filteredProjects};
-
-//     // const members =
-//     //   response?.data?.groups?.nodes?.[0]?.groupMembers?.nodes?.map((member) => {
-//     //     const userId = member.user.id.replace('gid://gitlab/User/', '');
-//     //     return Number(userId);
-//     //   }) || [];
-//     return { response };
-//   })
-// );
