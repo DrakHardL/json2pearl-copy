@@ -15,7 +15,9 @@
     <div class="nb-elements">element charger : {{ elements.length }}</div>
 
     @if (isLoading) {
-    <div><img src="images/projects.png" sizes="12px" /></div>
+    <div>
+      <loading-spiner></loading-spiner>
+    </div>
     }
 
     <div class="subject-display">
@@ -41,10 +43,7 @@
   } @case ('group') {
   <app-group-informations [group]="selected_elements" [members]="selected_group_members" />
   } @case ('user') {
-  <app-utilisateur-information
-    [user]="selected_elements"
-    [projects]="selected_user_projects"
-  />
+  <app-utilisateur-information [user]="selected_elements" [projects]="selected_user_projects" />
   } }
 
   <app-floating-toolbar (toolClicked)="onToolbarItemClicked($event)" />

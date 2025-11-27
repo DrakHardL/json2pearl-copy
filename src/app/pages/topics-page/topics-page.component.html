@@ -11,6 +11,9 @@
         placeholder="Rechercher un sujet"
       />
     </div>
+    @if (isLoading) {
+    <loading-spiner></loading-spiner>
+    }
 
     <hr />
 
@@ -39,11 +42,6 @@
       </div>
     </div>
 
-    <button
-      [disabled]="!selectedTopic"
-      (click)="exploreClick()"
-    >
-      Explore
-    </button>
+    <button [disabled]="!selectedTopic" (click)="exploreClick()">Explore</button>
   </div>
 </div>

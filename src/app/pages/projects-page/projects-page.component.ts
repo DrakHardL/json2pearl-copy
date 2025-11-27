@@ -15,6 +15,7 @@ import {
   ProjectApiService,
   UserApiService,
 } from 'ngx-forge-map';
+import { LoadingSpiner } from "../../models/loading-spiner/loading-spiner";
 
 @Component({
   selector: 'app-projects-page',
@@ -24,7 +25,8 @@ import {
     UtilisateurInformation,
     MarkdownModule,
     ProjectsInformations,
-  ],
+    LoadingSpiner
+],
   templateUrl: './projects-page.component.html',
   styleUrl: './projects-page.component.scss',
 })

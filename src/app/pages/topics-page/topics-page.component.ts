@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GraphForge, NodeType, TopicApiService } from 'ngx-forge-map';
 import { finalize, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { LoadingSpiner } from '../../models/loading-spiner/loading-spiner';
 
 export interface Topic {
   id: number;
@@ -17,11 +18,13 @@ export interface Topic {
   selector: 'app-topics-page',
   templateUrl: './topics-page.component.html',
   styleUrl: './topics-page.component.scss',
+  imports: [LoadingSpiner],
 })
 export class TopicsComponent {
   @ViewChild('topicsChart', { static: true }) topicsChart!: ElementRef;
   private current_search_request?: Subscription;
 
+  protected isLoading: boolean = false;
   protected topicGraph!: GraphForge;
   protected topics: Topic[] = [];
   protected selectedTopic: any;
@@ -59,9 +62,17 @@ export class TopicsComponent {
   }
 
   private showAllTopics(): Subscription {
-    return this.topicService.getTopics().subscribe((topics) => {
-      this.fill(topics);
-    });
+    this.isLoading = true;
+    return this.topicService
+      .getTopics()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((topics) => {
+        this.fill(topics);
+      });
   }
 
   private fill(topics: Topic[]) {
@@ -95,11 +106,13 @@ export class TopicsComponent {
     }
 
     this.topics = [];
+    this.isLoading = true;
     this.topicGraph.clear();
     this.current_search_request = this.topicService
       .getTopicsMatchSearch(query)
       .pipe(
         finalize(() => {
+          this.isLoading = false;
           this.topicGraph.fit();
         })
       )
