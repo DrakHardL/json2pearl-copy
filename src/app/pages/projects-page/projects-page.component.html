@@ -35,19 +35,16 @@
           <div class="tr" (click)="onItemSelected(elt)">
             <img src="icons/CarreProject.svg" alt="" />
             {{ elt.name }}
-            {{ elt.id }}
           </div>
           } @for (elt of elements.users; track $index) {
           <div class="tr" (click)="onItemSelected(elt)">
             <img src="images/UserIcon.png" alt="" />
             {{ elt.name }}
-            {{ elt.id }}
           </div>
           } @for (elt of elements.groups; track $index) {
           <div class="tr" (click)="onItemSelected(elt)">
             <img src="icons/GroupIcon.svg" alt="" />
             {{ elt.name }}
-            {{ elt.id }}
           </div>
           }
         </div>
