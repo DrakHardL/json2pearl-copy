@@ -5,4 +5,5 @@ export enum ToolBarItem {
   HIDE,
   INFO,
   COPY,
+  DOC,
 }

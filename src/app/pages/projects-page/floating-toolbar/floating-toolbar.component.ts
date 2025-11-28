@@ -15,8 +15,9 @@ export class FloatingToolbar {
   buttons = [
     { id: ToolBarItem.EXPEND, text: 'Explorer', image: 'icons/expend-icon.svg' },
     { id: ToolBarItem.HIDE, text: 'Cacher la sélection', image: 'icons/hide-icon.svg' },
-    { id: ToolBarItem.INFO, text: 'Information', image: 'icons/info-icon.svg' },
     { id: ToolBarItem.COPY, text: 'Copier le lien dans le presse-papier', image: 'icons/copy-icon.svg' },
+    { id: ToolBarItem.INFO, text: 'Information', image: 'icons/info-icon.svg' },
+    { id: ToolBarItem.DOC, text: 'Ouvrir la documentation', image: 'icons/help-icon.svg' },
   ];
 
   protected toolClick(tool_id: ToolBarItem): void {

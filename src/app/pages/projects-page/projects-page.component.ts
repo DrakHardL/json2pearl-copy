@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { finalize, Subscription } from 'rxjs';
@@ -144,7 +144,15 @@ export class ProjectsComponent implements OnInit {
         return this.onInfoToolClicked();
       case ToolbarItem.COPY:
         return this.onCopyToolClicked();
+      case ToolbarItem.DOC:
+        return this.openDocumentation();
     }
+  }
+
+  private openDocumentation(url: string = 'https://google.com'): void {
+    if (!url) return;
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if (win) win.focus();
   }
 
   private onInfoToolClicked(): void {
@@ -167,6 +175,57 @@ export class ProjectsComponent implements OnInit {
       { key: 'users', value: ids_users },
       { key: 'groups', value: ids_groups },
     ]);
+
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        console.log('URL copiée dans le presse-papier :', url);
+      })
+      .catch((err) => {
+        console.error('Erreur lors de la copie :', err);
+      });
+
+      (() => {
+        const msg = 'URL copiée dans le presse‑papier';
+        const id = 'clipboard-toast';
+        if (document.getElementById(id)) return;
+        const toast = document.createElement('div');
+        toast.id = id;
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+          position: 'fixed',
+          top: '24px',
+          right: '0',
+          background: 'rgba(0,0,0,0.85)',
+          color: '#fff',
+          padding: '10px 16px',
+          borderRadius: '6px',
+          zIndex: '100000',
+          fontSize: '13px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
+          opacity: '0',
+          transition: 'opacity 200ms ease, transform 200ms ease',
+          pointerEvents: 'auto',
+        });
+        document.body.appendChild(toast);
+        // show
+        requestAnimationFrame(() => {
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateX(-50%) translateY(0)';
+        });
+        // hide after 3s
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(-50%) translateY(8px)';
+          toast.addEventListener(
+            'transitionend',
+            () => {
+              toast.remove();
+            },
+            { once: true }
+          );
+        }, 1000);
+      })();
 
     console.log(url);
   }
@@ -382,5 +441,10 @@ export class ProjectsComponent implements OnInit {
           this.selected_group_members = [];
         },
       });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  protected onDeleteInput(event: KeyboardEvent): void {
+    if (event.key === 'Delete') this.onHideToolClicked();
   }
 }
