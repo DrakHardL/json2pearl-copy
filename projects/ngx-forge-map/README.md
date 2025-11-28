@@ -62,14 +62,14 @@ Exemple minimal d'utilisation
 
 ```html
 <!-- Dans un template d'un composant d'application -->
-<forge-graph-demo></forge-graph-demo>
+<lib-graph-demo></lib-graph-demo>
 ```
 
 ```ts
 // Dans le module
-import { NgxForgeMapModule } from 'ngx-forge-map';
+import { GraphDemo } from 'ngx-forge-map';
 
-@NgModule({ imports: [NgxForgeMapModule] })
+@NgModule({ imports: [GraphDemo] })
 export class AppModule {}
 ```
 
