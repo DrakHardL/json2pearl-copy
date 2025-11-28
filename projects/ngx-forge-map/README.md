@@ -1,63 +1,134 @@
 # NgxForgeMap
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
+Ce dépôt contient la bibliothèque Angular `ngx-forge-map` : un ensemble de composants, services et modèles destinés à afficher et manipuler une représentation graphique (forge map) de projets, groupes, topics et utilisateurs.
 
-## Code scaffolding
+**Contenu principal**
+- `src/lib/model/` : définitions de modèles (`graph-forge`, `group`, `project`, `topic`, `user`).
+- `src/lib/services/` : services pour l'accès aux données et la logique métier (`api.service`, `group.service`, `project.service`, `topic.service`, `user.service`).
+- `src/lib/pages/graph-demo/` : exemple de page/composant démonstration montrant l'utilisation de la carte.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+**Objectif**
+La bibliothèque fournit :
+- Un point d'entrée Angular réutilisable pour intégrer une vue « forge map » dans une application.
+- Des services pour récupérer, transformer et fournir les données aux composants.
+- Des modèles TypeScript pour typer les entités manipulées.
 
-```bash
-ng generate component component-name
+Installation et usage
+---------------------
+
+1. Installer la bibliothèque (après publication sur npm) :
+
+```powershell
+npm install ngx-forge-map
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. Importer le module dans votre application Angular (vérifier le nom exact exporté dans `public-api.ts`) :
 
-```bash
-ng generate --help
+```ts
+import { NgxForgeMapModule } from 'ngx-forge-map';
+
+@NgModule({
+   imports: [NgxForgeMapModule /*, ... */]
+})
+export class AppModule {}
 ```
 
-## Building
+3. Utiliser les composants exportés par la bibliothèque dans vos templates. (Consultez `public-api.ts` du projet pour connaître les composants/selcteurs exportés.)
 
-To build the library, run:
+Services et injection
+---------------------
 
-```bash
+Les services principaux présents dans la bibliothèque :
+- `ApiService` : encapsule les appels HTTP/REST vers le backend (points d'accès centralisés).
+- `GroupService` / `ProjectService` / `TopicService` / `UserService` : services spécifiques aux entités, construisent les modèles attendus par les composants.
+
+Dans vos composants, injectez simplement le service voulu :
+
+```ts
+constructor(private projectService: ProjectService) {}
+
+ngOnInit() {
+   this.projectService.list().subscribe(projects => this.projects = projects);
+}
+```
+
+Modèles (models)
+-----------------
+
+Les fichiers `*.model.ts` définissent les interfaces TypeScript utilisées par la bibliothèque. Ils permettent de garantir la forme attendue des objets (projets, groupes, topics, utilisateurs, graph-forge).
+
+Développement local
+-------------------
+
+- Builder la librairie :
+
+```powershell
 ng build ngx-forge-map
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+- Lancer les tests unitaires :
 
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ngx-forge-map
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+```powershell
 ng test
 ```
 
-## Running end-to-end tests
+- Exécuter les exemples/démo (si un app de démonstration est fourni dans le workspace) :
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```powershell
+ng serve
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Publication
+-----------
 
-## Additional Resources
+Après compilation, les artefacts se trouvent dans `dist/ngx-forge-map`. Pour publier sur npm :
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```powershell
+cd dist/ngx-forge-map; npm publish
+```
+
+Conseils et bonnes pratiques
+---------------------------
+- Consulter `projects/ngx-forge-map/src/public-api.ts` pour voir les symboles réellement exportés par la librairie.
+- Les composants UI attendent des données au format des modèles fournis ; préférez utiliser les services fournis pour remplir ces modèles.
+- Pour adapter l'apparence, surchargez les styles globaux de votre application ou fournissez des entrées (inputs) aux composants si la bibliothèque les expose.
+
+Exemple minimal d'utilisation
+-----------------------------
+
+```html
+<!-- Dans un template d'un composant d'application -->
+<forge-graph-demo></forge-graph-demo>
+```
+
+```ts
+// Dans le module
+import { NgxForgeMapModule } from 'ngx-forge-map';
+
+@NgModule({ imports: [NgxForgeMapModule] })
+export class AppModule {}
+```
+
+Support & contribution
+----------------------
+
+Vous pouvez contribuer en ouvrant des issues ou des pull requests dans ce dépôt. Pour les développements locaux, travaillez sur la branche de fonctionnalité, ajoutez des tests et mettez à jour la documentation si nécessaire.
+
+Fichiers utiles
+---------------
+- `src/lib/model/` : modèles de données.
+- `src/lib/services/` : logique métier et intégration HTTP.
+- `src/lib/pages/graph-demo/` : composant d'exemple et template.
+- `public-api.ts` : export public de la librairie.
+
+Licence
+-------
+Vérifiez la présence d'un fichier `LICENSE` à la racine du dépôt pour connaître la licence du projet.
+
+---
+
+Si vous voulez, je peux :
+- ouvrir `public-api.ts` et générer automatiquement une section « API » listant précisément les composants/services exportés ; ou
+- lancer un build et les tests locaux pour valider la compilation.
+
+Indiquez la prochaine action souhaitée.
