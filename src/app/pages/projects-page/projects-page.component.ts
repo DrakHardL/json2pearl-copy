@@ -4,12 +4,9 @@ import { MarkdownModule } from 'ngx-markdown';
 import { finalize, Subscription } from 'rxjs';
 import {
   GraphForge,
-  Group,
   GroupApiService,
   NodeType,
-  Project,
   ProjectApiService,
-  User,
   UserApiService,
 } from 'ngx-forge-map';
 
